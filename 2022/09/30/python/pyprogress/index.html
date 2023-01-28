@@ -1,0 +1,728 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="https://www.helloimg.com/images/2023/01/28/oRUbRY.jpg">
+  <link rel="icon" href="https://www.helloimg.com/images/2023/01/28/oRUbRY.jpg">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="言云纪">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="覆盖式进度条的实现 覆盖式进度条的实现是由\r会退至首行实现，不多BB，我先来个小Demo给大伙儿练练手！  12345import timefor i in range (50):    print(i,end&#x3D;&quot;\r&quot;)    time.sleep(1)	# 睡眠1秒  通过运行以上案例可以看到程序每隔1秒循环覆盖打印变量i的值，那如果打打印信息改一下呢？  12345im">
+<meta property="og:type" content="article">
+<meta property="og:title" content="python进度条与下载器的实现">
+<meta property="og:url" content="https://tanblog.cc/2022/09/30/python/pyprogress/index.html">
+<meta property="og:site_name" content="Tan_Blog">
+<meta property="og:description" content="覆盖式进度条的实现 覆盖式进度条的实现是由\r会退至首行实现，不多BB，我先来个小Demo给大伙儿练练手！  12345import timefor i in range (50):    print(i,end&#x3D;&quot;\r&quot;)    time.sleep(1)	# 睡眠1秒  通过运行以上案例可以看到程序每隔1秒循环覆盖打印变量i的值，那如果打打印信息改一下呢？  12345im">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2022-09-30T00:31:12.278Z">
+<meta property="article:modified_time" content="2022-10-04T15:10:37.340Z">
+<meta property="article:author" content="言云纪">
+<meta property="article:tag" content="python">
+<meta property="article:tag" content="爬虫">
+<meta name="twitter:card" content="summary_large_image">
+  
+  
+    <meta name="referrer" content="no-referrer-when-downgrade">
+  
+  
+  <title>python进度条与下载器的实现 - Tan_Blog</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_hj8rtnfg7um.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"tanblog.cc","root":"/","version":"1.9.4","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml"};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+
+  
+<meta name="generator" content="Hexo 6.3.0"><link rel="alternate" href="/atom.xml" title="Tan_Blog" type="application/atom+xml">
+</head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>Tan_Blog</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                <span>首页</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                <span>归档</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                <span>分类</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                <span>标签</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                <span>关于</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/links/">
+                <i class="iconfont icon-link-fill"></i>
+                <span>友链</span>
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <i class="iconfont icon-search"></i>
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">
+              <i class="iconfont icon-dark" id="color-toggle-icon"></i>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('https://www.helloimg.com/images/2023/01/28/oRUrZK.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="python进度条与下载器的实现"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2022-09-30 08:31" pubdate>
+          2022年9月30日 早上
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          3.2k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          27 分钟
+        
+      </span>
+    
+
+    
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">python进度条与下载器的实现</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <h1 id="覆盖式进度条的实现"><a href="#覆盖式进度条的实现" class="headerlink" title="覆盖式进度条的实现"></a>覆盖式进度条的实现</h1><blockquote>
+<p>覆盖式进度条的实现是由<code>\r</code>会退至首行实现，不多BB，我先来个小<code>Demo</code>给大伙儿练练手！</p>
+</blockquote>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">import</span> time<br><br><span class="hljs-keyword">for</span> i <span class="hljs-keyword">in</span> <span class="hljs-built_in">range</span> (<span class="hljs-number">50</span>):<br>    <span class="hljs-built_in">print</span>(i,end=<span class="hljs-string">&quot;\r&quot;</span>)<br>    time.sleep(<span class="hljs-number">1</span>)	<span class="hljs-comment"># 睡眠1秒</span><br></code></pre></td></tr></table></figure>
+<blockquote>
+<p>通过运行以上案例可以看到程序每隔1秒循环覆盖打印<code>变量i</code>的值，那如果打打印信息改一下呢？</p>
+</blockquote>
+<figure class="highlight pgsql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs pgsql"><span class="hljs-keyword">import</span> <span class="hljs-type">time</span><br><br><span class="hljs-keyword">for</span> i <span class="hljs-keyword">in</span> range (<span class="hljs-number">50</span>):<br>    print(&quot;█&quot;*i,end=&quot;\r&quot;)<br>    <span class="hljs-type">time</span>.sleep(<span class="hljs-number">1</span>)	# 睡眠<span class="hljs-number">1</span>秒<br></code></pre></td></tr></table></figure>
+<blockquote>
+<p>再次运行你会惊奇的发现进度条效果出来了！是不是很神奇？😎好了，系好安全带咋们要开始冲刺了！</p>
+</blockquote>
+<h1 id="下载器的实现"><a href="#下载器的实现" class="headerlink" title="下载器的实现"></a>下载器的实现</h1><blockquote>
+<p>首先咋们先来一段简单的伪代码爬虫</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><code class="hljs python">&gt;<span class="hljs-keyword">import</span> requests<br><br>&gt;<span class="hljs-keyword">def</span> <span class="hljs-title function_">Get_Data</span>(<span class="hljs-params">url,hander</span>):<br>   <span class="hljs-keyword">return</span> requests.get(url=url,hander=hander)<br>   <br>&gt;url = <span class="hljs-string">&quot;https://tanblog.cc/upload/2022/09/EADE32CD-73D6-4EF7-84C7-7CEDBC39319D.jpeg&quot;</span><br>&gt;hander = &#123;<br>  <span class="hljs-string">&#x27;User-Agent&#x27;</span>:<span class="hljs-string">&#x27;Mozilla/5.0&#x27;</span><br>&gt;&#125;<br>&gt;<span class="hljs-built_in">print</span>(Get_Data(url,hander).text)<br></code></pre></td></tr></table></figure>
+<p>通过运行以上程序你会发现只有获取完响应体信息才会打印变量而不能实时得到已获取的响应体大小。<br><code>缺点</code>：当请求大文件后会自动开始获取响应体信息，不利于查看与下载进度的展示<br><code>优点</code>：如果是小文件可以快速读取响应体信息</p>
+</blockquote>
+<blockquote>
+<p>当然，为避免请求大文件时无法读取响应体的尴尬，可以在请求时加上<code>stream=True</code>开启流模式<br>代码如下：</p>
+</blockquote>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">import</span> requests<br><br><span class="hljs-keyword">def</span> <span class="hljs-title function_">download_file</span>(<span class="hljs-params">url,filename</span>):<br>    <span class="hljs-built_in">print</span>(<span class="hljs-string">&quot;解析完成，正在开始下载！如未下载，请手动打开下方链接下载！&quot;</span>)<br>    <span class="hljs-built_in">print</span>(<span class="hljs-string">&quot;下载地址：%s&quot;</span>%url)<br>    header = &#123;<br>        <span class="hljs-string">&#x27;User-Agent&#x27;</span>:<span class="hljs-string">&#x27;Mozilla/5.0&#x27;</span>,<br>        <span class="hljs-string">&#x27;content-type&#x27;</span>:<span class="hljs-string">&#x27;application/json; charset=utf-8&#x27;</span>,<br>        <span class="hljs-string">&#x27;Referer&#x27;</span>:<span class="hljs-string">&#x27;https://www.bilibili.com&#x27;</span><br>    &#125;<br>    <span class="hljs-built_in">print</span>(<span class="hljs-string">&quot;视频名：%s&quot;</span>%filename)<br>    res = requests.get(url,headers=header,stream=<span class="hljs-literal">True</span>)<br>    <span class="hljs-built_in">print</span>(<span class="hljs-string">&quot;视频总大小：%s kb&quot;</span>%<span class="hljs-built_in">str</span>(<span class="hljs-built_in">int</span>(res.headers.get(<span class="hljs-string">&quot;Content-Length&quot;</span>))/<span class="hljs-number">1024</span>))<br>    f = <span class="hljs-built_in">open</span>(filename+<span class="hljs-string">&quot;.mp4&quot;</span>,<span class="hljs-string">&quot;wb&quot;</span>)<br>    <br>    write_size = <span class="hljs-number">0</span><br>    <span class="hljs-keyword">for</span> chunk <span class="hljs-keyword">in</span> res.iter_content(chunk_size=<span class="hljs-number">1024</span>):<br>        <span class="hljs-keyword">if</span> chunk:<br>            f.write(chunk)<br>            write_size +=<span class="hljs-number">1024</span><br>            <span class="hljs-built_in">print</span>(<span class="hljs-string">&quot;█&quot;</span> * <span class="hljs-built_in">int</span>(write_size/(<span class="hljs-built_in">int</span>(res.headers.get(<span class="hljs-string">&quot;Content-Length&quot;</span>))/<span class="hljs-number">50</span>))+<span class="hljs-string">&quot; &quot;</span>*(<span class="hljs-number">50</span>-(<span class="hljs-built_in">int</span>(write_size/(<span class="hljs-built_in">int</span>(res.headers.get(<span class="hljs-string">&quot;Content-Length&quot;</span>))/<span class="hljs-number">50</span>)))) + <span class="hljs-string">&quot;已下载 &quot;</span>+<span class="hljs-built_in">str</span>(<span class="hljs-built_in">int</span>(write_size/(<span class="hljs-built_in">int</span>(res.headers.get(<span class="hljs-string">&quot;Content-Length&quot;</span>))/<span class="hljs-number">50</span>))*<span class="hljs-number">2</span>)+<span class="hljs-string">&quot;%&quot;</span>,end=<span class="hljs-string">&quot;\r&quot;</span>)<br>    <span class="hljs-built_in">print</span>(<span class="hljs-string">&quot;█&quot;</span> * <span class="hljs-built_in">int</span>(write_size/(<span class="hljs-built_in">int</span>(res.headers.get(<span class="hljs-string">&quot;Content-Length&quot;</span>))/<span class="hljs-number">50</span>))+<span class="hljs-string">&quot; &quot;</span>*(<span class="hljs-number">50</span>-(<span class="hljs-built_in">int</span>(write_size/(<span class="hljs-built_in">int</span>(res.headers.get(<span class="hljs-string">&quot;Content-Length&quot;</span>))/<span class="hljs-number">50</span>)))) +<span class="hljs-built_in">str</span>(<span class="hljs-built_in">int</span>(write_size/(<span class="hljs-built_in">int</span>(res.headers.get(<span class="hljs-string">&quot;Content-Length&quot;</span>))/<span class="hljs-number">50</span>))*<span class="hljs-number">2</span>)+<span class="hljs-string">&quot;% 下载完成！&quot;</span>)<br><br>url = <span class="hljs-string">&quot;https://upos-sz-mirror08ct.bilivideo.com/upgcxcode/59/28/834082859/834082859_nb3-1-16.mp4?e=ig8euxZM2rNcNbRVhwdVhwdlhWdVhwdVhoNvNC8BqJIzNbfq9rVEuxTEnE8L5F6VnEsSTx0vkX8fqJeYTj_lta53NCM=&amp;uipk=5&amp;nbs=1&amp;deadline=1664521770&amp;gen=playurlv2&amp;os=08ctbv&amp;oi=730467091&amp;trid=70250f21dcda4920a44766a481f8f6c5T&amp;mid=0&amp;platform=html5&amp;upsig=338055a9e8388a07804741c1d94a123d&amp;uparams=e,uipk,nbs,deadline,gen,os,oi,trid,mid,platform&amp;bvc=vod&amp;nettype=0&amp;bw=54744&amp;orderid=0,1&amp;logo=80000000&quot;</span><br>filename = <span class="hljs-string">&quot;bilibili&quot;</span><br>download_file(url,filename)<br></code></pre></td></tr></table></figure>
+<blockquote>
+<p>Tips：当开启<code>stream=True</code>流模式后，可以用<code>res.headers.get(&quot;Content-Length&quot;)</code>方法获取文件Byte大小！<br>什么？太复杂了看不懂？没关系，来一个简易版的Demo</p>
+</blockquote>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><code class="hljs python">video_size = <span class="hljs-number">73206360</span>	<span class="hljs-comment"># 文件大小</span><br>num = <span class="hljs-number">0</span>		<span class="hljs-comment"># 已读取的大小</span><br>code = <span class="hljs-literal">True</span><br><span class="hljs-keyword">while</span> (code):<br>    num+=<span class="hljs-number">1024</span>	<span class="hljs-comment"># 每读取一次大小为1024Byte，可用chunk_size设置单次读取大小</span><br>    <span class="hljs-built_in">print</span>(<span class="hljs-string">&quot;█&quot;</span> * <span class="hljs-built_in">int</span>(num/(video_size/<span class="hljs-number">50</span>))+<span class="hljs-string">&quot; &quot;</span>*(<span class="hljs-number">50</span>-(<span class="hljs-built_in">int</span>(num/(video_size/<span class="hljs-number">50</span>)))) + <span class="hljs-string">&quot;已下载 &quot;</span>+<span class="hljs-built_in">str</span>(<span class="hljs-built_in">int</span>(num/(video_size/<span class="hljs-number">50</span>))*<span class="hljs-number">2</span>)+<span class="hljs-string">&quot;%&quot;</span>,end=<span class="hljs-string">&quot;\r&quot;</span>)<br>    <span class="hljs-keyword">if</span>(num &gt;=video_size):<br>        code = <span class="hljs-literal">False</span><br><span class="hljs-built_in">print</span>(<span class="hljs-string">&quot;█&quot;</span> * <span class="hljs-built_in">int</span>(num/(video_size/<span class="hljs-number">50</span>))+<span class="hljs-string">&quot; &quot;</span>*(<span class="hljs-number">50</span>-(<span class="hljs-built_in">int</span>(num/(video_size/<span class="hljs-number">50</span>)))) + <span class="hljs-built_in">str</span>(<span class="hljs-built_in">int</span>(num/(video_size/<span class="hljs-number">50</span>))*<span class="hljs-number">2</span>)+<span class="hljs-string">&quot;% 下载完成！&quot;</span>)<br></code></pre></td></tr></table></figure>
+
+
+
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/%E7%88%AC%E8%99%AB/" class="category-chain-item">爬虫</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/python/">#python</a>
+      
+        <a href="/tags/%E7%88%AC%E8%99%AB/">#爬虫</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>python进度条与下载器的实现</div>
+      <div>https://tanblog.cc/2022/09/30/python/pyprogress/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>言云纪</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2022年9月30日</div>
+        </div>
+      
+      
+      
+        <div class="license-meta-item">
+          <div>许可协议</div>
+          <div>
+            
+              
+              
+                <a target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                    <i class="iconfont icon-by"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2022/09/30/project/online/onlinevideo-3/" title="三. SpringBoot项目初始化mybatis配置">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">三. SpringBoot项目初始化mybatis配置</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2022/09/29/project/online/onlinevideo-2/" title="二. 数据库搭建">
+                        <span class="hidden-mobile">二. 数据库搭建</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header">
+    <i class="iconfont icon-list"></i>
+    <span>目录</span>
+  </p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
+  
+  
+    <div class="statistics">
+  
+  
+
+  
+    
+      <span id="busuanzi_container_site_pv" style="display: none">
+        总访问量 
+        <span id="busuanzi_value_site_pv"></span>
+         次
+      </span>
+    
+    
+      <span id="busuanzi_container_site_uv" style="display: none">
+        总访客数 
+        <span id="busuanzi_value_site_uv"></span>
+         人
+      </span>
+    
+    
+  
+</div>
+
+  
+  
+    <!-- 备案信息 ICP for China -->
+    <div class="beian">
+  <span>
+    <a href="http://beian.miit.gov.cn/" target="_blank" rel="nofollow noopener">
+      蜀ICP备2022023578号 -1
+    </a>
+  </span>
+  
+</div>
+
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.0/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.18.2/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init(Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc));
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script  src="/js/local-search.js" ></script>
+
+  <script defer src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>

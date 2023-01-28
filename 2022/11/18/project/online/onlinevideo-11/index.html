@@ -1,0 +1,732 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="https://www.helloimg.com/images/2023/01/28/oRUbRY.jpg">
+  <link rel="icon" href="https://www.helloimg.com/images/2023/01/28/oRUbRY.jpg">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="言云纪">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="这两个月有点累，我就不做代码解释了。直接上代码！另外这篇文章代码有一些待优化的地方，如下  服务逻辑类的switch块待改成反射 房主退出连接应该将房间权限赋给其他人   ws配置 WebSocketConfigurer.java  1234567891011121314151617181920212223242526272829303132333435363738394041424344454">
+<meta property="og:type" content="article">
+<meta property="og:title" content="十一. websocker服务与ws请求头拦截器">
+<meta property="og:url" content="https://tanblog.cc/2022/11/18/project/online/onlinevideo-11/index.html">
+<meta property="og:site_name" content="Tan_Blog">
+<meta property="og:description" content="这两个月有点累，我就不做代码解释了。直接上代码！另外这篇文章代码有一些待优化的地方，如下  服务逻辑类的switch块待改成反射 房主退出连接应该将房间权限赋给其他人   ws配置 WebSocketConfigurer.java  1234567891011121314151617181920212223242526272829303132333435363738394041424344454">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2022-11-18T02:42:14.559Z">
+<meta property="article:modified_time" content="2022-11-18T02:42:14.559Z">
+<meta property="article:author" content="言云纪">
+<meta property="article:tag" content="拦截器">
+<meta property="article:tag" content="websocket">
+<meta name="twitter:card" content="summary_large_image">
+  
+  
+    <meta name="referrer" content="no-referrer-when-downgrade">
+  
+  
+  <title>十一. websocker服务与ws请求头拦截器 - Tan_Blog</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_hj8rtnfg7um.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"tanblog.cc","root":"/","version":"1.9.4","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml"};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+
+  
+<meta name="generator" content="Hexo 6.3.0"><link rel="alternate" href="/atom.xml" title="Tan_Blog" type="application/atom+xml">
+</head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>Tan_Blog</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                <span>首页</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                <span>归档</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                <span>分类</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                <span>标签</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                <span>关于</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/links/">
+                <i class="iconfont icon-link-fill"></i>
+                <span>友链</span>
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <i class="iconfont icon-search"></i>
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">
+              <i class="iconfont icon-dark" id="color-toggle-icon"></i>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('https://www.helloimg.com/images/2023/01/28/oRUrZK.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="十一. websocker服务与ws请求头拦截器"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2022-11-18 10:42" pubdate>
+          2022年11月18日 上午
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          12k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          101 分钟
+        
+      </span>
+    
+
+    
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">十一. websocker服务与ws请求头拦截器</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <blockquote>
+<p>这两个月有点累，我就不做代码解释了。直接上代码！另外这篇文章代码有一些待优化的地方，如下</p>
+<ol>
+<li>服务逻辑类的switch块待改成反射</li>
+<li>房主退出连接应该将房间权限赋给其他人</li>
+</ol>
+</blockquote>
+<h1 id="ws配置"><a href="#ws配置" class="headerlink" title="ws配置"></a>ws配置</h1><blockquote>
+<p>WebSocketConfigurer.java</p>
+</blockquote>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">package</span> cc.tanblog.online.config;<br><br><span class="hljs-keyword">import</span> cc.tanblog.online.socket.MyWebSocketHandler;<br><span class="hljs-keyword">import</span> org.springframework.context.annotation.Bean;<br><span class="hljs-keyword">import</span> org.springframework.context.annotation.Configuration;<br><span class="hljs-keyword">import</span> org.springframework.web.socket.WebSocketHandler;<br><span class="hljs-keyword">import</span> org.springframework.web.socket.config.annotation.EnableWebSocket;<br><span class="hljs-keyword">import</span> org.springframework.web.socket.config.annotation.WebSocketConfigurer;<br><span class="hljs-keyword">import</span> org.springframework.web.socket.config.annotation.WebSocketHandlerRegistry;<br><br><span class="hljs-keyword">import</span> javax.annotation.Resource;<br><br><span class="hljs-comment">/**</span><br><span class="hljs-comment"> * <span class="hljs-doctag">@Description</span></span><br><span class="hljs-comment"> * <span class="hljs-doctag">@Author</span> Ocean_IT</span><br><span class="hljs-comment"> * <span class="hljs-doctag">@Email</span> 14312400@qq.com</span><br><span class="hljs-comment"> * <span class="hljs-doctag">@Data</span> 2022/8/16 9:42</span><br><span class="hljs-comment"> */</span><br><br><span class="hljs-meta">@Configuration</span><br><span class="hljs-meta">@EnableWebSocket</span><br><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">WebSocketConfig</span> <span class="hljs-keyword">implements</span> <span class="hljs-title class_">WebSocketConfigurer</span> &#123;<br>    <span class="hljs-comment">/**</span><br><span class="hljs-comment">     * 注入拦截器</span><br><span class="hljs-comment">     */</span><br>    <span class="hljs-meta">@Resource</span><br>    <span class="hljs-keyword">private</span> MyHandshakeInterceptor myHandshakeInterceptor;<br><br><br>    <span class="hljs-meta">@Override</span><br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">registerWebSocketHandlers</span><span class="hljs-params">(WebSocketHandlerRegistry webSocketHandlerRegistry)</span> &#123;<br><br>        webSocketHandlerRegistry<br>                <span class="hljs-comment">//添加myHandler消息处理对象，和websocket访问地址</span><br>                .addHandler(myHandler(), <span class="hljs-string">&quot;/ws&quot;</span>)<br>                <span class="hljs-comment">//设置允许跨域访问</span><br>                .setAllowedOrigins(<span class="hljs-string">&quot;*&quot;</span>)<br>                <span class="hljs-comment">//添加拦截器可实现用户链接前进行权限校验等操作</span><br>                .addInterceptors(myHandshakeInterceptor);<br>    &#125;<br><br>    <span class="hljs-meta">@Bean</span><br>    <span class="hljs-keyword">public</span> WebSocketHandler <span class="hljs-title function_">myHandler</span><span class="hljs-params">()</span> &#123;<br>        <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">MyWebSocketHandler</span>();<br><br>    &#125;<br><br>&#125;<br></code></pre></td></tr></table></figure>
+<h1 id="ws请求头拦截器"><a href="#ws请求头拦截器" class="headerlink" title="ws请求头拦截器"></a>ws请求头拦截器</h1><blockquote>
+<p>MyHandshakeInterceptor.java</p>
+</blockquote>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">package</span> cc.tanblog.online.config;<br><br><span class="hljs-keyword">import</span> cc.tanblog.online.dao.CreateRoomDao;<br><span class="hljs-keyword">import</span> cc.tanblog.online.dao.UserDao;<br><span class="hljs-keyword">import</span> cc.tanblog.online.dao.VideoroomDao;<br><span class="hljs-keyword">import</span> cc.tanblog.online.entity.User;<br><span class="hljs-keyword">import</span> cc.tanblog.online.entity.Videoroom;<br><span class="hljs-keyword">import</span> cc.tanblog.online.util.TokenUtils;<br><span class="hljs-keyword">import</span> org.apache.juli.logging.Log;<br><span class="hljs-keyword">import</span> org.apache.juli.logging.LogFactory;<br><span class="hljs-keyword">import</span> org.springframework.beans.factory.annotation.Autowired;<br><span class="hljs-keyword">import</span> org.springframework.http.server.ServerHttpRequest;<br><span class="hljs-keyword">import</span> org.springframework.http.server.ServerHttpResponse;<br><span class="hljs-keyword">import</span> org.springframework.http.server.ServletServerHttpRequest;<br><span class="hljs-keyword">import</span> org.springframework.stereotype.Component;<br><span class="hljs-keyword">import</span> org.springframework.web.socket.WebSocketHandler;<br><span class="hljs-keyword">import</span> org.springframework.web.socket.server.HandshakeInterceptor;<br><br><br><span class="hljs-keyword">import</span> java.util.List;<br><span class="hljs-keyword">import</span> java.util.Map;<br><br><span class="hljs-comment">/**</span><br><span class="hljs-comment"> * <span class="hljs-doctag">@Description</span></span><br><span class="hljs-comment"> * <span class="hljs-doctag">@Author</span> Ocean_IT</span><br><span class="hljs-comment"> * <span class="hljs-doctag">@Email</span> 14312400@qq.com</span><br><span class="hljs-comment"> * <span class="hljs-doctag">@Data</span> 2022/8/16 14:31</span><br><span class="hljs-comment"> */</span><br><br><span class="hljs-meta">@Component</span><br><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">MyHandshakeInterceptor</span> <span class="hljs-keyword">implements</span> <span class="hljs-title class_">HandshakeInterceptor</span> &#123;<br>    <span class="hljs-keyword">private</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">final</span> <span class="hljs-type">Log</span> <span class="hljs-variable">logger</span> <span class="hljs-operator">=</span> LogFactory.getLog(GlobalExceptionHandler.class);<br>    <span class="hljs-meta">@Autowired</span><br>    <span class="hljs-keyword">private</span> UserDao userDao;<br>    <span class="hljs-meta">@Autowired</span><br>    <span class="hljs-keyword">private</span> VideoroomDao videoroomDao;<br>    <span class="hljs-comment">/**</span><br><span class="hljs-comment">     * 握手之前，若返回false，则不建立链接 *</span><br><span class="hljs-comment">     *</span><br><span class="hljs-comment">     * <span class="hljs-doctag">@param</span> request</span><br><span class="hljs-comment">     * <span class="hljs-doctag">@param</span> response</span><br><span class="hljs-comment">     * <span class="hljs-doctag">@param</span> wsHandler</span><br><span class="hljs-comment">     * <span class="hljs-doctag">@param</span> attributes</span><br><span class="hljs-comment">     * <span class="hljs-doctag">@return</span></span><br><span class="hljs-comment">     */</span><br>    <span class="hljs-meta">@Override</span><br>    <span class="hljs-keyword">public</span> <span class="hljs-type">boolean</span> <span class="hljs-title function_">beforeHandshake</span><span class="hljs-params">(ServerHttpRequest request, ServerHttpResponse</span><br><span class="hljs-params">            response, WebSocketHandler wsHandler, Map&lt;String, Object&gt; attributes)</span> &#123;<br><br>        <span class="hljs-comment">//将用户id放入socket处理器的会话(WebSocketSession)中</span><br>        <span class="hljs-type">ServletServerHttpRequest</span> <span class="hljs-variable">serverHttpRequest</span> <span class="hljs-operator">=</span> (ServletServerHttpRequest) request;<br><br>        <span class="hljs-keyword">try</span>&#123;<br>            <span class="hljs-comment">//获取参数</span><br>            <span class="hljs-type">User</span> <span class="hljs-variable">user</span> <span class="hljs-operator">=</span> userDao.get_user(TokenUtils.getOpenid(serverHttpRequest.getServletRequest().getHeader(<span class="hljs-string">&quot;token&quot;</span>)));<br>            attributes.put(<span class="hljs-string">&quot;md5_openid&quot;</span>,user.getOpenid());<br>            attributes.put(<span class="hljs-string">&quot;uName&quot;</span>,user.getUName());<br>        &#125;<span class="hljs-keyword">catch</span>(Exception e)&#123;<br>            logger.error(<span class="hljs-string">&quot;ws链接token认证失败&quot;</span>);<br>            <span class="hljs-keyword">return</span> <span class="hljs-literal">false</span>;<br>        &#125;<br><br>        List&lt;Videoroom&gt; videoroom = videoroomDao.get_videoroom(Long.valueOf(serverHttpRequest.getServletRequest().getParameter(<span class="hljs-string">&quot;vrid&quot;</span>)));<br>        <span class="hljs-comment">// 如果查询结果总数等于0则房间号验证失败</span><br>        <span class="hljs-keyword">if</span>(videoroom.size() == <span class="hljs-number">0</span>)&#123;<br>            logger.error(<span class="hljs-string">&quot;ws链接未查询到房间&quot;</span>);<br>            <span class="hljs-keyword">return</span> <span class="hljs-literal">false</span>;<br>        &#125;<br>        attributes.put(<span class="hljs-string">&quot;vr_id&quot;</span>, videoroom.get(<span class="hljs-number">0</span>).getVrId().toString());<br>        logger.info(<span class="hljs-string">&quot;开始握手&quot;</span>);<br>        <span class="hljs-keyword">return</span> <span class="hljs-literal">true</span>;<br>    &#125;<br><br>    <span class="hljs-meta">@Override</span><br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">afterHandshake</span><span class="hljs-params">(ServerHttpRequest request, ServerHttpResponse</span><br><span class="hljs-params">            response, WebSocketHandler wsHandler, Exception exception)</span> &#123;<br>        logger.info(<span class="hljs-string">&quot;握手完成&quot;</span>);<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+<h1 id="websocket服务逻辑"><a href="#websocket服务逻辑" class="headerlink" title="websocket服务逻辑"></a>websocket服务逻辑</h1><blockquote>
+<p>MyWebSocketHandler.java</p>
+</blockquote>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br><span class="line">147</span><br><span class="line">148</span><br><span class="line">149</span><br><span class="line">150</span><br><span class="line">151</span><br><span class="line">152</span><br><span class="line">153</span><br><span class="line">154</span><br><span class="line">155</span><br><span class="line">156</span><br><span class="line">157</span><br><span class="line">158</span><br><span class="line">159</span><br><span class="line">160</span><br><span class="line">161</span><br><span class="line">162</span><br><span class="line">163</span><br><span class="line">164</span><br><span class="line">165</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">package</span> cc.tanblog.online.socket;<br><br><br><span class="hljs-keyword">import</span> cc.tanblog.online.dao.CreateRoomDao;<br><span class="hljs-keyword">import</span> cc.tanblog.online.dao.UserDao;<br><span class="hljs-keyword">import</span> cc.tanblog.online.entity.CreateRoom;<br><span class="hljs-keyword">import</span> cc.tanblog.online.entity.SocketClient;<br><span class="hljs-keyword">import</span> cc.tanblog.online.service.SocketService;<br><span class="hljs-keyword">import</span> cc.tanblog.online.util.SocketUtils;<br><span class="hljs-keyword">import</span> cn.hutool.json.JSONUtil;<br><span class="hljs-keyword">import</span> org.springframework.beans.factory.annotation.Autowired;<br><span class="hljs-keyword">import</span> org.springframework.web.socket.CloseStatus;<br><span class="hljs-keyword">import</span> org.springframework.web.socket.TextMessage;<br><span class="hljs-keyword">import</span> org.springframework.web.socket.WebSocketSession;<br><span class="hljs-keyword">import</span> org.springframework.web.socket.handler.TextWebSocketHandler;<br><br><span class="hljs-keyword">import</span> java.io.IOException;<br><span class="hljs-keyword">import</span> java.util.HashMap;<br><span class="hljs-keyword">import</span> java.util.List;<br><span class="hljs-keyword">import</span> java.util.concurrent.ConcurrentHashMap;<br><span class="hljs-keyword">import</span> java.util.concurrent.atomic.AtomicInteger;<br><br><span class="hljs-comment">/**</span><br><span class="hljs-comment"> * <span class="hljs-doctag">@Description</span></span><br><span class="hljs-comment"> * <span class="hljs-doctag">@Author</span> Ocean_IT</span><br><span class="hljs-comment"> * <span class="hljs-doctag">@Email</span> 14312400@qq.com</span><br><span class="hljs-comment"> * <span class="hljs-doctag">@Data</span> 2022/8/16 14:34</span><br><span class="hljs-comment"> */</span><br><br><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">MyWebSocketHandler</span> <span class="hljs-keyword">extends</span> <span class="hljs-title class_">TextWebSocketHandler</span> &#123;<br>    <span class="hljs-meta">@Autowired</span><br>    <span class="hljs-keyword">private</span> SocketService socketService;<br>    <span class="hljs-meta">@Autowired</span><br>    <span class="hljs-keyword">private</span> UserDao userDao;<br>    <span class="hljs-meta">@Autowired</span><br>    <span class="hljs-keyword">private</span> CreateRoomDao createRoomDao;<br><br>    <span class="hljs-comment">//静态变量，用来记录当前在线连接数。应该把它设计成线程安全的。</span><br>    <span class="hljs-keyword">private</span> <span class="hljs-keyword">static</span> <span class="hljs-type">AtomicInteger</span> <span class="hljs-variable">onlineNum</span> <span class="hljs-operator">=</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">AtomicInteger</span>();<br>    <span class="hljs-comment">//concurrent包的线程安全Set，用来存放每个客户端对应的WebSocketServer对象。</span><br>    <span class="hljs-keyword">private</span> <span class="hljs-keyword">static</span> ConcurrentHashMap&lt;String, WebSocketSession&gt; sessionPools = <span class="hljs-keyword">new</span> <span class="hljs-title class_">ConcurrentHashMap</span>&lt;&gt;();<br>    <span class="hljs-comment">// 房间人数记录</span><br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-type">HashMap</span> <span class="hljs-variable">roomNum</span> <span class="hljs-operator">=</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">HashMap</span>();<br>    <span class="hljs-meta">@Override</span><br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">handleTextMessage</span><span class="hljs-params">(WebSocketSession session, TextMessage message)</span> <span class="hljs-keyword">throws</span> IOException &#123;<br>    <span class="hljs-comment">//<span class="hljs-doctag">TODO:</span> 接收消息</span><br>        <span class="hljs-type">SocketClient</span> <span class="hljs-variable">socketClient</span> <span class="hljs-operator">=</span> JSONUtil.toBean(message.getPayload(), SocketClient.class);<br>        <span class="hljs-type">String</span> <span class="hljs-variable">md5_openid</span> <span class="hljs-operator">=</span> session.getAttributes().get(<span class="hljs-string">&quot;md5_openid&quot;</span>).toString();<br>        <span class="hljs-type">String</span> <span class="hljs-variable">vrid</span> <span class="hljs-operator">=</span> session.getAttributes().get(<span class="hljs-string">&quot;vr_id&quot;</span>).toString();<br>        <span class="hljs-type">String</span> <span class="hljs-variable">msg</span> <span class="hljs-operator">=</span><span class="hljs-string">&quot;&quot;</span>;<br>        <span class="hljs-keyword">switch</span> (socketClient.getType())&#123;<br>            <span class="hljs-keyword">case</span> <span class="hljs-string">&quot;BARRAGE&quot;</span> :<br>                <span class="hljs-comment">//<span class="hljs-doctag">XXX:</span>&#123;&quot;type&quot;:&quot;BARRAGE&quot;,&quot;msg&quot;:&quot;弹幕消息&quot;&#125;</span><br>                msg = SocketUtils.BARRAGE_MSG(session.getAttributes().get(<span class="hljs-string">&quot;md5_openid&quot;</span>).toString(),userDao.get_user(md5_openid),socketClient.getMsg());<br>                sendMessageToAll_room(msg,session.getAttributes().get(<span class="hljs-string">&quot;vr_id&quot;</span>).toString());<br>                <span class="hljs-keyword">break</span>;<br>            <span class="hljs-keyword">case</span> <span class="hljs-string">&quot;PROGRESS&quot;</span>:<br>                <span class="hljs-comment">//<span class="hljs-doctag">XXX:</span> &#123;&quot;type&quot;:&quot;PROGRESS&quot;,&quot;num&quot;:&quot;进度条数字&quot;&#125;</span><br>                List&lt;CreateRoom&gt; createRoomList = createRoomDao.get_createRoomList(md5_openid);<br>                <span class="hljs-keyword">if</span>(createRoomList.size() == <span class="hljs-number">0</span>)&#123;<br>                    msg = SocketUtils.DEFAULT_MSG();<br>                    session.sendMessage(<span class="hljs-keyword">new</span> <span class="hljs-title class_">TextMessage</span>(msg));<br>                &#125;<span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span>(createRoomList.get(<span class="hljs-number">0</span>).getVrId().toString().equals(vrid))&#123;<br>                    System.out.println(<span class="hljs-string">&quot;----------&quot;</span>);<br>                    msg = SocketUtils.PROGRESS_MSG(session.getAttributes().get(<span class="hljs-string">&quot;md5_openid&quot;</span>).toString(),socketClient.getNum().toString());<br><span class="hljs-comment">//                    sendMessageToAll_room(msg,session.getAttributes().get(&quot;vr_id&quot;).toString());</span><br>                    sendMessageToAll_roomDelMy(msg,session.getAttributes().get(<span class="hljs-string">&quot;vr_id&quot;</span>).toString(),session);<br>                &#125;<br>                <span class="hljs-keyword">break</span>;<br>            <span class="hljs-keyword">case</span> <span class="hljs-string">&quot;PING&quot;</span>:<br>                <span class="hljs-comment">//xxx:&#123;&quot;type&quot;:&quot;PING&quot;&#125;</span><br>                msg = SocketUtils.PONG_MSG();<br>                session.sendMessage(<span class="hljs-keyword">new</span> <span class="hljs-title class_">TextMessage</span>(msg));<br>                <span class="hljs-keyword">break</span>;<br>            <span class="hljs-keyword">default</span>:<br>                msg = SocketUtils.DEFAULT_MSG();<br>                session.sendMessage(<span class="hljs-keyword">new</span> <span class="hljs-title class_">TextMessage</span>(msg));<br>                <span class="hljs-keyword">break</span>;<br>        &#125;<br><br>    &#125;<br><br>    <span class="hljs-meta">@Override</span><br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">afterConnectionEstablished</span><span class="hljs-params">(WebSocketSession session)</span> <span class="hljs-keyword">throws</span> Exception &#123;<br>        <span class="hljs-comment">// 用户首次建立连接</span><br>        <span class="hljs-type">String</span> <span class="hljs-variable">md5_openid</span> <span class="hljs-operator">=</span> session.getAttributes().get(<span class="hljs-string">&quot;md5_openid&quot;</span>).toString();<br>        <span class="hljs-comment">//关闭重复连接</span><br>        <span class="hljs-keyword">if</span>(sessionPools.get(md5_openid)!=<span class="hljs-literal">null</span>)&#123;<br>            sessionPools.get(md5_openid).close();<br>        &#125;<br>        sessionPools.put(md5_openid, session);<br>        <span class="hljs-type">String</span> <span class="hljs-variable">room</span> <span class="hljs-operator">=</span> session.getAttributes().get(<span class="hljs-string">&quot;vr_id&quot;</span>).toString();<br>        addOnlineCount(room);<br>        <span class="hljs-comment">// 发送房间信息(私发)</span><br>        session.sendMessage(<span class="hljs-keyword">new</span> <span class="hljs-title class_">TextMessage</span>(SocketUtils.SYSTEM_MSG(socketService.get_videoroomInfo(Long.valueOf(room)),userDao.get_user(md5_openid))));<br>        <span class="hljs-comment">// 房间欢迎广播(指定房间,需要获取用户信息)</span><br>        sendMessageToAll_room(<br>                SocketUtils.WELCOME_MSG(<span class="hljs-string">&quot;欢迎 &quot;</span> + session.getAttributes().get(<span class="hljs-string">&quot;uName&quot;</span>).toString() + <span class="hljs-string">&quot;加入房间！&quot;</span>,userDao.get_user(md5_openid),roomNum.get(room).toString()),<br>                session.getAttributes().get(<span class="hljs-string">&quot;vr_id&quot;</span>).toString()<br>        );<br>    &#125;<br><br><br>    <span class="hljs-meta">@Override</span><br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">afterConnectionClosed</span><span class="hljs-params">(WebSocketSession session, CloseStatus status)</span><br>            <span class="hljs-keyword">throws</span> Exception &#123;<br>        System.out.println(<span class="hljs-string">&quot;断开连接!&quot;</span>);<br>        sessionPools.remove(session.getAttributes().get(<span class="hljs-string">&quot;md5_openid&quot;</span>).toString());<br>        <span class="hljs-type">String</span> <span class="hljs-variable">room</span> <span class="hljs-operator">=</span> session.getAttributes().get(<span class="hljs-string">&quot;vr_id&quot;</span>).toString();<br>        subOnlineCount(room);<br>        <span class="hljs-type">String</span> <span class="hljs-variable">msg</span> <span class="hljs-operator">=</span> session.getAttributes().get(<span class="hljs-string">&quot;uName&quot;</span>).toString() + <span class="hljs-string">&quot;已退出房间！&quot;</span>;<br>        sendMessageToAll_room(SocketUtils.QUIT_MSG(msg,roomNum.get(room).toString()),session.getAttributes().get(<span class="hljs-string">&quot;vr_id&quot;</span>).toString());<br>    &#125;<br><br>    <span class="hljs-comment">/**</span><br><span class="hljs-comment">     * 添加链接人数</span><br><span class="hljs-comment">     */</span><br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">addOnlineCount</span><span class="hljs-params">(String room)</span> &#123;<br>        onlineNum.incrementAndGet();<br>        <span class="hljs-keyword">if</span>(roomNum.containsKey(room))&#123;<br>            roomNum.put(room,Integer.parseInt(String.valueOf(roomNum.get(room)))+<span class="hljs-number">1</span>);<br>        &#125;<span class="hljs-keyword">else</span>&#123;<br>            roomNum.put(room,<span class="hljs-number">1</span>);<br>        &#125;<br>    &#125;<br><br>    <span class="hljs-comment">/**</span><br><span class="hljs-comment">     * 移除链接人数</span><br><span class="hljs-comment">     */</span><br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">subOnlineCount</span><span class="hljs-params">(String room)</span> &#123;<br>        onlineNum.decrementAndGet();<br>        roomNum.put(room,Integer.parseInt(String.valueOf(roomNum.get(room)))-<span class="hljs-number">1</span>);<br>    &#125;<br><br>    <span class="hljs-comment">/**</span><br><span class="hljs-comment">     * 指定聊天室群发</span><br><span class="hljs-comment">     */</span><br>    <span class="hljs-keyword">private</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">sendMessageToAll_room</span><span class="hljs-params">(String msg,String vrId)</span> &#123;<br>        sessionPools.forEach((id, session) -&gt; &#123;<br>            <span class="hljs-keyword">try</span> &#123;<br>                <span class="hljs-keyword">if</span>(session.getAttributes().get(<span class="hljs-string">&quot;vr_id&quot;</span>).toString().equals(vrId))&#123;<br>                    session.sendMessage(<span class="hljs-keyword">new</span> <span class="hljs-title class_">TextMessage</span>(msg));<br>                &#125;<br>            &#125; <span class="hljs-keyword">catch</span> (IOException e) &#123;<br>                e.printStackTrace();<br>            &#125;<br>        &#125;);<br>    &#125;<br><br>    <span class="hljs-comment">/**</span><br><span class="hljs-comment">     * 指定聊天室群发</span><br><span class="hljs-comment">     */</span><br>    <span class="hljs-keyword">private</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">sendMessageToAll_roomDelMy</span><span class="hljs-params">(String msg,String vrId,WebSocketSession session1)</span> &#123;<br>        sessionPools.forEach((id, session) -&gt; &#123;<br>            <span class="hljs-keyword">try</span> &#123;<br>                <span class="hljs-keyword">if</span>(session.getAttributes().get(<span class="hljs-string">&quot;vr_id&quot;</span>).toString().equals(vrId)&amp;&amp;session1.getAttributes().get(<span class="hljs-string">&quot;md5_openid&quot;</span>).equals(session.getAttributes().get(<span class="hljs-string">&quot;md5_openid&quot;</span>))!=<span class="hljs-literal">true</span>)&#123;<br>                    session.sendMessage(<span class="hljs-keyword">new</span> <span class="hljs-title class_">TextMessage</span>(msg));<br>                &#125;<br>            &#125; <span class="hljs-keyword">catch</span> (IOException e) &#123;<br>                e.printStackTrace();<br>            &#125;<br>        &#125;);<br>    &#125;<br><br>&#125;<br></code></pre></td></tr></table></figure>
+<h1 id="websocket静态方法工具类"><a href="#websocket静态方法工具类" class="headerlink" title="websocket静态方法工具类"></a>websocket静态方法工具类</h1><blockquote>
+<p>SocketUtils.java</p>
+</blockquote>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">package</span> cc.tanblog.online.util;<br><br><span class="hljs-keyword">import</span> cc.tanblog.online.entity.User;<br><span class="hljs-keyword">import</span> cn.hutool.json.JSONUtil;<br><br><span class="hljs-keyword">import</span> java.util.HashMap;<br><span class="hljs-keyword">import</span> java.util.Map;<br><br><span class="hljs-comment">/**</span><br><span class="hljs-comment"> * <span class="hljs-doctag">@Description</span></span><br><span class="hljs-comment"> * <span class="hljs-doctag">@Author</span> Ocean_IT</span><br><span class="hljs-comment"> * <span class="hljs-doctag">@Email</span> 14312400@qq.com</span><br><span class="hljs-comment"> * <span class="hljs-doctag">@Data</span> 2022/10/8 20:12</span><br><span class="hljs-comment"> */</span><br><br><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">SocketUtils</span> &#123;<br>    <span class="hljs-comment">//    系统消息</span><br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> String <span class="hljs-title function_">SYSTEM_MSG</span><span class="hljs-params">(Object data, User user)</span>&#123;<br>        Map&lt;String,Object&gt; map = <span class="hljs-keyword">new</span> <span class="hljs-title class_">HashMap</span>&lt;&gt;();<br>        map.put(<span class="hljs-string">&quot;type&quot;</span>,<span class="hljs-string">&quot;SYSTEM&quot;</span>);<br>        map.put(<span class="hljs-string">&quot;data&quot;</span>,data);<br>        map.put(<span class="hljs-string">&quot;userinfo&quot;</span>,user);<br>        <span class="hljs-keyword">return</span> JSONUtil.toJsonStr(map);<br>    &#125;<br>    <span class="hljs-comment">//  欢迎消息</span><br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> String <span class="hljs-title function_">WELCOME_MSG</span><span class="hljs-params">(String msg, User user,String roomNum)</span>&#123;<br>        Map&lt;String,Object&gt; map = <span class="hljs-keyword">new</span> <span class="hljs-title class_">HashMap</span>&lt;&gt;();<br>        map.put(<span class="hljs-string">&quot;type&quot;</span>,<span class="hljs-string">&quot;WELCOME&quot;</span>);<br>        map.put(<span class="hljs-string">&quot;msg&quot;</span>,msg);<br>        map.put(<span class="hljs-string">&quot;userinfo&quot;</span>,user);<br>        map.put(<span class="hljs-string">&quot;roomPersonCount&quot;</span>,roomNum);<br>        <span class="hljs-keyword">return</span> JSONUtil.toJsonStr(map);<br>    &#125;<br>    <span class="hljs-comment">// 退出房间消息</span><br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> String <span class="hljs-title function_">QUIT_MSG</span><span class="hljs-params">(String msg,String roomNum)</span>&#123;<br>        Map&lt;String,Object&gt; map = <span class="hljs-keyword">new</span> <span class="hljs-title class_">HashMap</span>&lt;&gt;();<br>        map.put(<span class="hljs-string">&quot;type&quot;</span>,<span class="hljs-string">&quot;QUIT&quot;</span>);<br>        map.put(<span class="hljs-string">&quot;msg&quot;</span>,msg);<br>        map.put(<span class="hljs-string">&quot;roomPersonCount&quot;</span>,roomNum);<br>        <span class="hljs-keyword">return</span> JSONUtil.toJsonStr(map);<br>    &#125;<br>    <span class="hljs-comment">//  弹幕消息</span><br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> String <span class="hljs-title function_">BARRAGE_MSG</span><span class="hljs-params">(String to,User user,String msg)</span>&#123;<br>        Map&lt;String,Object&gt; map = <span class="hljs-keyword">new</span> <span class="hljs-title class_">HashMap</span>&lt;&gt;();<br>        map.put(<span class="hljs-string">&quot;type&quot;</span>,<span class="hljs-string">&quot;BARRAGE&quot;</span>);<br>        map.put(<span class="hljs-string">&quot;msg&quot;</span>,msg);<br>        map.put(<span class="hljs-string">&quot;to&quot;</span>,to);<br>        map.put(<span class="hljs-string">&quot;userinfo&quot;</span>,user);<br>        <span class="hljs-keyword">return</span> JSONUtil.toJsonStr(map);<br>    &#125;<br>    <span class="hljs-comment">//    进度条</span><br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> String <span class="hljs-title function_">PROGRESS_MSG</span><span class="hljs-params">(String to,String num)</span>&#123;<br>        Map&lt;String,Object&gt; map = <span class="hljs-keyword">new</span> <span class="hljs-title class_">HashMap</span>&lt;&gt;();<br>        map.put(<span class="hljs-string">&quot;type&quot;</span>,<span class="hljs-string">&quot;PROGRESS&quot;</span>);<br>        map.put(<span class="hljs-string">&quot;to&quot;</span>,to);<br>        map.put(<span class="hljs-string">&quot;num&quot;</span>,num);<br>        <span class="hljs-keyword">return</span> JSONUtil.toJsonStr(map);<br>    &#125;<br>    <span class="hljs-comment">// 心跳包</span><br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> String <span class="hljs-title function_">PONG_MSG</span><span class="hljs-params">()</span>&#123;<br>        Map&lt;String,Object&gt; map = <span class="hljs-keyword">new</span> <span class="hljs-title class_">HashMap</span>&lt;&gt;();<br>        map.put(<span class="hljs-string">&quot;type&quot;</span>,<span class="hljs-string">&quot;PONG&quot;</span>);<br>        <span class="hljs-keyword">return</span> JSONUtil.toJsonStr(map);<br>    &#125;<br>    <span class="hljs-comment">// 默认</span><br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span>  String <span class="hljs-title function_">DEFAULT_MSG</span><span class="hljs-params">()</span>&#123;<br>        Map&lt;String,Object&gt; map = <span class="hljs-keyword">new</span> <span class="hljs-title class_">HashMap</span>&lt;&gt;();<br>        map.put(<span class="hljs-string">&quot;type&quot;</span>,<span class="hljs-string">&quot;ERROR&quot;</span>);<br>        map.put(<span class="hljs-string">&quot;msg&quot;</span>,<span class="hljs-string">&quot;你发送的请求错误！&quot;</span>);<br>        <span class="hljs-keyword">return</span> JSONUtil.toJsonStr(map);<br>    &#125;<br>&#125;<br><br></code></pre></td></tr></table></figure>
+
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/Springboot/" class="category-chain-item">Springboot</a>
+  
+  
+    <span>></span>
+    
+  <a href="/categories/Springboot/%E5%90%8C%E6%AD%A5%E5%BD%B1%E9%99%A2%E5%B0%8F%E7%A8%8B%E5%BA%8F/" class="category-chain-item">同步影院小程序</a>
+  
+  
+
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/%E6%8B%A6%E6%88%AA%E5%99%A8/">#拦截器</a>
+      
+        <a href="/tags/websocket/">#websocket</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>十一. websocker服务与ws请求头拦截器</div>
+      <div>https://tanblog.cc/2022/11/18/project/online/onlinevideo-11/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>言云纪</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2022年11月18日</div>
+        </div>
+      
+      
+      
+        <div class="license-meta-item">
+          <div>许可协议</div>
+          <div>
+            
+              
+              
+                <a target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                    <i class="iconfont icon-by"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2022/12/05/java/algorithm1/" title="冒泡排序">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">冒泡排序</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2022/10/14/project/online/online-bug/" title="在线影院后端Bug小计">
+                        <span class="hidden-mobile">在线影院后端Bug小计</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header">
+    <i class="iconfont icon-list"></i>
+    <span>目录</span>
+  </p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
+  
+  
+    <div class="statistics">
+  
+  
+
+  
+    
+      <span id="busuanzi_container_site_pv" style="display: none">
+        总访问量 
+        <span id="busuanzi_value_site_pv"></span>
+         次
+      </span>
+    
+    
+      <span id="busuanzi_container_site_uv" style="display: none">
+        总访客数 
+        <span id="busuanzi_value_site_uv"></span>
+         人
+      </span>
+    
+    
+  
+</div>
+
+  
+  
+    <!-- 备案信息 ICP for China -->
+    <div class="beian">
+  <span>
+    <a href="http://beian.miit.gov.cn/" target="_blank" rel="nofollow noopener">
+      蜀ICP备2022023578号 -1
+    </a>
+  </span>
+  
+</div>
+
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.0/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.18.2/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init(Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc));
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script  src="/js/local-search.js" ></script>
+
+  <script defer src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>

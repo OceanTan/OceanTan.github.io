@@ -1,0 +1,765 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="https://www.helloimg.com/images/2023/01/28/oRUbRY.jpg">
+  <link rel="icon" href="https://www.helloimg.com/images/2023/01/28/oRUbRY.jpg">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="言云纪">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="前言 前几期主要针对数据库的设计，mybatis的配置以及mybatis逆向生成代码，以及响应体返回信息封装和全局异常拦截的一些配置拦截处理，文章可能枯燥且看不出任何实际效果。本文将结合前几期的配置进行实战操作！  用户登录 微信小程序中自带wx.login接口，请求该接口会返回一个过期时长为五分钟的code。通过开发者的appid和secret将获取到的code发送请求可以取到openid。最后">
+<meta property="og:type" content="article">
+<meta property="og:title" content="五. 小程序用户注册登录的实现">
+<meta property="og:url" content="https://tanblog.cc/2022/10/02/project/online/onlinevideo-5/index.html">
+<meta property="og:site_name" content="Tan_Blog">
+<meta property="og:description" content="前言 前几期主要针对数据库的设计，mybatis的配置以及mybatis逆向生成代码，以及响应体返回信息封装和全局异常拦截的一些配置拦截处理，文章可能枯燥且看不出任何实际效果。本文将结合前几期的配置进行实战操作！  用户登录 微信小程序中自带wx.login接口，请求该接口会返回一个过期时长为五分钟的code。通过开发者的appid和secret将获取到的code发送请求可以取到openid。最后">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://tanblog.cc/upload/2022/10/A%601%7DX%5BL%60H2Z%29BIS%7B%28X%7BQP%24K.png">
+<meta property="og:image" content="https://tanblog.cc/upload/2022/10/8%609ST%60G3HUTCP%28%40N~R540%7B0.png">
+<meta property="article:published_time" content="2022-10-01T17:30:21.970Z">
+<meta property="article:modified_time" content="2022-10-04T15:10:13.426Z">
+<meta property="article:author" content="言云纪">
+<meta property="article:tag" content="SpringBoot">
+<meta property="article:tag" content="同步影院小程序">
+<meta property="article:tag" content="小程序">
+<meta property="article:tag" content="mysql">
+<meta property="article:tag" content="mybatis">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://tanblog.cc/upload/2022/10/A%601%7DX%5BL%60H2Z%29BIS%7B%28X%7BQP%24K.png">
+  
+  
+    <meta name="referrer" content="no-referrer-when-downgrade">
+  
+  
+  <title>五. 小程序用户注册登录的实现 - Tan_Blog</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_hj8rtnfg7um.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"tanblog.cc","root":"/","version":"1.9.4","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml"};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+
+  
+<meta name="generator" content="Hexo 6.3.0"><link rel="alternate" href="/atom.xml" title="Tan_Blog" type="application/atom+xml">
+</head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>Tan_Blog</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                <span>首页</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                <span>归档</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                <span>分类</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                <span>标签</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                <span>关于</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/links/">
+                <i class="iconfont icon-link-fill"></i>
+                <span>友链</span>
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <i class="iconfont icon-search"></i>
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">
+              <i class="iconfont icon-dark" id="color-toggle-icon"></i>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('https://www.helloimg.com/images/2023/01/28/oRUrZK.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="五. 小程序用户注册登录的实现"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2022-10-02 01:30" pubdate>
+          2022年10月2日 凌晨
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          7k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          59 分钟
+        
+      </span>
+    
+
+    
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">五. 小程序用户注册登录的实现</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><blockquote>
+<p>前几期主要针对<a href="/archives/onlinevideo2">数据库的设计</a>，<a href="/archives/onlinevideo3">mybatis的配置以及mybatis逆向生成代码</a>，以及<a href="archives/onlinevideo4">响应体返回信息封装和全局异常拦截</a>的一些配置拦截处理，文章可能枯燥且看不出任何实际效果。本文将结合前几期的配置进行实战操作！</p>
+</blockquote>
+<h1 id="用户登录"><a href="#用户登录" class="headerlink" title="用户登录"></a>用户登录</h1><blockquote>
+<p>微信小程序中自带<code>wx.login</code>接口，请求该接口会返回一个过期时长为五分钟的code。通过开发者的appid和secret将获取到的code发送请求可以取到openid。最后将 openid作为用户唯一标识主键存入数据库完成注册！<br><a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/wxamp/devprofile/get_profile?token=642866518&lang=zh_CN">点击查看微信开发者appid和secret</a></p>
+</blockquote>
+<h2 id="前端获取用户登录凭证（code）并请求后端"><a href="#前端获取用户登录凭证（code）并请求后端" class="headerlink" title="前端获取用户登录凭证（code）并请求后端"></a>前端获取用户登录凭证（code）并请求后端</h2><blockquote>
+<p>微信小程序的创建本博客将不叙述，<a target="_blank" rel="noopener" href="https://blog.csdn.net/m0_52650516/article/details/116639287?ops_request_misc=%257B%2522request%255Fid%2522%253A%2522166464868816800180678718%2522%252C%2522scm%2522%253A%252220140713.130102334..%2522%257D&request_id=166464868816800180678718&biz_id=0&utm_medium=distribute.pc_search_result.none-task-blog-2~all~sobaiduend~default-1-116639287-null-null.142%5Ev51%5Econtrol,201%5Ev3%5Eadd_ask&utm_term=%E5%BE%AE%E4%BF%A1%E5%B0%8F%E7%A8%8B%E5%BA%8F%E7%9A%84%E5%88%9B%E5%BB%BA&spm=1018.2226.3001.4187">点击跳转微信小程序的创建</a><br>在index.js中添加如下代码</p>
+</blockquote>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><code class="hljs js"><span class="hljs-title function_">login</span>(<span class="hljs-params"></span>)&#123;<br>      <span class="hljs-comment">// 获取code凭证</span><br>      wx.<span class="hljs-title function_">login</span>(&#123;<br>        <span class="hljs-title function_">success</span>(<span class="hljs-params">res</span>)&#123;<br>          <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(<span class="hljs-string">&quot;wx.login接口得到的数据：&quot;</span>,res);<br>          <span class="hljs-keyword">let</span> code = res.<span class="hljs-property">code</span><br>          <span class="hljs-keyword">let</span> userinfo = wx.<span class="hljs-title function_">getStorageSync</span>(<span class="hljs-string">&#x27;userinfo&#x27;</span>)<br>          userinfo.<span class="hljs-property">code</span> = code<br>          <span class="hljs-comment">// 将code传入后端</span><br>          wx.<span class="hljs-title function_">request</span>(&#123;<br>            <span class="hljs-attr">url</span>: <span class="hljs-string">&#x27;http://127.0.0.1:8080//usercontroller/user&#x27;</span>,<br>            <span class="hljs-attr">method</span>:<span class="hljs-string">&#x27;post&#x27;</span>,<br>            data : userinfo,<br>            <span class="hljs-comment">// 后端响应的数据</span><br>            <span class="hljs-title function_">success</span>(<span class="hljs-params">res</span>)&#123;<br>              <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(<span class="hljs-string">&quot;后端返回的数据：&quot;</span>,res);<br>            &#125;,<br>            <span class="hljs-title function_">fail</span>(<span class="hljs-params">err</span>)&#123;<br>              <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(<span class="hljs-string">&quot;后端请求失败&quot;</span>);<br>            &#125;<br>          &#125;)<br>        &#125;<br>      &#125;)<br>&#125;,<br><span class="hljs-title function_">userinfo</span>(<span class="hljs-params"></span>)&#123;<br>  <span class="hljs-keyword">let</span> that = <span class="hljs-variable language_">this</span><br>  wx.<span class="hljs-title function_">getUserProfile</span>(&#123;<br>    <span class="hljs-attr">desc</span>:<span class="hljs-string">&#x27;获取用户信息并登录&#x27;</span>,<br>    <span class="hljs-title function_">success</span>(<span class="hljs-params">res</span>)&#123;<br>      <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(<span class="hljs-string">&quot;获取到用户信息：&quot;</span>,res.<span class="hljs-property">userInfo</span>);<br>      wx.<span class="hljs-title function_">setStorageSync</span>(<span class="hljs-string">&#x27;userinfo&#x27;</span>, res.<span class="hljs-property">userInfo</span>)<br>      that.<span class="hljs-title function_">login</span>()<br>    &#125;<br>  &#125;)<br>&#125;,<br></code></pre></td></tr></table></figure>
+<blockquote>
+<p>因为官方规定<code> wx.getUserProfile</code>接口必须处罚点击事件才能调用。所以还需要wxml来调用userinfo方法！</p>
+</blockquote>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs html"><span class="hljs-comment">&lt;!--pages/index/index.wxml--&gt;</span><br><span class="hljs-tag">&lt;<span class="hljs-name">button</span> <span class="hljs-attr">bindtap</span>=<span class="hljs-string">&quot;userinfo&quot;</span>&gt;</span>登录<span class="hljs-tag">&lt;/<span class="hljs-name">button</span>&gt;</span><br></code></pre></td></tr></table></figure>
+<blockquote>
+<p>效果图如下![O&#96;@8IB0539)UYFPZRJW7G(O](<a href="https://tanblog.cc/upload/2022/10/O%60%408IB0539%29UYFPZRJW7G%28O.png">https://tanblog.cc/upload/2022/10/O%60%408IB0539%29UYFPZRJW7G%28O.png</a>)</p>
+</blockquote>
+<blockquote>
+<p>若提示<code>http://127.0.0.1:8080//usercontroller/user</code>request 合法域名列表中，请按下图操作打开不检验合法域名<img src="https://tanblog.cc/upload/2022/10/A%601%7DX%5BL%60H2Z%29BIS%7B%28X%7BQP%24K.png" srcset="/img/loading.gif" lazyload alt="A`1}X[L`H2Z)BIS{(X{QP$K"></p>
+</blockquote>
+<h2 id="后端响应并给前端返回Token"><a href="#后端响应并给前端返回Token" class="headerlink" title="后端响应并给前端返回Token"></a>后端响应并给前端返回Token</h2><blockquote>
+<p>后端查询加密后的openid如果存在则直接返回token，如果不存在则新建用户再返回token。</p>
+</blockquote>
+<h3 id="pom依赖注入"><a href="#pom依赖注入" class="headerlink" title="pom依赖注入"></a>pom依赖注入</h3><figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><code class="hljs xml"><span class="hljs-comment">&lt;!--token--&gt;</span><br><span class="hljs-tag">&lt;<span class="hljs-name">dependency</span>&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">groupId</span>&gt;</span>com.auth0<span class="hljs-tag">&lt;/<span class="hljs-name">groupId</span>&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">artifactId</span>&gt;</span>java-jwt<span class="hljs-tag">&lt;/<span class="hljs-name">artifactId</span>&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">version</span>&gt;</span>3.4.0<span class="hljs-tag">&lt;/<span class="hljs-name">version</span>&gt;</span><br><span class="hljs-tag">&lt;/<span class="hljs-name">dependency</span>&gt;</span><br><span class="hljs-comment">&lt;!-- hutool工具库 --&gt;</span><br><span class="hljs-tag">&lt;<span class="hljs-name">dependency</span>&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">groupId</span>&gt;</span>cn.hutool<span class="hljs-tag">&lt;/<span class="hljs-name">groupId</span>&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">artifactId</span>&gt;</span>hutool-all<span class="hljs-tag">&lt;/<span class="hljs-name">artifactId</span>&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">version</span>&gt;</span>5.8.0<span class="hljs-tag">&lt;/<span class="hljs-name">version</span>&gt;</span><br><span class="hljs-tag">&lt;/<span class="hljs-name">dependency</span>&gt;</span><br><span class="hljs-comment">&lt;!--lombok--&gt;</span><br><span class="hljs-tag">&lt;<span class="hljs-name">dependency</span>&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">groupId</span>&gt;</span>org.projectlombok<span class="hljs-tag">&lt;/<span class="hljs-name">groupId</span>&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">artifactId</span>&gt;</span>lombok<span class="hljs-tag">&lt;/<span class="hljs-name">artifactId</span>&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">scope</span>&gt;</span>provided<span class="hljs-tag">&lt;/<span class="hljs-name">scope</span>&gt;</span><br><span class="hljs-tag">&lt;/<span class="hljs-name">dependency</span>&gt;</span><br></code></pre></td></tr></table></figure>
+<h3 id="controller控制器类"><a href="#controller控制器类" class="headerlink" title="controller控制器类"></a>controller控制器类</h3><blockquote>
+<p>UserContorller</p>
+</blockquote>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-meta">@RestController</span><br><span class="hljs-meta">@RequestMapping(&quot;usercontroller&quot;)</span><br><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">UserController</span> &#123;<br>    <span class="hljs-meta">@Autowired</span><br>    <span class="hljs-keyword">private</span> UserService userService;<br><br>    <span class="hljs-meta">@PostMapping(&quot;/user&quot;)</span><br>    <span class="hljs-keyword">public</span> BaseResponse <span class="hljs-title function_">login</span><span class="hljs-params">(<span class="hljs-meta">@RequestBody</span> Map&lt;String,String&gt; params)</span>&#123;<br>        <span class="hljs-keyword">return</span> userService.login(params);<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+<h3 id="服务层接口类"><a href="#服务层接口类" class="headerlink" title="服务层接口类"></a>服务层接口类</h3><blockquote>
+<p>UserService</p>
+</blockquote>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-keyword">interface</span> <span class="hljs-title class_">UserService</span> &#123;<br>    <span class="hljs-keyword">public</span> BaseResponse <span class="hljs-title function_">login</span><span class="hljs-params">(Map&lt;String,String&gt; params)</span>;<br>&#125;<br></code></pre></td></tr></table></figure>
+<h3 id="服务层接口实现类"><a href="#服务层接口实现类" class="headerlink" title="服务层接口实现类"></a>服务层接口实现类</h3><blockquote>
+<p>UserServiceImpl</p>
+</blockquote>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-meta">@Service(&quot;userService&quot;)</span><br><br><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">UserServiceImpl</span> <span class="hljs-keyword">implements</span> <span class="hljs-title class_">UserService</span> &#123;<br>    <span class="hljs-meta">@Autowired</span><br>    <span class="hljs-keyword">private</span> UserDao userDao;<br>    <span class="hljs-keyword">public</span> BaseResponse <span class="hljs-title function_">login</span><span class="hljs-params">(Map&lt;String,String&gt; params)</span>&#123;<br>        <span class="hljs-type">String</span> <span class="hljs-variable">md5_openid</span> <span class="hljs-operator">=</span> WeChatUtils.GetOpenid(params.get(<span class="hljs-string">&quot;code&quot;</span>));<br>        <span class="hljs-comment">// 新账号默认创建房间数量为1，上传视频数量5。若不是新账号则用加密后的openid生成token</span><br>        <span class="hljs-type">User</span> <span class="hljs-variable">user</span> <span class="hljs-operator">=</span> User.builder()<br>                .uImg(params.get(<span class="hljs-string">&quot;avatarUrl&quot;</span>))<br>                .uName(params.get(<span class="hljs-string">&quot;nickName&quot;</span>))<br>                .openid(md5_openid)<br>                .createRoom(<span class="hljs-number">1</span>)<br>                .uploadNum(<span class="hljs-number">5</span>)<br>                .build();<br><span class="hljs-comment">//  如果数据库没有这个加密后的openid则注册账号</span><br>        <span class="hljs-keyword">if</span> (!userDao.openid(md5_openid))&#123;<br>            Assert.isTrue(userDao.addUser(user),<span class="hljs-string">&quot;创建用户失败，请联系管理员处理&quot;</span>);<br>        &#125;<br>        <span class="hljs-type">Map</span> <span class="hljs-variable">userMap</span> <span class="hljs-operator">=</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">HashMap</span>();<br>        userMap.put(<span class="hljs-string">&quot;token&quot;</span>,TokenUtils.sign(user));<br>        <span class="hljs-keyword">return</span> RespGenerator.success(userMap);<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+<h3 id="数据持久层接口类"><a href="#数据持久层接口类" class="headerlink" title="数据持久层接口类"></a>数据持久层接口类</h3><blockquote>
+<p>UserDao</p>
+</blockquote>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-keyword">interface</span> <span class="hljs-title class_">UserDao</span> &#123;<br>    <span class="hljs-keyword">public</span> Boolean <span class="hljs-title function_">openid</span><span class="hljs-params">(String md5_openId)</span>;<br>    <span class="hljs-keyword">public</span> Boolean <span class="hljs-title function_">addUser</span><span class="hljs-params">(User user)</span>;<br>&#125;<br></code></pre></td></tr></table></figure>
+<h3 id="数据持久层接口实现类"><a href="#数据持久层接口实现类" class="headerlink" title="数据持久层接口实现类"></a>数据持久层接口实现类</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-meta">@Repository(&quot;userDao&quot;)</span><br><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">UserDaoImpl</span> <span class="hljs-keyword">implements</span> <span class="hljs-title class_">UserDao</span> &#123;<br>    <span class="hljs-meta">@Autowired</span><br>    <span class="hljs-keyword">private</span> UserMapper userMapper;<br>    <span class="hljs-type">UserExample</span> <span class="hljs-variable">userExample</span> <span class="hljs-operator">=</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">UserExample</span>();<br>    <span class="hljs-keyword">public</span> Boolean <span class="hljs-title function_">openid</span><span class="hljs-params">(String openId)</span>&#123;<br>        userExample.createCriteria().andOpenidEqualTo(openId);<br>        <span class="hljs-keyword">return</span> userMapper.selectByExample(userExample).size() &lt; <span class="hljs-number">1</span> ?<span class="hljs-literal">false</span>:<span class="hljs-literal">true</span>;<br>    &#125;<br><br>    <span class="hljs-keyword">public</span> Boolean <span class="hljs-title function_">addUser</span><span class="hljs-params">(User user)</span>&#123;<br>        <span class="hljs-keyword">return</span> userMapper.insert(user) ==<span class="hljs-number">1</span> ?<span class="hljs-literal">true</span>:<span class="hljs-literal">false</span>;<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+<h3 id="工具类"><a href="#工具类" class="headerlink" title="工具类"></a>工具类</h3><blockquote>
+<p>WeChatUtils</p>
+</blockquote>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">WeChatUtils</span> &#123;<br>    <span class="hljs-keyword">private</span> <span class="hljs-keyword">static</span> <span class="hljs-type">String</span> <span class="hljs-variable">appid</span> <span class="hljs-operator">=</span> <span class="hljs-string">&quot;wxf9ac121f6797029f&quot;</span>;<br>    <span class="hljs-keyword">private</span> <span class="hljs-keyword">static</span> String secret=<span class="hljs-string">&quot;78ad8f60d3d686eda0822abfc8c8c8f9&quot;</span>;<br><br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> String <span class="hljs-title function_">getAppid</span><span class="hljs-params">()</span> &#123;<br>        <span class="hljs-keyword">return</span> appid;<br>    &#125;<br><br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">setAppid</span><span class="hljs-params">(String appid)</span> &#123;<br>        WeChatUtils.appid = appid;<br>    &#125;<br><br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> String <span class="hljs-title function_">getSecret</span><span class="hljs-params">()</span> &#123;<br>        <span class="hljs-keyword">return</span> secret;<br>    &#125;<br><br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">setSecret</span><span class="hljs-params">(String secret)</span> &#123;<br>        WeChatUtils.secret = secret;<br>    &#125;<br><br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> String <span class="hljs-title function_">GetOpenid</span><span class="hljs-params">(String code)</span>&#123;<br>        <span class="hljs-type">String</span> <span class="hljs-variable">url</span> <span class="hljs-operator">=</span> <span class="hljs-string">&quot;https://api.weixin.qq.com/sns/jscode2session&quot;</span>;<span class="hljs-comment">//指定URL</span><br>        Map&lt;String, Object&gt; map = <span class="hljs-keyword">new</span> <span class="hljs-title class_">HashMap</span>&lt;&gt;();<span class="hljs-comment">//存放参数</span><br>        map.put(<span class="hljs-string">&quot;appid&quot;</span>, WeChatUtils.getAppid());<br>        map.put(<span class="hljs-string">&quot;secret&quot;</span>, WeChatUtils.getSecret());<br>        map.put(<span class="hljs-string">&quot;js_code&quot;</span>,code);<br>        map.put(<span class="hljs-string">&quot;grant_type&quot;</span>,<span class="hljs-string">&quot;authorization_code&quot;</span>);<br>        <span class="hljs-comment">//发送get请求并接收响应数据</span><br>        String result= HttpUtil.createGet(url).form(map).execute().body();<br>        <span class="hljs-keyword">return</span> SecureUtil.md5(JSONUtil.parseObj(result).get(<span class="hljs-string">&quot;openid&quot;</span>).toString());<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+<blockquote>
+<p>TokenUtils</p>
+</blockquote>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-meta">@Component</span><br><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">TokenUtils</span> &#123;<br><br>    <span class="hljs-comment">//token到期时间10小时</span><br>    <span class="hljs-keyword">private</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">final</span> <span class="hljs-type">long</span> EXPIRE_TIME= <span class="hljs-number">10</span>*<span class="hljs-number">60</span>*<span class="hljs-number">60</span>*<span class="hljs-number">1000</span>;<br>    <span class="hljs-comment">//密钥盐</span><br>    <span class="hljs-keyword">private</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">final</span> String TOKEN_SECRET=<span class="hljs-string">&quot;ljdyaishi22jin**3nkjnj??&quot;</span>;<br><br>    <span class="hljs-comment">/**</span><br><span class="hljs-comment">     * 生成token</span><br><span class="hljs-comment">     * <span class="hljs-doctag">@param</span> user</span><br><span class="hljs-comment">     * <span class="hljs-doctag">@return</span></span><br><span class="hljs-comment">     */</span><br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> String <span class="hljs-title function_">sign</span><span class="hljs-params">(User user)</span>&#123;<br><br>        String token=<span class="hljs-literal">null</span>;<br>        <span class="hljs-keyword">try</span> &#123;<br>            Date expireAt=<span class="hljs-keyword">new</span> <span class="hljs-title class_">Date</span>(System.currentTimeMillis()+EXPIRE_TIME);<br>            token = JWT.create()<br>                    <span class="hljs-comment">//发行人</span><br>                    .withIssuer(<span class="hljs-string">&quot;Ocean_Tan&quot;</span>)<br>                    <span class="hljs-comment">//存放数据</span><br>                    .withClaim(<span class="hljs-string">&quot;md5_openid&quot;</span>,user.getOpenid())<br>                    <span class="hljs-comment">//过期时间</span><br>                    .withExpiresAt(expireAt)<br>                    .sign(Algorithm.HMAC256(TOKEN_SECRET));<br>        &#125; <span class="hljs-keyword">catch</span> (IllegalArgumentException|JWTCreationException je) &#123;<br><br>        &#125;<br>        <span class="hljs-keyword">return</span> token;<br>    &#125;<br><br><br><br>    <span class="hljs-meta">@Autowired</span><br>    <span class="hljs-keyword">private</span> UserMapper userMapper;<br>    <span class="hljs-keyword">private</span> <span class="hljs-keyword">static</span> TokenUtils tokenUtils;<br>    <span class="hljs-meta">@PostConstruct</span><br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">inin</span><span class="hljs-params">()</span>&#123;<br>        tokenUtils = <span class="hljs-built_in">this</span>;<br>    &#125;<br><br><span class="hljs-comment">//解密token并判断用户是否存在</span><br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> Boolean <span class="hljs-title function_">verify</span><span class="hljs-params">(String token)</span>&#123;<br><br>        <span class="hljs-keyword">try</span> &#123;<br>            <span class="hljs-comment">//创建token验证器</span><br>            JWTVerifier jwtVerifier=JWT.require(Algorithm.HMAC256(TOKEN_SECRET)).withIssuer(<span class="hljs-string">&quot;Ocean_Tan&quot;</span>).build();<br>            DecodedJWT decodedJWT=jwtVerifier.verify(token);<br>            <span class="hljs-type">User</span> <span class="hljs-variable">user</span> <span class="hljs-operator">=</span> User.builder().openid(decodedJWT.getClaim(<span class="hljs-string">&quot;md5_openid&quot;</span>).asString()).build();<br>            <span class="hljs-type">UserExample</span> <span class="hljs-variable">userExample</span> <span class="hljs-operator">=</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">UserExample</span>();<br>            userExample.createCriteria().andOpenidEqualTo(user.getOpenid());<br>            <span class="hljs-keyword">return</span> tokenUtils.userMapper.selectByExample(userExample).size()==<span class="hljs-number">1</span>?<span class="hljs-literal">true</span>:<span class="hljs-literal">false</span>;<br><span class="hljs-comment">//            System.out.println(&quot;过期时间：      &quot; + decodedJWT.getExpiresAt());</span><br><br>        &#125; <span class="hljs-keyword">catch</span> (IllegalArgumentException |JWTVerificationException e) &#123;<br>            <span class="hljs-comment">//抛出错误即为验证不通过</span><br><span class="hljs-comment">//            throw new IllegalArgumentException(&quot;未获取到用户信息！请登录！&quot;);</span><br>            <span class="hljs-keyword">return</span> <span class="hljs-literal">false</span>;<br>        &#125;<br>    &#125;<br><br><br><br><br>    <span class="hljs-comment">//    解密token并获取token用户信息</span><br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> List&lt;User&gt; <span class="hljs-title function_">tookenList</span><span class="hljs-params">(String token)</span>&#123;<br>        JWTVerifier jwtVerifier=JWT.require(Algorithm.HMAC256(TOKEN_SECRET)).withIssuer(<span class="hljs-string">&quot;Ocean_Tan&quot;</span>).build();<br>        DecodedJWT decodedJWT=jwtVerifier.verify(token);<br>        <span class="hljs-type">User</span> <span class="hljs-variable">user</span> <span class="hljs-operator">=</span> User.builder().openid(decodedJWT.getClaim(<span class="hljs-string">&quot;md5_openid&quot;</span>).asString()).build();<br>        <span class="hljs-type">UserExample</span> <span class="hljs-variable">userExample</span> <span class="hljs-operator">=</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">UserExample</span>();<br>        userExample.createCriteria().andOpenidEqualTo(user.getOpenid());<br>        <span class="hljs-keyword">return</span> tokenUtils.userMapper.selectByExample(userExample);<br>    &#125;<br><br><br>&#125;<br></code></pre></td></tr></table></figure>
+<blockquote>
+<p>效果如下图所示<img src="https://tanblog.cc/upload/2022/10/8%609ST%60G3HUTCP%28%40N~R540%7B0.png" srcset="/img/loading.gif" lazyload alt="8`9ST`G3HUTCP(@N~R540{0"></p>
+</blockquote>
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/%E5%90%8C%E6%AD%A5%E5%BD%B1%E9%99%A2%E5%B0%8F%E7%A8%8B%E5%BA%8F/" class="category-chain-item">同步影院小程序</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/SpringBoot/">#SpringBoot</a>
+      
+        <a href="/tags/%E5%90%8C%E6%AD%A5%E5%BD%B1%E9%99%A2%E5%B0%8F%E7%A8%8B%E5%BA%8F/">#同步影院小程序</a>
+      
+        <a href="/tags/%E5%B0%8F%E7%A8%8B%E5%BA%8F/">#小程序</a>
+      
+        <a href="/tags/mysql/">#mysql</a>
+      
+        <a href="/tags/mybatis/">#mybatis</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>五. 小程序用户注册登录的实现</div>
+      <div>https://tanblog.cc/2022/10/02/project/online/onlinevideo-5/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>言云纪</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2022年10月2日</div>
+        </div>
+      
+      
+      
+        <div class="license-meta-item">
+          <div>许可协议</div>
+          <div>
+            
+              
+              
+                <a target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                    <i class="iconfont icon-by"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2022/10/03/project/online/onlinevideo-6/" title="六. 接口请求自定义拦截器配置">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">六. 接口请求自定义拦截器配置</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2022/10/01/project/online/onlinevideo-4/" title="四. 统一API响应体与全局异常拦截器的封装配置">
+                        <span class="hidden-mobile">四. 统一API响应体与全局异常拦截器的封装配置</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header">
+    <i class="iconfont icon-list"></i>
+    <span>目录</span>
+  </p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
+  
+  
+    <div class="statistics">
+  
+  
+
+  
+    
+      <span id="busuanzi_container_site_pv" style="display: none">
+        总访问量 
+        <span id="busuanzi_value_site_pv"></span>
+         次
+      </span>
+    
+    
+      <span id="busuanzi_container_site_uv" style="display: none">
+        总访客数 
+        <span id="busuanzi_value_site_uv"></span>
+         人
+      </span>
+    
+    
+  
+</div>
+
+  
+  
+    <!-- 备案信息 ICP for China -->
+    <div class="beian">
+  <span>
+    <a href="http://beian.miit.gov.cn/" target="_blank" rel="nofollow noopener">
+      蜀ICP备2022023578号 -1
+    </a>
+  </span>
+  
+</div>
+
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.0/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.18.2/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init(Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc));
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script  src="/js/local-search.js" ></script>
+
+  <script defer src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>

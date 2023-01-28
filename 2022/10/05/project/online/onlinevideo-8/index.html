@@ -1,0 +1,880 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="https://www.helloimg.com/images/2023/01/28/oRUbRY.jpg">
+  <link rel="icon" href="https://www.helloimg.com/images/2023/01/28/oRUbRY.jpg">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="言云纪">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="本期代码量较大，且涉及多表操作逻辑复杂建议配合目录食用！每个功能的编写顺序都是Service&#x3D;&gt;ServiceImpl&#x3D;&gt;Dao&#x3D;&gt;DaoImpl最后再用Controller调用Service完成接口的实现  前期准备 本篇的验证都是基于token进行操作，所以需要先准备一个token生成器的test方法！最后将生成的token保存到请求头的tok">
+<meta property="og:type" content="article">
+<meta property="og:title" content="八. 实现房间的新增，查找，删除，修改接口实现">
+<meta property="og:url" content="https://tanblog.cc/2022/10/05/project/online/onlinevideo-8/index.html">
+<meta property="og:site_name" content="Tan_Blog">
+<meta property="og:description" content="本期代码量较大，且涉及多表操作逻辑复杂建议配合目录食用！每个功能的编写顺序都是Service&#x3D;&gt;ServiceImpl&#x3D;&gt;Dao&#x3D;&gt;DaoImpl最后再用Controller调用Service完成接口的实现  前期准备 本篇的验证都是基于token进行操作，所以需要先准备一个token生成器的test方法！最后将生成的token保存到请求头的tok">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2022-10-05T07:58:29.056Z">
+<meta property="article:modified_time" content="2022-10-05T09:54:15.563Z">
+<meta property="article:author" content="言云纪">
+<meta property="article:tag" content="SpringBoot">
+<meta property="article:tag" content="同步影院小程序">
+<meta property="article:tag" content="mysql">
+<meta property="article:tag" content="mybatis">
+<meta property="article:tag" content="API">
+<meta name="twitter:card" content="summary_large_image">
+  
+  
+    <meta name="referrer" content="no-referrer-when-downgrade">
+  
+  
+  <title>八. 实现房间的新增，查找，删除，修改接口实现 - Tan_Blog</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_hj8rtnfg7um.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"tanblog.cc","root":"/","version":"1.9.4","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml"};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+
+  
+<meta name="generator" content="Hexo 6.3.0"><link rel="alternate" href="/atom.xml" title="Tan_Blog" type="application/atom+xml">
+</head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>Tan_Blog</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                <span>首页</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                <span>归档</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                <span>分类</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                <span>标签</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                <span>关于</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/links/">
+                <i class="iconfont icon-link-fill"></i>
+                <span>友链</span>
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <i class="iconfont icon-search"></i>
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">
+              <i class="iconfont icon-dark" id="color-toggle-icon"></i>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('https://www.helloimg.com/images/2023/01/28/oRUrZK.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="八. 实现房间的新增，查找，删除，修改接口实现"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2022-10-05 15:58" pubdate>
+          2022年10月5日 下午
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          9.2k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          77 分钟
+        
+      </span>
+    
+
+    
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">八. 实现房间的新增，查找，删除，修改接口实现</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <blockquote>
+<p>本期代码量较大，且涉及多表操作逻辑复杂建议配合目录食用！每个功能的编写顺序都是<code>Service</code>&#x3D;&gt;<code>ServiceImpl</code>&#x3D;&gt;<code>Dao</code>&#x3D;&gt;<code>DaoImpl</code><br>最后再用<code>Controller</code>调用<code>Service</code>完成接口的实现</p>
+</blockquote>
+<h1 id="前期准备"><a href="#前期准备" class="headerlink" title="前期准备"></a>前期准备</h1><blockquote>
+<p>本篇的验证都是基于token进行操作，所以需要先准备一个token生成器的test方法！最后将生成的token保存到请求头的<code>token</code>中！</p>
+</blockquote>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">class</span> <span class="hljs-title class_">TokenUtilsTest</span> &#123;<br><br>    <span class="hljs-meta">@Test</span><br>    <span class="hljs-keyword">void</span> <span class="hljs-title function_">sign</span><span class="hljs-params">()</span> &#123;<br>    <span class="hljs-comment">// 如果不能使用builder方法，请查看pom文件中是否存在lombok依赖，若依赖存在请检查User实体类上是否添加@Builder注解</span><br>        <span class="hljs-type">User</span> <span class="hljs-variable">user</span> <span class="hljs-operator">=</span> User.builder()<br>                .openid(<span class="hljs-string">&quot;9IWM51WXRKD9BN21CJV SS9SXBAMV4F FEA&quot;</span>)<br>                .build();<br> <br>        System.out.println(TokenUtils.sign(user));<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+<h1 id="查看已创建的房间"><a href="#查看已创建的房间" class="headerlink" title="查看已创建的房间"></a>查看已创建的房间</h1><h2 id="Dao数据持久层"><a href="#Dao数据持久层" class="headerlink" title="Dao数据持久层"></a>Dao数据持久层</h2><ol>
+<li>暴露接口<blockquote>
+<p><code>VideoroomDao</code><br>根据vrid查询视频房间信息，返回数组对象</p>
+</blockquote>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">public</span> List&lt;Videoroom&gt; <span class="hljs-title function_">get_videoroom</span><span class="hljs-params">(Long vrid)</span>;<br></code></pre></td></tr></table></figure>
+<blockquote>
+<p><code>CreateRoomDao</code><br>根据加密后的openid查询创建房间记录表中的所以数据</p>
+</blockquote>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">public</span> List&lt;CreateRoom&gt; <span class="hljs-title function_">get_createRoomList</span><span class="hljs-params">(String md5_openid)</span>;<br></code></pre></td></tr></table></figure></li>
+<li>数据持久层接口实现<blockquote>
+<p> <code>VideoroomDaoImpl</code></p>
+</blockquote>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-meta">@Autowired</span><br><span class="hljs-keyword">private</span> VideoroomMapper videoroomMapper;<br><br><span class="hljs-keyword">private</span> <span class="hljs-type">VideoroomExample</span> <span class="hljs-variable">videoroomExample</span> <span class="hljs-operator">=</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">VideoroomExample</span>();<br><br><span class="hljs-keyword">public</span> List&lt;Videoroom&gt; <span class="hljs-title function_">get_videoroom</span><span class="hljs-params">(Long vrid)</span>&#123;<br>    videoroomExample.createCriteria().andVrIdEqualTo(vrid);<br>    <span class="hljs-keyword">return</span> videoroomMapper.selectByExample(videoroomExample);<br>&#125;<br></code></pre></td></tr></table></figure>
+<blockquote>
+<p><code>CreateRoomDao</code></p>
+</blockquote>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-meta">@Autowired</span><br><span class="hljs-keyword">private</span> CreateRoomMapper createRoomMapper;<br><span class="hljs-keyword">private</span> <span class="hljs-type">CreateRoomExample</span> <span class="hljs-variable">createRoomExample</span> <span class="hljs-operator">=</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">CreateRoomExample</span>();<br><br><span class="hljs-keyword">public</span> List&lt;CreateRoom&gt; <span class="hljs-title function_">get_createRoomList</span><span class="hljs-params">(String md5_openid)</span>&#123;<br>    createRoomExample.createCriteria().andOpenidEqualTo(md5_openid);<br>    <span class="hljs-keyword">return</span> createRoomMapper.selectByExample(createRoomExample);<br>&#125;<br></code></pre></td></tr></table></figure></li>
+</ol>
+<h2 id="Service服务层"><a href="#Service服务层" class="headerlink" title="Service服务层"></a>Service服务层</h2><ol>
+<li>暴露接口<blockquote>
+<p><code>VideoroomService</code></p>
+</blockquote>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">public</span> BaseResponse <span class="hljs-title function_">get_videoroom</span><span class="hljs-params">(String token)</span>;<br></code></pre></td></tr></table></figure></li>
+<li>服务层接口实现<blockquote>
+<p>VideoroomServiceImpl</p>
+</blockquote>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-meta">@Autowired</span><br><span class="hljs-keyword">private</span> CreateRoomDao createRoomDao;<br><span class="hljs-meta">@Autowired</span><br><span class="hljs-keyword">private</span> VideoroomDao videoroomDao;<br><span class="hljs-comment">/*</span><br><span class="hljs-comment"> * @Description 根据token查看已创建的房间等信息</span><br><span class="hljs-comment"> * @Param null</span><br><span class="hljs-comment"> * @Return &#123;@link null&#125;</span><br><span class="hljs-comment"> * @Author Ocean_IT</span><br><span class="hljs-comment"> * @Email 14312400@qq.com</span><br><span class="hljs-comment"> * @Date 2022/10/5 2:27</span><br><span class="hljs-comment"> */</span><br><br><span class="hljs-keyword">public</span> BaseResponse <span class="hljs-title function_">get_videoroom</span><span class="hljs-params">(String token)</span>&#123;<br>    List&lt;CreateRoom&gt; createRoomList = createRoomDao.get_createRoomList(TokenUtils.getOpenid(token));<br>    <span class="hljs-keyword">if</span>(createRoomList.size() == <span class="hljs-number">0</span>)&#123;<br>        <span class="hljs-keyword">return</span> RespGenerator.success(<span class="hljs-string">&quot;未查询到用户已创建房间信息！&quot;</span>);<br>    &#125;<br>    <span class="hljs-keyword">return</span> RespGenerator.success(videoroomDao.get_videoroom(createRoomList.get(<span class="hljs-number">0</span>).getVrId()));<br>&#125;<br></code></pre></td></tr></table></figure></li>
+</ol>
+<h2 id="Controller控制器层"><a href="#Controller控制器层" class="headerlink" title="Controller控制器层"></a>Controller控制器层</h2><blockquote>
+<p><code>Videoroomcontroller</code></p>
+</blockquote>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-meta">@Autowired</span><br><span class="hljs-keyword">private</span> VideoroomService videoroomService;<br><span class="hljs-comment">//查看自己创建的房间</span><br><span class="hljs-meta">@GetMapping(&quot;/videoroom&quot;)</span><br><span class="hljs-keyword">public</span> BaseResponse <span class="hljs-title function_">get_videoroom</span><span class="hljs-params">(HttpServletRequest request)</span>&#123;<br>    <span class="hljs-keyword">return</span> videoroomService.get_videoroom(request.getHeader(<span class="hljs-string">&quot;token&quot;</span>));<br>&#125;<br></code></pre></td></tr></table></figure>
+<h2 id="调用方法"><a href="#调用方法" class="headerlink" title="调用方法"></a>调用方法</h2><blockquote>
+<p>url：<code>http://127.0.0.1:8080/videoroomcontroller/videoroom</code><br>Methed：GET<br>Header：token<br>return：json</p>
+</blockquote>
+<h1 id="创建房间"><a href="#创建房间" class="headerlink" title="创建房间"></a>创建房间</h1><h2 id="Mapper编写"><a href="#Mapper编写" class="headerlink" title="Mapper编写"></a>Mapper编写</h2><blockquote>
+<p>UserMapper.xml</p>
+</blockquote>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><code class="hljs xml"><span class="hljs-tag">&lt;<span class="hljs-name">update</span> <span class="hljs-attr">id</span>=<span class="hljs-string">&quot;updateByAddCount_create_room&quot;</span> <span class="hljs-attr">parameterType</span>=<span class="hljs-string">&quot;map&quot;</span>&gt;</span><br>  <span class="hljs-comment">&lt;!--</span><br><span class="hljs-comment">  create_room 数量 + 1</span><br><span class="hljs-comment">  --&gt;</span><br>  update user<br>  set create_room = create_room + 1<br>  where openid = #&#123;record.openid,jdbcType=VARCHAR&#125;<br><span class="hljs-tag">&lt;/<span class="hljs-name">update</span>&gt;</span><br><br><span class="hljs-tag">&lt;<span class="hljs-name">update</span> <span class="hljs-attr">id</span>=<span class="hljs-string">&quot;updateByDelCount_create_room&quot;</span> <span class="hljs-attr">parameterType</span>=<span class="hljs-string">&quot;map&quot;</span>&gt;</span><br>  <span class="hljs-comment">&lt;!--</span><br><span class="hljs-comment">  create_room 数量 - 1</span><br><span class="hljs-comment">  --&gt;</span><br>  update user<br>  set create_room = create_room - 1<br>  where openid = #&#123;record.openid,jdbcType=VARCHAR&#125;<br><span class="hljs-tag">&lt;/<span class="hljs-name">update</span>&gt;</span><br></code></pre></td></tr></table></figure>
+<h2 id="Mapper接口暴露"><a href="#Mapper接口暴露" class="headerlink" title="Mapper接口暴露"></a>Mapper接口暴露</h2><blockquote>
+<p>UserMapper.java</p>
+</blockquote>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-type">int</span> <span class="hljs-title function_">updateByAddCount_create_room</span><span class="hljs-params">(String md5_openid)</span>;<br><br><span class="hljs-type">int</span> <span class="hljs-title function_">updateByDelCount_create_room</span><span class="hljs-params">(String md5_openid)</span>;java<br></code></pre></td></tr></table></figure>
+<h2 id="Dao数据持久层-1"><a href="#Dao数据持久层-1" class="headerlink" title="Dao数据持久层"></a>Dao数据持久层</h2><ol>
+<li>暴露接口<blockquote>
+<p><code>VideoDao</code><br>根据vid查询视频表信息，返回对象。</p>
+</blockquote>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">public</span> Video <span class="hljs-title function_">get_vid</span><span class="hljs-params">(Long vid)</span>;<br></code></pre></td></tr></table></figure>
+<blockquote>
+<p><code>VideoroomDao</code><br>传入一个Videoroom对象并将他插入数据库，返回布尔类型</p>
+</blockquote>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">public</span> Boolean <span class="hljs-title function_">post_videoroom</span><span class="hljs-params">(Videoroom videoroom)</span>;<br></code></pre></td></tr></table></figure>
+<blockquote>
+<p><code>UserDao</code><br>根据openid查询user表数据，并根据type执行createVideo字段的自增和自减，返回布尔类型</p>
+</blockquote>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">public</span> Boolean <span class="hljs-title function_">put_createVideo_num</span><span class="hljs-params">(String md5_openid,Boolean type)</span>;<br></code></pre></td></tr></table></figure>
+<blockquote>
+<p><code>CreateRoomDao</code><br>根据主键查询表中是否超出创建房间的数量再执行创建。返回布尔类型</p>
+</blockquote>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">public</span> Boolean <span class="hljs-title function_">Post_createRoom</span><span class="hljs-params">(CreateRoom createRoom)</span>;<br></code></pre></td></tr></table></figure></li>
+<li>数据持久层接口实现<blockquote>
+<p><code>VideoDaoImpl</code></p>
+</blockquote>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-meta">@Autowired</span><br><span class="hljs-keyword">private</span> VideoMapper videoMapper;<br><span class="hljs-keyword">public</span> Video <span class="hljs-title function_">get_vid</span><span class="hljs-params">(Long vid)</span>&#123;<br>    <span class="hljs-keyword">return</span> videoMapper.selectByPrimaryKey(vid);<br>&#125;<br></code></pre></td></tr></table></figure>
+<blockquote>
+<p><code>VideoroomDaoImpl</code></p>
+</blockquote>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">public</span> Boolean <span class="hljs-title function_">post_videoroom</span><span class="hljs-params">(Videoroom videoroom)</span>&#123;<br>    <span class="hljs-keyword">return</span> videoroomMapper.insert(videoroom) == <span class="hljs-number">1</span>?<span class="hljs-literal">true</span>:<span class="hljs-literal">false</span>;<br>&#125;<br></code></pre></td></tr></table></figure>
+<blockquote>
+<p><code>UserDaoImpl</code></p>
+</blockquote>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">public</span> Boolean <span class="hljs-title function_">put_createVideo_num</span><span class="hljs-params">(String md5_openid,Boolean type)</span>&#123;<br>    <span class="hljs-keyword">if</span>(type)&#123;<br>        <span class="hljs-keyword">return</span> userMapper.updateByAddCount_create_room(md5_openid)==<span class="hljs-number">1</span>?<span class="hljs-literal">true</span>:<span class="hljs-literal">false</span>;<br>    &#125;<span class="hljs-keyword">else</span>&#123;<br>        <span class="hljs-keyword">return</span> userMapper.updateByDelCount_create_room(md5_openid)==<span class="hljs-number">1</span>?<span class="hljs-literal">true</span>:<span class="hljs-literal">false</span>;<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+<blockquote>
+<p><code>CreateRoomDaoImpl</code> </p>
+</blockquote>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">public</span> Boolean <span class="hljs-title function_">Post_createRoom</span><span class="hljs-params">(CreateRoom createRoom)</span>&#123;<br>    createRoomExample.createCriteria().andOpenidEqualTo(createRoom.getOpenid());<br>    <span class="hljs-keyword">return</span> createRoomMapper.selectByExample(createRoomExample).size()&lt;<span class="hljs-number">1</span> ?createRoomMapper.insert(createRoom) ==<span class="hljs-number">1</span>?<span class="hljs-literal">true</span>:<span class="hljs-literal">false</span>:<span class="hljs-literal">false</span>;<br>&#125;<br></code></pre></td></tr></table></figure></li>
+</ol>
+<h2 id="Service服务层-1"><a href="#Service服务层-1" class="headerlink" title="Service服务层"></a>Service服务层</h2><ol>
+<li>暴露接口<blockquote>
+<p><code>VideoroomService</code></p>
+</blockquote>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">public</span> BaseResponse <span class="hljs-title function_">post_videoroom</span><span class="hljs-params">(Videoroom videoroom,Long vid,String token)</span>;<br></code></pre></td></tr></table></figure></li>
+<li>服务层接口实现<blockquote>
+<p><code>VideoroomServiceImpl</code></p>
+</blockquote>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-meta">@Autowired</span><br><span class="hljs-keyword">private</span> CreateRoomDao createRoomDao;<br><span class="hljs-meta">@Autowired</span><br><span class="hljs-keyword">private</span> VideoroomDao videoroomDao;<br><span class="hljs-meta">@Autowired</span><br><span class="hljs-keyword">private</span> UserDao userDao;<br><span class="hljs-meta">@Autowired</span><br><span class="hljs-keyword">private</span> VideoDao videoDao;<br><span class="hljs-comment">/*</span><br><span class="hljs-comment"> * @Description 根据token创建房间</span><br><span class="hljs-comment"> * @Param null</span><br><span class="hljs-comment"> * @Return &#123;@link null&#125;</span><br><span class="hljs-comment"> * @Author Ocean_IT</span><br><span class="hljs-comment"> * @Email 14312400@qq.com</span><br><span class="hljs-comment"> * @Date 2022/10/5 2:28</span><br><span class="hljs-comment"> */</span><br><span class="hljs-meta">@Transactional</span><br><span class="hljs-keyword">public</span> BaseResponse <span class="hljs-title function_">post_videoroom</span><span class="hljs-params">(Videoroom videoroom,Long vid,String token)</span>&#123;<br>    <span class="hljs-type">Video</span> <span class="hljs-variable">video</span> <span class="hljs-operator">=</span> videoDao.get_vid(vid);<br>    Assert.notNull(video,<span class="hljs-string">&quot;未查询到视频信息，请重新选择视频创建房间&quot;</span>);<br>    videoroom.setVrId(IdWorker.getId());<br>    Assert.isTrue(videoroomDao.post_videoroom(videoroom),<span class="hljs-string">&quot;房间创建失败&quot;</span>);<br>    <span class="hljs-type">CreateRoom</span> <span class="hljs-variable">createRoom</span> <span class="hljs-operator">=</span> CreateRoom.builder()<br>            .openid(TokenUtils.getOpenid(token))<br>            .crId(IdWorker.getId())<br>            .vrId(videoroom.getVrId())<br>            .vid(vid).build();<br>    Assert.isTrue(userDao.put_createVideo_num(TokenUtils.getOpenid(token),<span class="hljs-literal">true</span>),<span class="hljs-string">&quot;房间数更新失败！&quot;</span>);<br>    <span class="hljs-keyword">return</span> createRoomDao.Post_createRoom(createRoom)?RespGenerator.success(createRoom):RespGenerator.fail(<span class="hljs-string">&quot;400&quot;</span>,<span class="hljs-string">&quot;房间创建失败&quot;</span>);<br>&#125;<br></code></pre></td></tr></table></figure></li>
+</ol>
+<h2 id="Controller控制器层-1"><a href="#Controller控制器层-1" class="headerlink" title="Controller控制器层"></a>Controller控制器层</h2><blockquote>
+<p><code>videoroomcontroller</code></p>
+</blockquote>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-comment">//创建房间</span><br><span class="hljs-meta">@PostMapping(&quot;/videoroom/&#123;vid&#125;&quot;)</span><br><span class="hljs-keyword">public</span> BaseResponse <span class="hljs-title function_">post_videoroom</span><span class="hljs-params">(<span class="hljs-meta">@PathVariable(&quot;vid&quot;)</span> Long vid,<span class="hljs-meta">@RequestBody</span> Videoroom videoroom, HttpServletRequest request)</span>&#123;<br>    <span class="hljs-keyword">return</span> videoroomService.post_videoroom(videoroom,vid,request.getHeader(<span class="hljs-string">&quot;token&quot;</span>));<br>&#125;<br></code></pre></td></tr></table></figure>
+<h2 id="调用方法-1"><a href="#调用方法-1" class="headerlink" title="调用方法"></a>调用方法</h2><blockquote>
+<p>url：<a target="_blank" rel="noopener" href="http://127.0.0.1:8080/videoroomcontroller/videoroom/%7Bvid%7D">http://127.0.0.1:8080/videoroomcontroller/videoroom/{vid}</a><br>Methed：POST<br>Header：token<br>DATA：<code>&#123;     &quot;vrTitle&quot;:&quot;标题&quot;,     &quot;vrDescribe&quot;:&quot;描述信息&quot; &#125;</code><br>return：json</p>
+</blockquote>
+<h1 id="修改房间信息"><a href="#修改房间信息" class="headerlink" title="修改房间信息"></a>修改房间信息</h1><h2 id="Dao数据持久层-2"><a href="#Dao数据持久层-2" class="headerlink" title="Dao数据持久层"></a>Dao数据持久层</h2><ol>
+<li>暴露接口<blockquote>
+<p><code>VideoroomDao</code><br>根据vrid查询并修改数据为videoroom对象中的值</p>
+</blockquote>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">public</span> Boolean <span class="hljs-title function_">put_videoroom</span><span class="hljs-params">(Long vrid,Videoroom videoroom)</span>;<br></code></pre></td></tr></table></figure></li>
+<li>数据持久层接口实现<blockquote>
+<p><code>VideoroomDaoImpl</code></p>
+</blockquote>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">public</span> Boolean <span class="hljs-title function_">put_videoroom</span><span class="hljs-params">(Long vrid,Videoroom videoroom)</span>&#123;<br>    videoroomExample.createCriteria().andVrIdEqualTo(vrid);<br>    videoroom.setVrId(<span class="hljs-literal">null</span>);<br>    <span class="hljs-keyword">return</span> videoroomMapper.updateByExampleSelective(videoroom,videoroomExample)==<span class="hljs-number">1</span>?<span class="hljs-literal">true</span>:<span class="hljs-literal">false</span>;<br>&#125;<br></code></pre></td></tr></table></figure></li>
+</ol>
+<h2 id="Service服务层-2"><a href="#Service服务层-2" class="headerlink" title="Service服务层"></a>Service服务层</h2><ol>
+<li>暴露接口<blockquote>
+<p><code>VideoroomService</code></p>
+</blockquote>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">public</span> BaseResponse <span class="hljs-title function_">put_videoroom</span><span class="hljs-params">(Videoroom videoroom,String token)</span>;<br></code></pre></td></tr></table></figure></li>
+<li>服务层接口实现<blockquote>
+<p><code>VideoroomServiceImpl</code></p>
+</blockquote>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-comment">/*</span><br><span class="hljs-comment"> * @Description 根据token等信息修改房间信息</span><br><span class="hljs-comment"> * @Param null</span><br><span class="hljs-comment"> * @Return &#123;@link null&#125;</span><br><span class="hljs-comment"> * @Author Ocean_IT</span><br><span class="hljs-comment"> * @Email 14312400@qq.com</span><br><span class="hljs-comment"> * @Date 2022/10/5 6:20</span><br><span class="hljs-comment"> */</span><br><span class="hljs-meta">@Transactional</span><br><span class="hljs-keyword">public</span> BaseResponse <span class="hljs-title function_">put_videoroom</span><span class="hljs-params">(Videoroom videoroom,String token)</span>&#123;<br>    List&lt;CreateRoom&gt; createRoomList = createRoomDao.get_createRoomList(TokenUtils.getOpenid(token));<br>    <span class="hljs-keyword">if</span>(createRoomList.size() == <span class="hljs-number">0</span>)&#123;<br>        <span class="hljs-keyword">return</span> RespGenerator.fail(<span class="hljs-string">&quot;400&quot;</span>,<span class="hljs-string">&quot;未查询到你要修改房间的信息！&quot;</span>);<br>    &#125;<span class="hljs-keyword">else</span>&#123;<br>        Assert.isTrue(videoroomDao.put_videoroom(createRoomList.get(<span class="hljs-number">0</span>).getVrId(),videoroom),<span class="hljs-string">&quot;修改房间信息失败！&quot;</span>);<br>        <span class="hljs-keyword">return</span> RespGenerator.success_noData(<span class="hljs-string">&quot;房间信息修改完成！&quot;</span>);<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure></li>
+</ol>
+<h2 id="Controller控制器层-2"><a href="#Controller控制器层-2" class="headerlink" title="Controller控制器层"></a>Controller控制器层</h2><blockquote>
+<p><code>Videoroomcontroller</code></p>
+</blockquote>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-comment">//修改房间标题等信息</span><br><span class="hljs-meta">@PutMapping(&quot;/videoroom&quot;)</span><br><span class="hljs-keyword">public</span> BaseResponse <span class="hljs-title function_">put_videoroom</span><span class="hljs-params">(<span class="hljs-meta">@RequestBody</span> Videoroom videoroom,HttpServletRequest request)</span>&#123;<br>    <span class="hljs-keyword">return</span> videoroomService.put_videoroom(videoroom,request.getHeader(<span class="hljs-string">&quot;token&quot;</span>));<br>&#125;<br></code></pre></td></tr></table></figure>
+<h2 id="调用方法-2"><a href="#调用方法-2" class="headerlink" title="调用方法"></a>调用方法</h2><blockquote>
+<p>url：<a target="_blank" rel="noopener" href="http://127.0.0.1:8080/videoroomcontroller/videoroom">http://127.0.0.1:8080/videoroomcontroller/videoroom</a><br>Methed：PUT<br>Header：token<br>Data：<code>&#123;     &quot;vrTitle&quot;:&quot;sss打赏&quot;,     &quot;vrDescribe&quot;:&quot;dasd&quot;,     &quot;vrId&quot;:&quot;0&quot; &#125;</code><br>return：json</p>
+</blockquote>
+<h1 id="删除房间"><a href="#删除房间" class="headerlink" title="删除房间"></a>删除房间</h1><h2 id="Dao数据持久层-3"><a href="#Dao数据持久层-3" class="headerlink" title="Dao数据持久层"></a>Dao数据持久层</h2><ol>
+<li>暴露接口<blockquote>
+<p><code>CreateRoomDao</code><br>根据vrid删除表信息</p>
+</blockquote>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">public</span> Boolean <span class="hljs-title function_">del_createRoom</span><span class="hljs-params">(Long vrid)</span>;<br></code></pre></td></tr></table></figure>
+<blockquote>
+<p><code>VideoroomDao</code><br>根据vrid删除表信息</p>
+</blockquote>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">public</span> Boolean <span class="hljs-title function_">del_videoroom</span><span class="hljs-params">(Long vrid)</span>;<br></code></pre></td></tr></table></figure></li>
+<li>数据持久层接口实现<blockquote>
+<p><code>CreateRoomDaoImpl</code></p>
+</blockquote>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">public</span> Boolean <span class="hljs-title function_">del_createRoom</span><span class="hljs-params">(Long vrid)</span>&#123;<br>    createRoomExample.createCriteria().andVrIdEqualTo(vrid);<br>    <span class="hljs-keyword">return</span> createRoomMapper.deleteByExample(createRoomExample) == <span class="hljs-number">1</span>?<span class="hljs-literal">true</span>:<span class="hljs-literal">false</span>;<br>&#125;<br></code></pre></td></tr></table></figure>
+<blockquote>
+<p><code>VideoroomDaoImpl</code></p>
+</blockquote>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">public</span> Boolean <span class="hljs-title function_">del_videoroom</span><span class="hljs-params">(Long vrid)</span>&#123;<br>    <span class="hljs-keyword">return</span> videoroomMapper.deleteByPrimaryKey(vrid) ==<span class="hljs-number">1</span>?<span class="hljs-literal">true</span>:<span class="hljs-literal">false</span>;<br>&#125;<br></code></pre></td></tr></table></figure></li>
+</ol>
+<h2 id="Service服务层-3"><a href="#Service服务层-3" class="headerlink" title="Service服务层"></a>Service服务层</h2><ol>
+<li>暴露接口<blockquote>
+<p><code>VideoroomService</code></p>
+</blockquote>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">public</span> BaseResponse <span class="hljs-title function_">del_videoroom</span><span class="hljs-params">(String token)</span>;<br></code></pre></td></tr></table></figure></li>
+<li>服务层接口实现<blockquote>
+<p><code>VideoroomServiceImpl</code></p>
+</blockquote>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-comment">/*</span><br><span class="hljs-comment"> * @Description 根据token删除房间</span><br><span class="hljs-comment"> * @Param null</span><br><span class="hljs-comment"> * @Return &#123;@link null&#125;</span><br><span class="hljs-comment"> * @Author Ocean_IT</span><br><span class="hljs-comment"> * @Email 14312400@qq.com</span><br><span class="hljs-comment"> * @Date 2022/10/5 14:27</span><br><span class="hljs-comment"> */</span><br><span class="hljs-meta">@Transactional</span><br><span class="hljs-keyword">public</span> BaseResponse <span class="hljs-title function_">del_videoroom</span><span class="hljs-params">(String token)</span>&#123;<br>    List&lt;CreateRoom&gt; createRoomList = createRoomDao.get_createRoomList(TokenUtils.getOpenid(token));<br>    <span class="hljs-keyword">if</span>(createRoomList.size() == <span class="hljs-number">0</span>)&#123;<br>        <span class="hljs-keyword">return</span> RespGenerator.fail(<span class="hljs-string">&quot;400&quot;</span>,<span class="hljs-string">&quot;未查询到你要删除房间的信息！&quot;</span>);<br>    &#125;<br>    <span class="hljs-type">Long</span> <span class="hljs-variable">vrid</span> <span class="hljs-operator">=</span> createRoomList.get(<span class="hljs-number">0</span>).getVrId();<br>    Assert.isTrue(createRoomDao.del_createRoom(vrid),<span class="hljs-string">&quot;删除房间记录失败&quot;</span>);<br>    Assert.isTrue(videoroomDao.del_videoroom(vrid),<span class="hljs-string">&quot;删除房间信息失败&quot;</span>);<br>    Assert.isTrue(userDao.put_createVideo_num(TokenUtils.getOpenid(token),<span class="hljs-literal">false</span>),<span class="hljs-string">&quot;房间数更新失败！&quot;</span>);<br>    <span class="hljs-keyword">return</span> RespGenerator.success_noData(<span class="hljs-string">&quot;房间删除成功！&quot;</span>);<br>&#125;<br></code></pre></td></tr></table></figure></li>
+</ol>
+<h2 id="Controller控制器层-3"><a href="#Controller控制器层-3" class="headerlink" title="Controller控制器层"></a>Controller控制器层</h2><blockquote>
+<p><code>VideoroomController</code></p>
+</blockquote>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-comment">//删除房间信息</span><br><span class="hljs-meta">@DeleteMapping(&quot;/videoroom&quot;)</span><br><span class="hljs-keyword">public</span> BaseResponse <span class="hljs-title function_">del_videoroom</span><span class="hljs-params">(HttpServletRequest request)</span>&#123;<br>    <span class="hljs-keyword">return</span> videoroomService.del_videoroom(request.getHeader(<span class="hljs-string">&quot;token&quot;</span>));<br>&#125;<br></code></pre></td></tr></table></figure>
+<h2 id="调用方法-3"><a href="#调用方法-3" class="headerlink" title="调用方法"></a>调用方法</h2><blockquote>
+<p>url：<a target="_blank" rel="noopener" href="http://127.0.0.1:8080/videoroomcontroller/videoroom/%7Bvid%7D">http://127.0.0.1:8080/videoroomcontroller/videoroom/{vid}</a><br>Methed：DELETE<br>Header：token<br>return：json</p>
+</blockquote>
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/Springboot/" class="category-chain-item">Springboot</a>
+  
+  
+    <span>></span>
+    
+  <a href="/categories/Springboot/%E5%90%8C%E6%AD%A5%E5%BD%B1%E9%99%A2%E5%B0%8F%E7%A8%8B%E5%BA%8F/" class="category-chain-item">同步影院小程序</a>
+  
+  
+
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/SpringBoot/">#SpringBoot</a>
+      
+        <a href="/tags/%E5%90%8C%E6%AD%A5%E5%BD%B1%E9%99%A2%E5%B0%8F%E7%A8%8B%E5%BA%8F/">#同步影院小程序</a>
+      
+        <a href="/tags/mysql/">#mysql</a>
+      
+        <a href="/tags/mybatis/">#mybatis</a>
+      
+        <a href="/tags/API/">#API</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>八. 实现房间的新增，查找，删除，修改接口实现</div>
+      <div>https://tanblog.cc/2022/10/05/project/online/onlinevideo-8/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>言云纪</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2022年10月5日</div>
+        </div>
+      
+      
+      
+        <div class="license-meta-item">
+          <div>许可协议</div>
+          <div>
+            
+              
+              
+                <a target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                    <i class="iconfont icon-by"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2022/10/05/project/online/onlinevideo-9/" title="九. 配置swagger生成api文档">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">九. 配置swagger生成api文档</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2022/10/04/project/online/onlinevideo-7/" title="七. 实现用户修改个人信息">
+                        <span class="hidden-mobile">七. 实现用户修改个人信息</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header">
+    <i class="iconfont icon-list"></i>
+    <span>目录</span>
+  </p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
+  
+  
+    <div class="statistics">
+  
+  
+
+  
+    
+      <span id="busuanzi_container_site_pv" style="display: none">
+        总访问量 
+        <span id="busuanzi_value_site_pv"></span>
+         次
+      </span>
+    
+    
+      <span id="busuanzi_container_site_uv" style="display: none">
+        总访客数 
+        <span id="busuanzi_value_site_uv"></span>
+         人
+      </span>
+    
+    
+  
+</div>
+
+  
+  
+    <!-- 备案信息 ICP for China -->
+    <div class="beian">
+  <span>
+    <a href="http://beian.miit.gov.cn/" target="_blank" rel="nofollow noopener">
+      蜀ICP备2022023578号 -1
+    </a>
+  </span>
+  
+</div>
+
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.0/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.18.2/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init(Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc));
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script  src="/js/local-search.js" ></script>
+
+  <script defer src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>

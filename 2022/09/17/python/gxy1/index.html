@@ -1,0 +1,787 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="https://www.helloimg.com/images/2023/01/28/oRUbRY.jpg">
+  <link rel="icon" href="https://www.helloimg.com/images/2023/01/28/oRUbRY.jpg">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="言云纪">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="自动签到脚本">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Python实现工学云自动签到打卡">
+<meta property="og:url" content="https://tanblog.cc/2022/09/17/python/gxy1/index.html">
+<meta property="og:site_name" content="Tan_Blog">
+<meta property="og:description" content="自动签到脚本">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://tanblog.cc/upload/2022/09/image.png">
+<meta property="og:image" content="https://tanblog.cc/upload/2022/09/image-1663424879810.png">
+<meta property="og:image" content="https://tanblog.cc/upload/2022/09/image-1663425795249.png">
+<meta property="og:image" content="https://tanblog.cc/upload/2022/09/image-1663425651223.png">
+<meta property="og:image" content="https://tanblog.cc/upload/2022/09/image-1663426212074.png">
+<meta property="og:image" content="https://tanblog.cc/upload/2022/09/image-1663426255561.png">
+<meta property="og:image" content="https://tanblog.cc/upload/2022/09/image-1663429146601.png">
+<meta property="og:image" content="https://tanblog.cc/upload/2022/09/image-1663429907500.png">
+<meta property="og:image" content="https://tanblog.cc/upload/2022/09/image-1663431075329.png">
+<meta property="og:image" content="https://tanblog.cc/upload/2022/09/image-1663431424511.png">
+<meta property="og:image" content="https://tanblog.cc/upload/2022/09/95EB8E14-3CE0-400F-B3A5-DCC528B55378.png">
+<meta property="article:published_time" content="2022-09-17T13:48:43.970Z">
+<meta property="article:modified_time" content="2022-10-14T15:52:56.222Z">
+<meta property="article:author" content="言云纪">
+<meta property="article:tag" content="python">
+<meta property="article:tag" content="爬虫">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://tanblog.cc/upload/2022/09/image.png">
+  
+  
+    <meta name="referrer" content="no-referrer-when-downgrade">
+  
+  
+  <title>Python实现工学云自动签到打卡 - Tan_Blog</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_hj8rtnfg7um.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"tanblog.cc","root":"/","version":"1.9.4","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml"};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+
+  
+<meta name="generator" content="Hexo 6.3.0"><link rel="alternate" href="/atom.xml" title="Tan_Blog" type="application/atom+xml">
+</head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>Tan_Blog</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                <span>首页</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                <span>归档</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                <span>分类</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                <span>标签</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                <span>关于</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/links/">
+                <i class="iconfont icon-link-fill"></i>
+                <span>友链</span>
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <i class="iconfont icon-search"></i>
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">
+              <i class="iconfont icon-dark" id="color-toggle-icon"></i>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('https://www.helloimg.com/images/2023/01/28/oRUrZK.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="Python实现工学云自动签到打卡"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2022-09-17 21:48" pubdate>
+          2022年9月17日 晚上
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          11k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          95 分钟
+        
+      </span>
+    
+
+    
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">Python实现工学云自动签到打卡</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <blockquote>
+<p>本文仅用于学习，请勿用于非法商业！转载请注明本文出处！<br>本文参考地址01：<a target="_blank" rel="noopener" href="https://github.com/yecca/moguding/blob/1.0/login.py">https://github.com/yecca/moguding/blob/1.0/login.py</a><br>本文参考地址02：<a target="_blank" rel="noopener" href="https://blog.csdn.net/weixin_39953845/article/details/111074929">https://blog.csdn.net/weixin_39953845/article/details/111074929</a></p>
+</blockquote>
+<h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><blockquote>
+<p>顶岗实习期间学校要求工学云打卡满两百天。但是每天上下班已经很累了，如果再上班期间强制记起打卡的事情反而只会增加工作负担！本文将会以爬虫的方式来解放双手，实现工学云每日定时打卡并发送邮件进行推送！文章底部奉上完整代码！</p>
+</blockquote>
+<h1 id="开发环境"><a href="#开发环境" class="headerlink" title="开发环境"></a>开发环境</h1><blockquote>
+<p>开发语言：Python 3.7.7<br>运行环境：windows10 工作版<br>pip库：requests，hashlib，json，time，smtplib，MIMEText<br>抓包工具：HTTPDebuggerUI，雷电模拟器</p>
+</blockquote>
+<h1 id="工学云接口"><a href="#工学云接口" class="headerlink" title="工学云接口"></a>工学云接口</h1><p>本文不叙述抓包过程，接口如下所示：</p>
+<table>
+<thead>
+<tr>
+<th>类型</th>
+<th>接口地址</th>
+<th>请求方式</th>
+<th>请求体</th>
+<th>请求头</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>登录接口</td>
+<td><a target="_blank" rel="noopener" href="https://api.moguding.net:9000/session/user/v1/login">https://api.moguding.net:9000/session/user/v1/login</a></td>
+<td>POST</td>
+<td><img src="/upload/2022/09/image.png" srcset="/img/loading.gif" lazyload alt="工学云登录接口"></td>
+<td><img src="/upload/2022/09/image-1663424879810.png" srcset="/img/loading.gif" lazyload alt="工学云登录接口请求头"></td>
+</tr>
+<tr>
+<td>签到任务查询接口</td>
+<td><a target="_blank" rel="noopener" href="https://api.moguding.net:9000/practice/plan/v3/getPlanByStu">https://api.moguding.net:9000/practice/plan/v3/getPlanByStu</a></td>
+<td>POST</td>
+<td><img src="/upload/2022/09/image-1663425795249.png" srcset="/img/loading.gif" lazyload alt="工学云任务接口请求体"></td>
+<td><img src="/upload/2022/09/image-1663425651223.png" srcset="/img/loading.gif" lazyload alt="工学云任务（签到）接口请求头"></td>
+</tr>
+<tr>
+<td>签到接口</td>
+<td><a target="_blank" rel="noopener" href="https://api.moguding.net:9000/attendence/clock/v2/save">https://api.moguding.net:9000/attendence/clock/v2/save</a></td>
+<td>POST</td>
+<td><img src="/upload/2022/09/image-1663426212074.png" srcset="/img/loading.gif" lazyload alt="工学云签到接口请求头"></td>
+<td><img src="/upload/2022/09/image-1663426255561.png" srcset="/img/loading.gif" lazyload alt="工学云登录接口请求体"></td>
+</tr>
+</tbody></table>
+<h1 id="爬虫编写（Python版）"><a href="#爬虫编写（Python版）" class="headerlink" title="爬虫编写（Python版）"></a>爬虫编写（Python版）</h1><h2 id="逻辑流程草图"><a href="#逻辑流程草图" class="headerlink" title="逻辑流程草图"></a>逻辑流程草图</h2><pre><code class=" mermaid">graph TB
+login[模拟登录]--&gt;b[(获取tooken以及加密盐)]--&gt;E((加密sign1))--&gt;c[带sign1查询学院信息]--&gt;d[(获取任务id)]--&gt;get[发送签到请求]
+addr[获取签到地址信息]--&gt;e((生成加密参sign2))--&gt;get[发送签到]
+c[带sign1查询学院信息]--&gt;addr[获取签到地址信息]
+get[发送签到]--&gt;en[发送邮件]
+</code></pre>
+<h2 id="模拟登录并保存token等信息"><a href="#模拟登录并保存token等信息" class="headerlink" title="模拟登录并保存token等信息"></a>模拟登录并保存token等信息</h2><h3 id="引入依赖库"><a href="#引入依赖库" class="headerlink" title="引入依赖库"></a>引入依赖库</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">import</span> requests<br><span class="hljs-keyword">import</span> json<br></code></pre></td></tr></table></figure>
+<h3 id="main入口"><a href="#main入口" class="headerlink" title="main入口"></a>main入口</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">if</span> __name__ == <span class="hljs-string">&quot;__main__&quot;</span>:<br>    Login_info = &#123;&#125;<br>    login()<br>    <span class="hljs-built_in">print</span>(Login_info)   <span class="hljs-comment"># 打印获取的token等信息</span><br></code></pre></td></tr></table></figure>
+<h3 id="登录方法"><a href="#登录方法" class="headerlink" title="登录方法"></a>登录方法</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">def</span> <span class="hljs-title function_">login</span>():<br>    url = <span class="hljs-string">&quot;https://api.moguding.net:9000/session/user/v1/login&quot;</span><br>    headers = &#123;<br>        <span class="hljs-string">&quot;Content-Type&quot;</span>: <span class="hljs-string">&quot;application/json; charset=UTF-8&quot;</span>,<br>        <span class="hljs-string">&quot;User-Agent&quot;</span>: <span class="hljs-string">&quot;Mozilla/5.0 (Linux; U; Android 10; zh-cn; ELS-AN00 Build/HUAWEIELS-AN00) AppleWebKit/533.1 (KHTML, like Gecko) Version/5.0 Mobile Safari/533.1&quot;</span>,<br>    &#125;<br>    data = &#123;<br>        <span class="hljs-string">&quot;phone&quot;</span>: <span class="hljs-string">&quot;你的账号&quot;</span>, <br>        <span class="hljs-string">&quot;password&quot;</span>: <span class="hljs-string">&quot;你的密码&quot;</span>, <br>        <span class="hljs-string">&quot;loginType&quot;</span>: <span class="hljs-string">&quot;android&quot;</span><br>        &#125;<br>    res = requests.post(url,headers=headers,data=json.dumps(data)).json()<br>    <span class="hljs-keyword">if</span> res[<span class="hljs-string">&#x27;code&#x27;</span>] != <span class="hljs-number">200</span> :<br>        <span class="hljs-built_in">print</span>(<span class="hljs-string">&quot;登录失败,错误信息为&quot;</span>+res[<span class="hljs-string">&#x27;msg&#x27;</span>])<br>    <span class="hljs-keyword">else</span>:<br>        Login_info[<span class="hljs-string">&#x27;token&#x27;</span>] = res[<span class="hljs-string">&#x27;data&#x27;</span>][<span class="hljs-string">&#x27;token&#x27;</span>]<br>        Login_info[<span class="hljs-string">&#x27;userId&#x27;</span>] = res[<span class="hljs-string">&#x27;data&#x27;</span>][<span class="hljs-string">&#x27;userId&#x27;</span>]<br>        Login_info[<span class="hljs-string">&#x27;moguNo&#x27;</span>] = res[<span class="hljs-string">&#x27;data&#x27;</span>][<span class="hljs-string">&#x27;moguNo&#x27;</span>]<br></code></pre></td></tr></table></figure>
+<h3 id="运行效果"><a href="#运行效果" class="headerlink" title="运行效果"></a>运行效果</h3><p><img src="/upload/2022/09/image-1663429146601.png" srcset="/img/loading.gif" lazyload alt="工学云登录爬虫效果1"></p>
+<h2 id="获取签到任务id"><a href="#获取签到任务id" class="headerlink" title="获取签到任务id"></a>获取签到任务id</h2><h3 id="导入依赖库"><a href="#导入依赖库" class="headerlink" title="导入依赖库"></a>导入依赖库</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">import</span> hashlib<br></code></pre></td></tr></table></figure>
+<h3 id="main入口方法修改"><a href="#main入口方法修改" class="headerlink" title="main入口方法修改"></a>main入口方法修改</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">if</span> __name__ == <span class="hljs-string">&quot;__main__&quot;</span>:<br>    Login_info = &#123;&#125;<br>    <span class="hljs-comment"># login()</span><br>    GetPlanId()<br>    <span class="hljs-built_in">print</span>(Login_info)   <span class="hljs-comment"># 打印获取的token等信息</span><br></code></pre></td></tr></table></figure>
+<h3 id="生成加密参方法"><a href="#生成加密参方法" class="headerlink" title="生成加密参方法"></a>生成加密参方法</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-comment"># 获取planId的sign</span><br><span class="hljs-keyword">def</span> <span class="hljs-title function_">getPlanIdSign</span>(<span class="hljs-params">userId</span>):<br>    byStr = <span class="hljs-built_in">str</span>(userId) + <span class="hljs-string">&quot;student&quot;</span> + <span class="hljs-string">&quot;3478cbbc33f84bd00d75d7dfa69e0daa&quot;</span><br>    <span class="hljs-keyword">return</span> getMd5(byStr)<br><br><span class="hljs-comment"># md5加密</span><br><span class="hljs-keyword">def</span> <span class="hljs-title function_">getMd5</span>(<span class="hljs-params">byStr</span>):<br>    encode = byStr.encode(<span class="hljs-string">&#x27;utf-8&#x27;</span>)<br>    <span class="hljs-keyword">return</span> hashlib.md5(encode).hexdigest()<br></code></pre></td></tr></table></figure>
+<h3 id="获取任务id方法"><a href="#获取任务id方法" class="headerlink" title="获取任务id方法"></a>获取任务id方法</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">def</span> <span class="hljs-title function_">GetPlanId</span>():<br>    login()<br>    url = <span class="hljs-string">&quot;https://api.moguding.net:9000/practice/plan/v3/getPlanByStu&quot;</span><br>    headers = &#123;<br>        <span class="hljs-string">&quot;Host&quot;</span>: <span class="hljs-string">&quot;api.moguding.net:9000&quot;</span>,<br>        <span class="hljs-string">&quot;Accept-Language&quot;</span>: <span class="hljs-string">&quot;zh-CN,zh;q=0.8&quot;</span>,<br>        <span class="hljs-string">&quot;User-Agent&quot;</span>: <span class="hljs-string">&quot;Mozilla/5.0 (Linux; Android 7.0; HTC M9e Build/EZG0TF) AppleWebKit/537.36 (KHTML, like Gecko) Version/4.0 Chrome/55.0.1566.54 Mobile Safari/537.36&quot;</span>,<br>        <span class="hljs-string">&quot;sign&quot;</span>: getPlanIdSign(Login_info[<span class="hljs-string">&#x27;userId&#x27;</span>]),<br>        <span class="hljs-string">&quot;Connection&quot;</span>: <span class="hljs-string">&quot;keep-alive&quot;</span>,<br>        <span class="hljs-string">&quot;Authorization&quot;</span>: Login_info[<span class="hljs-string">&#x27;token&#x27;</span>],<br>        <span class="hljs-string">&quot;roleKey&quot;</span>: <span class="hljs-string">&quot;student&quot;</span>,<br>        <span class="hljs-string">&quot;Content-Type&quot;</span>: <span class="hljs-string">&quot;application/json; charset=UTF-8&quot;</span>,<br>        <span class="hljs-string">&quot;Accept-Encoding&quot;</span>: <span class="hljs-string">&quot;&quot;</span>,<br>    &#125;<br>    data = &#123;<br>        <span class="hljs-string">&quot;state&quot;</span>: <span class="hljs-string">&quot;&quot;</span><br>    &#125;<br>    res = requests.post(url, headers=headers, data=json.dumps(data)).json()<br>    Login_info[<span class="hljs-string">&#x27;planId&#x27;</span>] = res[<span class="hljs-string">&quot;data&quot;</span>][<span class="hljs-number">0</span>][<span class="hljs-string">&quot;planId&quot;</span>]<br></code></pre></td></tr></table></figure>
+<h3 id="运行效果-1"><a href="#运行效果-1" class="headerlink" title="运行效果"></a>运行效果</h3><p><img src="/upload/2022/09/image-1663429907500.png" srcset="/img/loading.gif" lazyload alt="工学云爬虫效果2"></p>
+<h2 id="签到并发送邮件"><a href="#签到并发送邮件" class="headerlink" title="签到并发送邮件"></a>签到并发送邮件</h2><h3 id="导入依赖库-1"><a href="#导入依赖库-1" class="headerlink" title="导入依赖库"></a>导入依赖库</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">import</span> time<br><span class="hljs-keyword">import</span> smtplib<br><span class="hljs-keyword">from</span> email.mime.text <span class="hljs-keyword">import</span> MIMEText<br></code></pre></td></tr></table></figure>
+<h3 id="main入口方法修改-1"><a href="#main入口方法修改-1" class="headerlink" title="main入口方法修改"></a>main入口方法修改</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">if</span> __name__ == <span class="hljs-string">&quot;__main__&quot;</span>:<br>    Login_info = &#123;&#125;<br>    Login_info[<span class="hljs-string">&#x27;address&#x27;</span>] = <span class="hljs-string">&quot;上海市-嘉定区-宝安公路&quot;</span> <span class="hljs-comment">#</span><br>    get_time()  <br>    Sign_in()<br>    <span class="hljs-built_in">print</span>(Login_info)<br></code></pre></td></tr></table></figure>
+<h3 id="上下班判断方法"><a href="#上下班判断方法" class="headerlink" title="上下班判断方法"></a>上下班判断方法</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-comment"># 根据现在时间判断上下班签到</span><br><span class="hljs-comment"># 上班  8-16</span><br><span class="hljs-keyword">def</span> <span class="hljs-title function_">get_time</span>():<br>    mytime = time.localtime()<br>    <span class="hljs-keyword">if</span> mytime.tm_hour &lt; <span class="hljs-number">8</span> <span class="hljs-keyword">or</span> mytime.tm_hour &gt; <span class="hljs-number">16</span>:<br>        Login_info[<span class="hljs-string">&#x27;cardType&#x27;</span>] = <span class="hljs-string">&#x27;END&#x27;</span>  <span class="hljs-comment"># 上班</span><br>    <span class="hljs-keyword">else</span>:<br>        Login_info[<span class="hljs-string">&#x27;cardType&#x27;</span>] = <span class="hljs-string">&#x27;START&#x27;</span>    <span class="hljs-comment"># 下班</span><br></code></pre></td></tr></table></figure>
+<h3 id="签到请求加密参生成"><a href="#签到请求加密参生成" class="headerlink" title="签到请求加密参生成"></a>签到请求加密参生成</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-comment"># 获取签到sign加密参</span><br><span class="hljs-keyword">def</span> <span class="hljs-title function_">getSign</span>(<span class="hljs-params">cardType, planId, userId, address</span>):<br>    byStr = <span class="hljs-string">&quot;Android&quot;</span> + <span class="hljs-built_in">str</span>(cardType) + <span class="hljs-built_in">str</span>(planId) + <span class="hljs-built_in">str</span>(userId) + <span class="hljs-built_in">str</span>(address) + <span class="hljs-string">&quot;3478cbbc33f84bd00d75d7dfa69e0daa&quot;</span><br>    <span class="hljs-keyword">return</span> getMd5(byStr)<br></code></pre></td></tr></table></figure>
+<h3 id="发送邮件方法"><a href="#发送邮件方法" class="headerlink" title="发送邮件方法"></a>发送邮件方法</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-comment"># 发送邮件</span><br><span class="hljs-keyword">def</span> <span class="hljs-title function_">send_email</span>(<span class="hljs-params">text</span>):<br>    mail_host = <span class="hljs-string">&quot;smtp邮件服务器地址&quot;</span>  <br>    mail_user = <span class="hljs-string">&quot;smtp邮件服务器账号&quot;</span> <br>    mail_pass = <span class="hljs-string">&quot;smtp邮件服务器授权码&quot;</span><br>    sender = mail_user	<span class="hljs-comment"># 发件人邮箱地址</span><br>    receivers = [<span class="hljs-string">&#x27;收件人邮箱地址&#x27;</span>]<br>    content = text<br>    title = <span class="hljs-string">&#x27;工学云每日签到信息&#x27;</span><br>    message = MIMEText(content, <span class="hljs-string">&#x27;plain&#x27;</span>, <span class="hljs-string">&#x27;utf-8&#x27;</span>)<br>    message[<span class="hljs-string">&#x27;From&#x27;</span>] = <span class="hljs-string">&quot;&#123;&#125;&quot;</span>.<span class="hljs-built_in">format</span>(sender)<br>    message[<span class="hljs-string">&#x27;To&#x27;</span>] = <span class="hljs-string">&quot;,&quot;</span>.join(receivers)<br>    message[<span class="hljs-string">&#x27;Subject&#x27;</span>] = title<br>    <span class="hljs-keyword">try</span>:<br>        smtpObj = smtplib.SMTP_SSL(mail_host, <span class="hljs-number">465</span>)<br>        smtpObj.login(mail_user, mail_pass)<br>        smtpObj.sendmail(sender, receivers, message.as_string())<br>    <span class="hljs-keyword">except</span> smtplib.SMTPException <span class="hljs-keyword">as</span> e:<br>        <span class="hljs-built_in">print</span>(e)<br></code></pre></td></tr></table></figure>
+<blockquote>
+<p>以上方法代码请修改自己的邮件服务器账号密码</p>
+</blockquote>
+<h3 id="发送签到请求"><a href="#发送签到请求" class="headerlink" title="发送签到请求"></a>发送签到请求</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-comment"># 签到</span><br><span class="hljs-keyword">def</span> <span class="hljs-title function_">Sign_in</span>():<br>    GetPlanId()<br>    url = <span class="hljs-string">&quot;https://api.moguding.net:9000/attendence/clock/v2/save&quot;</span><br>    headers = &#123;<br>        <span class="hljs-string">&quot;Host&quot;</span>: <span class="hljs-string">&quot;api.moguding.net:9000&quot;</span>,<br>        <span class="hljs-string">&quot;Accept-Language&quot;</span>: <span class="hljs-string">&quot;zh-CN,zh;q=0.8&quot;</span>,<br>        <span class="hljs-string">&quot;User-Agent&quot;</span>: <span class="hljs-string">&quot;Mozilla/5.0 (Linux; Android 7.0; HTC M9e Build/EZG0TF) AppleWebKit/537.36 (KHTML, like Gecko) Version/4.0 Chrome/55.0.1566.54 Mobile Safari/537.36&quot;</span>,<br>        <span class="hljs-string">&quot;sign&quot;</span>: getSign(Login_info[<span class="hljs-string">&#x27;cardType&#x27;</span>], Login_info[<span class="hljs-string">&#x27;planId&#x27;</span>], Login_info[<span class="hljs-string">&#x27;userId&#x27;</span>], Login_info[<span class="hljs-string">&#x27;address&#x27;</span>]),<br>        <span class="hljs-string">&quot;Connection&quot;</span>: <span class="hljs-string">&quot;keep-alive&quot;</span>,<br>        <span class="hljs-string">&quot;Authorization&quot;</span>: Login_info[<span class="hljs-string">&#x27;token&#x27;</span>],<br>        <span class="hljs-string">&quot;roleKey&quot;</span>: <span class="hljs-string">&quot;student&quot;</span>,<br>        <span class="hljs-string">&quot;Content-Type&quot;</span>: <span class="hljs-string">&quot;application/json; charset=UTF-8&quot;</span>,<br>        <span class="hljs-string">&quot;Accept-Encoding&quot;</span>: <span class="hljs-string">&quot;&quot;</span>,<br>    &#125;<br>    <span class="hljs-comment"># 签到打卡信息，根据自己需求更改</span><br>    data = &#123;<br>        <span class="hljs-string">&quot;country&quot;</span>: <span class="hljs-string">&quot;中国&quot;</span>, <br>        <span class="hljs-string">&quot;address&quot;</span>: Login_info[<span class="hljs-string">&#x27;address&#x27;</span>], <br>        <span class="hljs-string">&quot;province&quot;</span>: <span class="hljs-string">&quot;上海市&quot;</span>, <br>        <span class="hljs-string">&quot;city&quot;</span>: <span class="hljs-string">&quot;上海市&quot;</span>, <br>        <span class="hljs-string">&quot;latitude&quot;</span>: <span class="hljs-string">&quot;39.910924547299565&quot;</span>, <span class="hljs-comment"># 纬度</span><br>        <span class="hljs-string">&quot;description&quot;</span>: <span class="hljs-string">&quot;&quot;</span>, <br>        <span class="hljs-string">&quot;planId&quot;</span>: Login_info[<span class="hljs-string">&#x27;planId&#x27;</span>], <br>        <span class="hljs-string">&quot;type&quot;</span>: Login_info[<span class="hljs-string">&#x27;cardType&#x27;</span>], <br>        <span class="hljs-string">&quot;device&quot;</span>: <span class="hljs-string">&quot;Android&quot;</span>, <br>        <span class="hljs-string">&quot;longitude&quot;</span>: <span class="hljs-string">&quot;116.4133836971231&quot;</span>  <span class="hljs-comment"># 经度</span><br>    &#125;<br>    res = requests.post(url,headers=headers,data=json.dumps(data)).json()<br>    <span class="hljs-keyword">if</span> res[<span class="hljs-string">&#x27;code&#x27;</span>] == <span class="hljs-number">200</span> :<br>        <span class="hljs-built_in">print</span>(<span class="hljs-string">&quot;签到成功！&quot;</span>)<br>        send_email(<span class="hljs-string">&quot;工学云签到成功！&quot;</span>)<br>    <span class="hljs-keyword">else</span> :<br>        <span class="hljs-built_in">print</span>(<span class="hljs-string">&quot;签到失败，错误原因：&quot;</span> + res.msg)<br>        send_email(<span class="hljs-string">&quot;工学云签到失败，错误原因：&quot;</span> + res.msg +<span class="hljs-string">&quot;请登录并检查服务器配置信息是否正确！&quot;</span>)<br></code></pre></td></tr></table></figure>
+<h1 id="完整脚本1"><a href="#完整脚本1" class="headerlink" title="完整脚本1"></a>完整脚本1</h1><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">import</span> requests<br><span class="hljs-keyword">import</span> hashlib<br><span class="hljs-keyword">import</span> json<br><span class="hljs-keyword">import</span> time<br><span class="hljs-keyword">import</span> smtplib<br><span class="hljs-keyword">from</span> email.mime.text <span class="hljs-keyword">import</span> MIMEText<br><br><span class="hljs-comment"># 模拟登录获取token等信息</span><br><span class="hljs-keyword">def</span> <span class="hljs-title function_">login</span>():<br>    url = <span class="hljs-string">&quot;https://api.moguding.net:9000/session/user/v1/login&quot;</span><br>    headers = &#123;<br>        <span class="hljs-string">&quot;Content-Type&quot;</span>: <span class="hljs-string">&quot;application/json; charset=UTF-8&quot;</span>,<br>        <span class="hljs-string">&quot;User-Agent&quot;</span>: <span class="hljs-string">&quot;Mozilla/5.0 (Linux; U; Android 10; zh-cn; ELS-AN00 Build/HUAWEIELS-AN00) AppleWebKit/533.1 (KHTML, like Gecko) Version/5.0 Mobile Safari/533.1&quot;</span>,<br>    &#125;<br>    data = &#123;<br>        <span class="hljs-string">&quot;phone&quot;</span>: <span class="hljs-string">&quot;工学云账号&quot;</span>, <br>        <span class="hljs-string">&quot;password&quot;</span>: <span class="hljs-string">&quot;工学云密码&quot;</span>, <br>        <span class="hljs-string">&quot;loginType&quot;</span>: <span class="hljs-string">&quot;android&quot;</span><br>        &#125;<br>    res = requests.post(url,headers=headers,data=json.dumps(data)).json()<br>    <span class="hljs-keyword">if</span> res[<span class="hljs-string">&#x27;code&#x27;</span>] != <span class="hljs-number">200</span> :<br>        <span class="hljs-built_in">print</span>(<span class="hljs-string">&quot;登录失败,错误信息为&quot;</span>+res[<span class="hljs-string">&#x27;msg&#x27;</span>])<br>    <span class="hljs-keyword">else</span>:<br>        Login_info[<span class="hljs-string">&#x27;token&#x27;</span>] = res[<span class="hljs-string">&#x27;data&#x27;</span>][<span class="hljs-string">&#x27;token&#x27;</span>]<br>        Login_info[<span class="hljs-string">&#x27;userId&#x27;</span>] = res[<span class="hljs-string">&#x27;data&#x27;</span>][<span class="hljs-string">&#x27;userId&#x27;</span>]<br>        Login_info[<span class="hljs-string">&#x27;moguNo&#x27;</span>] = res[<span class="hljs-string">&#x27;data&#x27;</span>][<span class="hljs-string">&#x27;moguNo&#x27;</span>]<br><br><span class="hljs-comment"># 获取签到任务ID</span><br><span class="hljs-keyword">def</span> <span class="hljs-title function_">GetPlanId</span>():<br>    login()<br>    url = <span class="hljs-string">&quot;https://api.moguding.net:9000/practice/plan/v3/getPlanByStu&quot;</span><br>    headers = &#123;<br>        <span class="hljs-string">&quot;Host&quot;</span>: <span class="hljs-string">&quot;api.moguding.net:9000&quot;</span>,<br>        <span class="hljs-string">&quot;Accept-Language&quot;</span>: <span class="hljs-string">&quot;zh-CN,zh;q=0.8&quot;</span>,<br>        <span class="hljs-string">&quot;User-Agent&quot;</span>: <span class="hljs-string">&quot;Mozilla/5.0 (Linux; Android 7.0; HTC M9e Build/EZG0TF) AppleWebKit/537.36 (KHTML, like Gecko) Version/4.0 Chrome/55.0.1566.54 Mobile Safari/537.36&quot;</span>,<br>        <span class="hljs-string">&quot;sign&quot;</span>: getPlanIdSign(Login_info[<span class="hljs-string">&#x27;userId&#x27;</span>]),<br>        <span class="hljs-string">&quot;Connection&quot;</span>: <span class="hljs-string">&quot;keep-alive&quot;</span>,<br>        <span class="hljs-string">&quot;Authorization&quot;</span>: Login_info[<span class="hljs-string">&#x27;token&#x27;</span>],<br>        <span class="hljs-string">&quot;roleKey&quot;</span>: <span class="hljs-string">&quot;student&quot;</span>,<br>        <span class="hljs-string">&quot;Content-Type&quot;</span>: <span class="hljs-string">&quot;application/json; charset=UTF-8&quot;</span>,<br>        <span class="hljs-string">&quot;Accept-Encoding&quot;</span>: <span class="hljs-string">&quot;&quot;</span>,<br>    &#125;<br>    data = &#123;<br>        <span class="hljs-string">&quot;state&quot;</span>: <span class="hljs-string">&quot;&quot;</span><br>    &#125;<br>    res = requests.post(url, headers=headers, data=json.dumps(data)).json()<br>    Login_info[<span class="hljs-string">&#x27;planId&#x27;</span>] = res[<span class="hljs-string">&quot;data&quot;</span>][<span class="hljs-number">0</span>][<span class="hljs-string">&quot;planId&quot;</span>]<br><br><br><span class="hljs-comment"># 获取planId的sign</span><br><span class="hljs-keyword">def</span> <span class="hljs-title function_">getPlanIdSign</span>(<span class="hljs-params">userId</span>):<br>    byStr = <span class="hljs-built_in">str</span>(userId) + <span class="hljs-string">&quot;student&quot;</span> + <span class="hljs-string">&quot;3478cbbc33f84bd00d75d7dfa69e0daa&quot;</span><br>    <span class="hljs-keyword">return</span> getMd5(byStr)<br><br><span class="hljs-comment"># md5加密</span><br><span class="hljs-keyword">def</span> <span class="hljs-title function_">getMd5</span>(<span class="hljs-params">byStr</span>):<br>    encode = byStr.encode(<span class="hljs-string">&#x27;utf-8&#x27;</span>)<br>    <span class="hljs-keyword">return</span> hashlib.md5(encode).hexdigest()<br><br><span class="hljs-comment"># 签到</span><br><span class="hljs-keyword">def</span> <span class="hljs-title function_">Sign_in</span>():<br>    GetPlanId()<br>    url = <span class="hljs-string">&quot;https://api.moguding.net:9000/attendence/clock/v2/save&quot;</span><br>    headers = &#123;<br>        <span class="hljs-string">&quot;Host&quot;</span>: <span class="hljs-string">&quot;api.moguding.net:9000&quot;</span>,<br>        <span class="hljs-string">&quot;Accept-Language&quot;</span>: <span class="hljs-string">&quot;zh-CN,zh;q=0.8&quot;</span>,<br>        <span class="hljs-string">&quot;User-Agent&quot;</span>: <span class="hljs-string">&quot;Mozilla/5.0 (Linux; Android 7.0; HTC M9e Build/EZG0TF) AppleWebKit/537.36 (KHTML, like Gecko) Version/4.0 Chrome/55.0.1566.54 Mobile Safari/537.36&quot;</span>,<br>        <span class="hljs-string">&quot;sign&quot;</span>: getSign(Login_info[<span class="hljs-string">&#x27;cardType&#x27;</span>], Login_info[<span class="hljs-string">&#x27;planId&#x27;</span>], Login_info[<span class="hljs-string">&#x27;userId&#x27;</span>], Login_info[<span class="hljs-string">&#x27;address&#x27;</span>]),<br>        <span class="hljs-string">&quot;Connection&quot;</span>: <span class="hljs-string">&quot;keep-alive&quot;</span>,<br>        <span class="hljs-string">&quot;Authorization&quot;</span>: Login_info[<span class="hljs-string">&#x27;token&#x27;</span>],<br>        <span class="hljs-string">&quot;roleKey&quot;</span>: <span class="hljs-string">&quot;student&quot;</span>,<br>        <span class="hljs-string">&quot;Content-Type&quot;</span>: <span class="hljs-string">&quot;application/json; charset=UTF-8&quot;</span>,<br>        <span class="hljs-string">&quot;Accept-Encoding&quot;</span>: <span class="hljs-string">&quot;&quot;</span>,<br>    &#125;<br>    <span class="hljs-comment"># 签到打卡信息，根据自己需求更改</span><br>    data = &#123;<br>        <span class="hljs-string">&quot;country&quot;</span>: <span class="hljs-string">&quot;中国&quot;</span>, <br>        <span class="hljs-string">&quot;address&quot;</span>: Login_info[<span class="hljs-string">&#x27;address&#x27;</span>], <br>        <span class="hljs-string">&quot;province&quot;</span>: <span class="hljs-string">&quot;上海市&quot;</span>, <br>        <span class="hljs-string">&quot;city&quot;</span>: <span class="hljs-string">&quot;上海市&quot;</span>, <br>        <span class="hljs-string">&quot;latitude&quot;</span>: <span class="hljs-string">&quot;39.910924547299565&quot;</span>, <span class="hljs-comment"># 纬度</span><br>        <span class="hljs-string">&quot;description&quot;</span>: <span class="hljs-string">&quot;&quot;</span>, <br>        <span class="hljs-string">&quot;planId&quot;</span>: Login_info[<span class="hljs-string">&#x27;planId&#x27;</span>], <br>        <span class="hljs-string">&quot;type&quot;</span>: Login_info[<span class="hljs-string">&#x27;cardType&#x27;</span>], <br>        <span class="hljs-string">&quot;device&quot;</span>: <span class="hljs-string">&quot;Android&quot;</span>, <br>        <span class="hljs-string">&quot;longitude&quot;</span>: <span class="hljs-string">&quot;116.4133836971231&quot;</span>  <span class="hljs-comment"># 经度</span><br>    &#125;<br>    res = requests.post(url,headers=headers,data=json.dumps(data)).json()<br>    <span class="hljs-keyword">if</span> res[<span class="hljs-string">&#x27;code&#x27;</span>] == <span class="hljs-number">200</span> :<br>        <span class="hljs-built_in">print</span>(<span class="hljs-string">&quot;签到成功！&quot;</span>)<br>        send_email(<span class="hljs-string">&quot;工学云签到成功！&quot;</span>)<br>    <span class="hljs-keyword">else</span> :<br>        <span class="hljs-built_in">print</span>(<span class="hljs-string">&quot;签到失败，错误原因：&quot;</span> + res.msg)<br>        send_email(<span class="hljs-string">&quot;工学云签到失败，错误原因：&quot;</span> + res.msg +<span class="hljs-string">&quot;请登录并检查服务器配置信息是否正确！&quot;</span>)<br>    <br><span class="hljs-comment"># 根据现在时间判断上下班签到</span><br><span class="hljs-comment"># 上班  8-16</span><br><span class="hljs-keyword">def</span> <span class="hljs-title function_">get_time</span>():<br>    mytime = time.localtime()<br>    <span class="hljs-keyword">if</span> mytime.tm_hour &lt; <span class="hljs-number">8</span> <span class="hljs-keyword">or</span> mytime.tm_hour &gt; <span class="hljs-number">16</span>:<br>        Login_info[<span class="hljs-string">&#x27;cardType&#x27;</span>] = <span class="hljs-string">&#x27;END&#x27;</span>  <span class="hljs-comment"># 上班</span><br>    <span class="hljs-keyword">else</span>:<br>        Login_info[<span class="hljs-string">&#x27;cardType&#x27;</span>] = <span class="hljs-string">&#x27;START&#x27;</span>    <span class="hljs-comment"># 下班</span><br><br><span class="hljs-comment"># 获取签到sign加密参</span><br><span class="hljs-keyword">def</span> <span class="hljs-title function_">getSign</span>(<span class="hljs-params">cardType, planId, userId, address</span>):<br>    byStr = <span class="hljs-string">&quot;Android&quot;</span> + <span class="hljs-built_in">str</span>(cardType) + <span class="hljs-built_in">str</span>(planId) + <span class="hljs-built_in">str</span>(userId) + <span class="hljs-built_in">str</span>(address) + <span class="hljs-string">&quot;3478cbbc33f84bd00d75d7dfa69e0daa&quot;</span><br>    <span class="hljs-keyword">return</span> getMd5(byStr)<br><br><span class="hljs-comment"># 发送邮件</span><br><span class="hljs-keyword">def</span> <span class="hljs-title function_">send_email</span>(<span class="hljs-params">text</span>):<br>    mail_host = <span class="hljs-string">&quot;smtp.qq.com&quot;</span>  <br>    mail_user = <span class="hljs-string">&quot;14312400@qq.com&quot;</span> <br>    mail_pass = <span class="hljs-string">&quot;授权码&quot;</span><br>    sender = mail_user<br>    receivers = [<span class="hljs-string">&#x27;收件人邮箱&#x27;</span>]<br>    content = text<br>    title = <span class="hljs-string">&#x27;工学云每日签到信息&#x27;</span><br>    message = MIMEText(content, <span class="hljs-string">&#x27;plain&#x27;</span>, <span class="hljs-string">&#x27;utf-8&#x27;</span>)<br>    message[<span class="hljs-string">&#x27;From&#x27;</span>] = <span class="hljs-string">&quot;&#123;&#125;&quot;</span>.<span class="hljs-built_in">format</span>(sender)<br>    message[<span class="hljs-string">&#x27;To&#x27;</span>] = <span class="hljs-string">&quot;,&quot;</span>.join(receivers)<br>    message[<span class="hljs-string">&#x27;Subject&#x27;</span>] = title<br>    <span class="hljs-keyword">try</span>:<br>        smtpObj = smtplib.SMTP_SSL(mail_host, <span class="hljs-number">465</span>)<br>        smtpObj.login(mail_user, mail_pass)<br>        smtpObj.sendmail(sender, receivers, message.as_string())<br>    <span class="hljs-keyword">except</span> smtplib.SMTPException <span class="hljs-keyword">as</span> e:<br>        <span class="hljs-built_in">print</span>(e)<br>        <br><span class="hljs-keyword">if</span> __name__ == <span class="hljs-string">&quot;__main__&quot;</span>:<br>    Login_info = &#123;&#125;<br>    Login_info[<span class="hljs-string">&#x27;address&#x27;</span>] = <span class="hljs-string">&quot;上海市-嘉定区-宝安公路99&quot;</span> <span class="hljs-comment">#签到地址</span><br>    get_time()  <br>    Sign_in()<br>    <span class="hljs-built_in">print</span>(Login_info)<br></code></pre></td></tr></table></figure>
+<blockquote>
+<p>将该脚本设置为每日定时任务即可，本文不再叙述windows&#x2F;centos系统如何设置定时任务</p>
+</blockquote>
+<h1 id="完整程序运行效果"><a href="#完整程序运行效果" class="headerlink" title="完整程序运行效果"></a>完整程序运行效果</h1><p><img src="/upload/2022/09/image-1663431075329.png" srcset="/img/loading.gif" lazyload alt="工学云爬虫邮件效果"><br><img src="/upload/2022/09/image-1663431424511.png" srcset="/img/loading.gif" lazyload alt="工学云爬虫程序完整效果"><br><img src="/upload/2022/09/95EB8E14-3CE0-400F-B3A5-DCC528B55378.png" srcset="/img/loading.gif" lazyload alt="工学云爬虫手机端效果"></p>
+<blockquote>
+<p>对本文有任何疑问的童鞋可以本文留言或邮箱联系我。后续将会尝试Springboot版本，敬请期待！！</p>
+</blockquote>
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/%E7%88%AC%E8%99%AB/" class="category-chain-item">爬虫</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/python/">#python</a>
+      
+        <a href="/tags/%E7%88%AC%E8%99%AB/">#爬虫</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>Python实现工学云自动签到打卡</div>
+      <div>https://tanblog.cc/2022/09/17/python/gxy1/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>言云纪</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2022年9月17日</div>
+        </div>
+      
+      
+      
+        <div class="license-meta-item">
+          <div>许可协议</div>
+          <div>
+            
+              
+              
+                <a target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                    <i class="iconfont icon-by"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2022/09/23/python/py-crawler/" title="python爬虫工具库的封装">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">python爬虫工具库的封装</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2022/09/09/Linux/docker-nginx/" title="nginx服务器搭建">
+                        <span class="hidden-mobile">nginx服务器搭建</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header">
+    <i class="iconfont icon-list"></i>
+    <span>目录</span>
+  </p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
+  
+  
+    <div class="statistics">
+  
+  
+
+  
+    
+      <span id="busuanzi_container_site_pv" style="display: none">
+        总访问量 
+        <span id="busuanzi_value_site_pv"></span>
+         次
+      </span>
+    
+    
+      <span id="busuanzi_container_site_uv" style="display: none">
+        总访客数 
+        <span id="busuanzi_value_site_uv"></span>
+         人
+      </span>
+    
+    
+  
+</div>
+
+  
+  
+    <!-- 备案信息 ICP for China -->
+    <div class="beian">
+  <span>
+    <a href="http://beian.miit.gov.cn/" target="_blank" rel="nofollow noopener">
+      蜀ICP备2022023578号 -1
+    </a>
+  </span>
+  
+</div>
+
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.0/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.18.2/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init(Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc));
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script  src="/js/local-search.js" ></script>
+
+  <script defer src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>

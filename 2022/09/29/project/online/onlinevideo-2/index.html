@@ -1,0 +1,744 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="https://www.helloimg.com/images/2023/01/28/oRUbRY.jpg">
+  <link rel="icon" href="https://www.helloimg.com/images/2023/01/28/oRUbRY.jpg">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="言云纪">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="数据库的设计与表创建">
+<meta property="og:type" content="article">
+<meta property="og:title" content="二. 数据库搭建">
+<meta property="og:url" content="https://tanblog.cc/2022/09/29/project/online/onlinevideo-2/index.html">
+<meta property="og:site_name" content="Tan_Blog">
+<meta property="og:description" content="数据库的设计与表创建">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://tanblog.cc/upload/2022/09/8%5B%40%40U%29PO_WQGYN~ZY%7DJ%5DWMS.png">
+<meta property="og:image" content="https://tanblog.cc/upload/2022/09/image-1664465210063.png">
+<meta property="og:image" content="https://tanblog.cc/upload/2022/09/image-1664465106654.png">
+<meta property="og:image" content="https://ocean-1306678650.cos.ap-shanghai.myqcloud.com/picture/image-1665096523022.png">
+<meta property="og:image" content="https://tanblog.cc/upload/2022/09/YB1%25%40Y3%29NO9%294Y7%24QM5WD%25J.png">
+<meta property="article:published_time" content="2022-09-29T13:57:20.006Z">
+<meta property="article:modified_time" content="2022-10-06T22:49:37.281Z">
+<meta property="article:author" content="言云纪">
+<meta property="article:tag" content="同步影院小程序">
+<meta property="article:tag" content="mysql">
+<meta property="article:tag" content="PowerDesigner">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://tanblog.cc/upload/2022/09/8%5B%40%40U%29PO_WQGYN~ZY%7DJ%5DWMS.png">
+  
+  
+    <meta name="referrer" content="no-referrer-when-downgrade">
+  
+  
+  <title>二. 数据库搭建 - Tan_Blog</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_hj8rtnfg7um.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"tanblog.cc","root":"/","version":"1.9.4","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml"};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+
+  
+<meta name="generator" content="Hexo 6.3.0"><link rel="alternate" href="/atom.xml" title="Tan_Blog" type="application/atom+xml">
+</head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>Tan_Blog</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                <span>首页</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                <span>归档</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                <span>分类</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                <span>标签</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                <span>关于</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/links/">
+                <i class="iconfont icon-link-fill"></i>
+                <span>友链</span>
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <i class="iconfont icon-search"></i>
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">
+              <i class="iconfont icon-dark" id="color-toggle-icon"></i>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('https://www.helloimg.com/images/2023/01/28/oRUrZK.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="二. 数据库搭建"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2022-09-29 21:57" pubdate>
+          2022年9月29日 晚上
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          31k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          257 分钟
+        
+      </span>
+    
+
+    
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">二. 数据库搭建</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <h1 id="数据库设计"><a href="#数据库设计" class="headerlink" title="数据库设计"></a>数据库设计</h1><blockquote>
+<p>数据库设计采用<a target="_blank" rel="noopener" href="https://blog.csdn.net/minwang593/article/details/12417747">新奥尔良设计法</a></p>
+</blockquote>
+<h2 id="产品需求分析"><a href="#产品需求分析" class="headerlink" title="产品需求分析"></a>产品需求分析</h2><blockquote>
+<p>需求分析是数据库设计的第一步，也是最困难、应当投入最大精力的一步.需求分析要做的是了解、分析用户对系统的需求，弄清系统要达到的目标、要实现的功能.需求分析的结果用数据流程图和数据字典表示.值得注意的是，要使一个系统具有较长的生命周期，除了要满足用户提出的需求外，还需要系统设计人员预测未来系统可能要支持的功能</p>
+</blockquote>
+<p><img src="https://tanblog.cc/upload/2022/09/8%5B%40%40U%29PO_WQGYN~ZY%7DJ%5DWMS.png" srcset="/img/loading.gif" lazyload alt="在线同步影院需求分析"></p>
+<h2 id="概念结构设计"><a href="#概念结构设计" class="headerlink" title="概念结构设计"></a>概念结构设计</h2><blockquote>
+<p>概念结构设计是将系统需求分析得到的用户需求抽象为信息结构的过程。概念结构即概念模型，用E-R图对其进行描述。概念结构具有的特点∶是现实世界的真实模型、易于理解、易于更改、易于向数据模型转换。</p>
+</blockquote>
+<p><img src="https://tanblog.cc/upload/2022/09/image-1664465210063.png" srcset="/img/loading.gif" lazyload alt="在线同步影院概念模型"></p>
+<h2 id="逻辑结构设计"><a href="#逻辑结构设计" class="headerlink" title="逻辑结构设计"></a>逻辑结构设计</h2><blockquote>
+<p>逻辑结构设计的任务就是把概念模型转换成某个具体的DBMS所支持的数据模型。通常概念模型向逻辑模型转换过程分3步进行：</p>
+<ol>
+<li>概念模型转换为—般的数据模型</li>
+<li>一般的数据模型转换为特定DBMS支持的数据模型</li>
+<li>优化数据模型</li>
+</ol>
+</blockquote>
+<p><img src="https://tanblog.cc/upload/2022/09/image-1664465106654.png" srcset="/img/loading.gif" lazyload alt="在线同步影院逻辑结构"></p>
+<h2 id="物理结构设计"><a href="#物理结构设计" class="headerlink" title="物理结构设计"></a>物理结构设计</h2><blockquote>
+<p>数据库的物理结构:数据库在物理设备上的存储结构与存取方法，依赖于给定的计算机系统。物理结构设计是对于给定的逻辑数据模型，选取一个最适合应用环境的物理结构。物理结构设计分为两步:</p>
+<ol>
+<li>确定数据库的存取方法和存取结构</li>
+<li>对物理结构进行评价(重点是时间和效率)，若评价结构满足原设计要求，则可以进行物理实施;否则要修改物理结构，甚至返回逻辑设计阶段修改数据模型</li>
+</ol>
+</blockquote>
+<p><img src="https://ocean-1306678650.cos.ap-shanghai.myqcloud.com/picture/image-1665096523022.png" srcset="/img/loading.gif" lazyload alt="image-1665096523022"></p>
+<h1 id="创建数据库"><a href="#创建数据库" class="headerlink" title="创建数据库"></a>创建数据库</h1><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs sql"><span class="hljs-keyword">CREATE</span> DATABASE `online`<span class="hljs-type">CHARACTER</span> <span class="hljs-keyword">SET</span> utf8 <span class="hljs-keyword">COLLATE</span> utf8_general_ci; <br></code></pre></td></tr></table></figure>
+<h1 id="创建表"><a href="#创建表" class="headerlink" title="创建表"></a>创建表</h1><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br></pre></td><td class="code"><pre><code class="hljs sql"><span class="hljs-comment">/*==============================================================*/</span><br><span class="hljs-comment">/* DBMS name:      MySQL 5.0                                    */</span><br><span class="hljs-comment">/* Created on:     2022/9/29 23:38:39                           */</span><br><span class="hljs-comment">/*==============================================================*/</span><br><br><br><span class="hljs-keyword">drop</span> <span class="hljs-keyword">table</span> if <span class="hljs-keyword">exists</span> create_room;<br><br><span class="hljs-keyword">drop</span> <span class="hljs-keyword">table</span> if <span class="hljs-keyword">exists</span> upload_video;<br><br><span class="hljs-keyword">drop</span> <span class="hljs-keyword">table</span> if <span class="hljs-keyword">exists</span> <span class="hljs-keyword">user</span>;<br><br><span class="hljs-keyword">drop</span> <span class="hljs-keyword">table</span> if <span class="hljs-keyword">exists</span> video;<br><br><span class="hljs-keyword">drop</span> <span class="hljs-keyword">table</span> if <span class="hljs-keyword">exists</span> videoroom;<br><br><span class="hljs-comment">/*==============================================================*/</span><br><span class="hljs-comment">/* Table: create_room                                           */</span><br><span class="hljs-comment">/*==============================================================*/</span><br><span class="hljs-keyword">create</span> <span class="hljs-keyword">table</span> create_room<br>(<br>   cr_id                <span class="hljs-type">bigint</span> <span class="hljs-keyword">not</span> <span class="hljs-keyword">null</span>,<br>   vr_id                <span class="hljs-type">bigint</span> <span class="hljs-keyword">not</span> <span class="hljs-keyword">null</span>,<br>   openid               <span class="hljs-type">varchar</span>(<span class="hljs-number">35</span>) <span class="hljs-keyword">not</span> <span class="hljs-keyword">null</span>,<br>   vid                  <span class="hljs-type">bigint</span>,<br>   <span class="hljs-keyword">primary</span> key (cr_id)<br>);<br><br><span class="hljs-comment">/*==============================================================*/</span><br><span class="hljs-comment">/* Table: upload_video                                          */</span><br><span class="hljs-comment">/*==============================================================*/</span><br><span class="hljs-keyword">create</span> <span class="hljs-keyword">table</span> upload_video<br>(<br>   vid                  <span class="hljs-type">bigint</span> <span class="hljs-keyword">not</span> <span class="hljs-keyword">null</span>,<br>   openid               <span class="hljs-type">varchar</span>(<span class="hljs-number">35</span>) <span class="hljs-keyword">not</span> <span class="hljs-keyword">null</span>,<br>   uv_id                <span class="hljs-type">bigint</span> <span class="hljs-keyword">not</span> <span class="hljs-keyword">null</span>,<br>   <span class="hljs-keyword">primary</span> key (uv_id)<br>);<br><br><span class="hljs-comment">/*==============================================================*/</span><br><span class="hljs-comment">/* Table: user                                                  */</span><br><span class="hljs-comment">/*==============================================================*/</span><br><span class="hljs-keyword">create</span> <span class="hljs-keyword">table</span> <span class="hljs-keyword">user</span><br>(<br>   openid               <span class="hljs-type">varchar</span>(<span class="hljs-number">35</span>) <span class="hljs-keyword">not</span> <span class="hljs-keyword">null</span>,<br>   u_name               <span class="hljs-type">varchar</span>(<span class="hljs-number">20</span>),<br>   u_img                <span class="hljs-type">varchar</span>(<span class="hljs-number">300</span>),<br>   upload_num           <span class="hljs-type">int</span>,<br>   create_room          <span class="hljs-type">int</span>,<br>   <span class="hljs-keyword">primary</span> key (openid)<br>);<br><br><span class="hljs-comment">/*==============================================================*/</span><br><span class="hljs-comment">/* Table: video                                                 */</span><br><span class="hljs-comment">/*==============================================================*/</span><br><span class="hljs-keyword">create</span> <span class="hljs-keyword">table</span> video<br>(<br>   vid                  <span class="hljs-type">bigint</span> <span class="hljs-keyword">not</span> <span class="hljs-keyword">null</span>,<br>   v_title              <span class="hljs-type">varchar</span>(<span class="hljs-number">20</span>) <span class="hljs-keyword">not</span> <span class="hljs-keyword">null</span>,<br>   v_url                <span class="hljs-type">varchar</span>(<span class="hljs-number">300</span>) <span class="hljs-keyword">not</span> <span class="hljs-keyword">null</span>,<br>   v_describe           <span class="hljs-type">varchar</span>(<span class="hljs-number">100</span>),<br>   <span class="hljs-keyword">primary</span> key (vid)<br>);<br><br><span class="hljs-comment">/*==============================================================*/</span><br><span class="hljs-comment">/* Table: videoroom                                             */</span><br><span class="hljs-comment">/*==============================================================*/</span><br><span class="hljs-keyword">create</span> <span class="hljs-keyword">table</span> videoroom<br>(<br>   vr_id                <span class="hljs-type">bigint</span> <span class="hljs-keyword">not</span> <span class="hljs-keyword">null</span>,<br>   vr_title             <span class="hljs-type">varchar</span>(<span class="hljs-number">20</span>),<br>   vr_describe          <span class="hljs-type">varchar</span>(<span class="hljs-number">100</span>),<br>   <span class="hljs-keyword">primary</span> key (vr_id)<br>);<br><br><span class="hljs-keyword">alter</span> <span class="hljs-keyword">table</span> create_room <span class="hljs-keyword">add</span> <span class="hljs-keyword">constraint</span> FK_Relationship_5 <span class="hljs-keyword">foreign</span> key (vid)<br>      <span class="hljs-keyword">references</span> video (vid) <span class="hljs-keyword">on</span> <span class="hljs-keyword">delete</span> restrict <span class="hljs-keyword">on</span> <span class="hljs-keyword">update</span> restrict;<br><br><span class="hljs-keyword">alter</span> <span class="hljs-keyword">table</span> create_room <span class="hljs-keyword">add</span> <span class="hljs-keyword">constraint</span> FK_create_room <span class="hljs-keyword">foreign</span> key (vr_id)<br>      <span class="hljs-keyword">references</span> videoroom (vr_id) <span class="hljs-keyword">on</span> <span class="hljs-keyword">delete</span> restrict <span class="hljs-keyword">on</span> <span class="hljs-keyword">update</span> restrict;<br><br><span class="hljs-keyword">alter</span> <span class="hljs-keyword">table</span> create_room <span class="hljs-keyword">add</span> <span class="hljs-keyword">constraint</span> FK_create_room2 <span class="hljs-keyword">foreign</span> key (openid)<br>      <span class="hljs-keyword">references</span> <span class="hljs-keyword">user</span> (openid) <span class="hljs-keyword">on</span> <span class="hljs-keyword">delete</span> restrict <span class="hljs-keyword">on</span> <span class="hljs-keyword">update</span> restrict;<br><br><span class="hljs-keyword">alter</span> <span class="hljs-keyword">table</span> upload_video <span class="hljs-keyword">add</span> <span class="hljs-keyword">constraint</span> FK_upload_video <span class="hljs-keyword">foreign</span> key (vid)<br>      <span class="hljs-keyword">references</span> video (vid) <span class="hljs-keyword">on</span> <span class="hljs-keyword">delete</span> restrict <span class="hljs-keyword">on</span> <span class="hljs-keyword">update</span> restrict;<br><br><span class="hljs-keyword">alter</span> <span class="hljs-keyword">table</span> upload_video <span class="hljs-keyword">add</span> <span class="hljs-keyword">constraint</span> FK_upload_video2 <span class="hljs-keyword">foreign</span> key (openid)<br>      <span class="hljs-keyword">references</span> <span class="hljs-keyword">user</span> (openid) <span class="hljs-keyword">on</span> <span class="hljs-keyword">delete</span> restrict <span class="hljs-keyword">on</span> <span class="hljs-keyword">update</span> restrict;<br><br></code></pre></td></tr></table></figure>
+<h1 id="生成表测试数据"><a href="#生成表测试数据" class="headerlink" title="生成表测试数据"></a>生成表测试数据</h1><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br><span class="line">147</span><br><span class="line">148</span><br><span class="line">149</span><br><span class="line">150</span><br><span class="line">151</span><br><span class="line">152</span><br><span class="line">153</span><br><span class="line">154</span><br><span class="line">155</span><br><span class="line">156</span><br><span class="line">157</span><br><span class="line">158</span><br><span class="line">159</span><br><span class="line">160</span><br><span class="line">161</span><br><span class="line">162</span><br><span class="line">163</span><br><span class="line">164</span><br><span class="line">165</span><br><span class="line">166</span><br><span class="line">167</span><br><span class="line">168</span><br><span class="line">169</span><br><span class="line">170</span><br><span class="line">171</span><br><span class="line">172</span><br><span class="line">173</span><br><span class="line">174</span><br><span class="line">175</span><br><span class="line">176</span><br><span class="line">177</span><br><span class="line">178</span><br><span class="line">179</span><br><span class="line">180</span><br><span class="line">181</span><br><span class="line">182</span><br><span class="line">183</span><br><span class="line">184</span><br><span class="line">185</span><br><span class="line">186</span><br><span class="line">187</span><br><span class="line">188</span><br><span class="line">189</span><br><span class="line">190</span><br><span class="line">191</span><br><span class="line">192</span><br><span class="line">193</span><br><span class="line">194</span><br><span class="line">195</span><br><span class="line">196</span><br><span class="line">197</span><br><span class="line">198</span><br><span class="line">199</span><br></pre></td><td class="code"><pre><code class="hljs sql"><span class="hljs-keyword">insert</span> <span class="hljs-keyword">into</span> <span class="hljs-keyword">user</span> (openid, u_name, u_img, upload_num, create_room) <span class="hljs-keyword">values</span> (<span class="hljs-string">&#x27;NU5YM T64H1ACW0X5C534PIOCKGSWADOWU8&#x27;</span>, <span class="hljs-string">&#x27;OH KGE9O5XAWMW0N51W2&#x27;</span>, <span class="hljs-string">&#x27;BQTH35UYI2PYTBWEEV8J3 BXBAA9XGGDVG6XQEINRJQVVEG1HCKCNFJQAJAI7 B6AH32TLO2IOAIU9YUA Y D76YQ4WUJJHM4AFQ6DP9PVMCMJUOH8FUF51J5V0SJHCW099V9PQ1DA90L8C1OF5GHGO00GU1FGYVMO J03QRJ329QQI6JUPHQSFNXGUGVMA2LS82WBGHAC50IV4WSKVRW6FCGDR05H0NPM0SVOEYO UCXVQR4PQAA2KM7NMV1 KHN8HCJRUIVWWHJDRVB7N8OCIOUJRCUF908I7GWPU81S7U&#x27;</span>, <span class="hljs-number">19</span>, <span class="hljs-number">4</span>);<br><br><span class="hljs-keyword">insert</span> <span class="hljs-keyword">into</span> <span class="hljs-keyword">user</span> (openid, u_name, u_img, upload_num, create_room) <span class="hljs-keyword">values</span> (<span class="hljs-string">&#x27;37 9F 679K2B33H1X2A3STRXI4RM6GT095L&#x27;</span>, <span class="hljs-string">&#x27;ICSS7 AVJRME43TUPJ8Q&#x27;</span>, <span class="hljs-string">&#x27;EDB26XAWD8QE0BQXDK3GAAXYLWARCE0 5DBUJMKP9FIAG2G70JWJLAQYQATG19UKV5IB80OCR THWU10OW9R25 L 2UBDVII90B95O5JQDIU3LY9SLK8LEA9I J0LM1SHL2583Q8OI5VV4W1A0YQ5ILF14WT2TUKB S2ENHIJP4N28WMOWEOMT2TUYOP4OJ8 MBRNOQMWLK0IJ8E0GL53K77OEGB4927AF9N0D4 QCEE4LFXT91WJXQLVRIYIML6KN SHVI4OFDXUXC 6A1B0 P39QYIQOMXM PX663RTSYC&#x27;</span>, <span class="hljs-number">4</span>, <span class="hljs-number">2</span>);<br><br><span class="hljs-keyword">insert</span> <span class="hljs-keyword">into</span> <span class="hljs-keyword">user</span> (openid, u_name, u_img, upload_num, create_room) <span class="hljs-keyword">values</span> (<span class="hljs-string">&#x27;PYXQG I05VSV0END78CKB 6HA9TDWL7SKYQ&#x27;</span>, <span class="hljs-string">&#x27;GTEN4TJWYTOAMT15C6WS&#x27;</span>, <span class="hljs-string">&#x27;LU3DQXOHNPG18HOK89WFWKDF77CSSQG2EO45M R1JYKUPIDFI2IR9VQCPU 7S W79L3JJOXFUKY43QGY5SR76S9DSS17IP4G8OYUNMLMQ7QMDI6QOY96NOAUQPU55FR8EY LRTYAGGDA1MIYP0VA58XRQ4YHJ47KVBPF3P T8VL555BIUBT9QLYT2K8VY3N6TLX6I4E5CUEH8P3XT5JYYB3B CT5752EDGQTAASY4O3MF89E8OQHYAR7VQ69NF68SLIGBUFJWM85B3WRVYF BW451Y0B7JJEAHWD0WGV0TNR&#x27;</span>, <span class="hljs-number">16</span>, <span class="hljs-number">10</span>);<br><br><span class="hljs-keyword">insert</span> <span class="hljs-keyword">into</span> <span class="hljs-keyword">user</span> (openid, u_name, u_img, upload_num, create_room) <span class="hljs-keyword">values</span> (<span class="hljs-string">&#x27; GOU3TKJSA0LUDR 1R966AC2J0Y7GFOR8P6&#x27;</span>, <span class="hljs-string">&#x27;GII24T8O71Q9DU2UQTJK&#x27;</span>, <span class="hljs-string">&#x27;34YHH0YV9W6FX1AMAFF64LV0AUPIXAJAEF5RTPUNFGPYW1AKUIYLM9L0MJUS0Y8RIMWDQU Y339EFTKSDJY94QM20BBMSPIC5QJT24IN0U6Y 6  VR4GY6O3YTDKQA9BK517P6TQF1JJ4UM2WQV5JMV6I3 WCDT8NOABJHNC8HARBFV4JIFYA3IKAOYH8JNNPIULIH RPD1S7GGCDIS5OF9KEGTWY8NFLA33MI1FSABKDCB3LJPL6E RHQYC5UUHQ18LUTF0U9ALGGOWUTQYCPWUP6HOHOOW277I8HX8VO11&#x27;</span>, <span class="hljs-number">7</span>, <span class="hljs-number">0</span>);<br><br><span class="hljs-keyword">insert</span> <span class="hljs-keyword">into</span> <span class="hljs-keyword">user</span> (openid, u_name, u_img, upload_num, create_room) <span class="hljs-keyword">values</span> (<span class="hljs-string">&#x27;9IWM51WXRKD9BN21CJV SS9SXBAMV4F FEA&#x27;</span>, <span class="hljs-string">&#x27; 9HBC4M5NMVE DTXA HM&#x27;</span>, <span class="hljs-string">&#x27;402FB 9DOYGMTYBFLXSY2LQVVMN0BDBT25AKS4DTTNE41K4R9O33QHBFU50G7JPE1YG9HMYRB6SI6WEJ6YVULJAJ9XOT2UMXSDWP7EPGVVW3HCE85OLYPRN8BRLF B594AA5BO4Q5WCBTM50YN2BPOB669 VJD8UUFJ3N4E5UG0VKVGMHLCYN4WQ21DVVVLTTJV6LTKTPJ0HMMXLK6S39EUX9LJ9O2P Y5R439HLI3T3EVX 5W01P6AC1AL34MUR4R0XKBPY1X5UUYNM47YCOIADQFWHXM29BTNL1AK14U0X&#x27;</span>, <span class="hljs-number">10</span>, <span class="hljs-number">7</span>);<br><br><span class="hljs-keyword">insert</span> <span class="hljs-keyword">into</span> <span class="hljs-keyword">user</span> (openid, u_name, u_img, upload_num, create_room) <span class="hljs-keyword">values</span> (<span class="hljs-string">&#x27;P POWY7AQG9WNV5JW6YE894AEFQNB3S4L C&#x27;</span>, <span class="hljs-string">&#x27;L5BTGOH8MM4KVNRAONH8&#x27;</span>, <span class="hljs-string">&#x27;IN0VHHTOG JWN71TDI68JK0G0VAMNHNSD5PV7 1UTEMM7R0K86S4Q9PUJ6R7IEM00 ABCUET25VSS3XCUWCX 0OD6PPVM2U9I70NX5XQ2WCBU4D 2EYGDT1P2EMDYUCGH6YV2VYV6SYTVO0F9QM1 MBQTJS4H1LM2PYRWW3QBBDJDH SCF2Q 97HNW989T9XY0NMJ16VXG1EU7JCSES7JHQ57MVEAABRDNGH7YF2YJ6XWDBIJY5TTY81R781OG0L1QJ23988XBTD3F8U4T5M269O3MS6K7V38MWNGHDFVWQL&#x27;</span>, <span class="hljs-number">12</span>, <span class="hljs-number">13</span>);<br><br><span class="hljs-keyword">insert</span> <span class="hljs-keyword">into</span> <span class="hljs-keyword">user</span> (openid, u_name, u_img, upload_num, create_room) <span class="hljs-keyword">values</span> (<span class="hljs-string">&#x27;7F3GGF36N22H3XUAV23EYSDJ6Y1MU7KYUN1&#x27;</span>, <span class="hljs-string">&#x27;3G0F4TK4AT3C4JBM9X4L&#x27;</span>, <span class="hljs-string">&#x27;3RF4K4P7JNOOH8NJ1DP2R599L0TWCWI3KMC8HEGXKQOVQSVGCNLH K6JS6V0F9I466R6XKTRGQM99G4YMOXHRJYSD64BSCUGNIN8J1 CJRAVWUYP50DBG3PYQ7DJJXGMRMBPIHYY8YM24VO171VH1PANA9SID80S9DC4I4IIXAW8U EW35LJY7D6GAR7KS1Q0KL6SI6N4NP LYY 4K287WEGQ50USNRYUX7P3MAM9VU1C 1KNG3HBGL1KLIQD67JM2KNPT CVNFANN1K3WPDCXX7IAIC569BAGG7GW5CHMWU&#x27;</span>, <span class="hljs-number">3</span>, <span class="hljs-number">1</span>);<br><br><span class="hljs-keyword">insert</span> <span class="hljs-keyword">into</span> <span class="hljs-keyword">user</span> (openid, u_name, u_img, upload_num, create_room) <span class="hljs-keyword">values</span> (<span class="hljs-string">&#x27;TIPF1J 5XM2 GYRBN2Q6FME2P7MOVT9PRD0&#x27;</span>, <span class="hljs-string">&#x27;JB7EC53E0BBFSOHUAMKJ&#x27;</span>, <span class="hljs-string">&#x27;M07NVT93VU8T4TJBEWGORKSMP1FWO9VVUFH1G4D1022G NFF2Y8R0PUECVBV22DQHSPNCLYQFXRBQ59MIDQ92464RD0RABL06AE20W7U93F91NG1OKWMXXMKWYLT093B5KXK1NKAAQ0TJANX2DHVP6ANAFSVX2NK4OE 1CT PB66 8RON2 RHUJGV18FRTCOD2OVKEY5ASE54F3W AONDS388E9NBELUQLIFA3B2DHY8PT2933OKKRUDFK0CCQYCGHBJWOG8S5VLK8JQMYT68F2E2XG OLGOHGDP49B9VWX0&#x27;</span>, <span class="hljs-number">11</span>, <span class="hljs-number">8</span>);<br><br><span class="hljs-keyword">insert</span> <span class="hljs-keyword">into</span> <span class="hljs-keyword">user</span> (openid, u_name, u_img, upload_num, create_room) <span class="hljs-keyword">values</span> (<span class="hljs-string">&#x27;4 JOITHJDIPDWANASPBR0U55TV0R4M82GHF&#x27;</span>, <span class="hljs-string">&#x27;UHUOI7UKB3P OGG84XH5&#x27;</span>, <span class="hljs-string">&#x27;JEIANQPVLD91AE8P7N8G5KO3NW XKBRXIXE5VQTLW385Q6WBSGTFEA1I9HY69CQIDCTNGLA1H 1RM N9BKYJOI2HSWW4YC0I15NC5F5IMB21OTMLTCQW0I442WU 43ICIN4U5Q4YNAXA57K473GPU1D8X326SR 3R4P0AFS0 2K0T 48I0RFA5P8933BHXYITQ4TUSGY1L6V1HP S9JJVDWA1DT1CLN RJHEPJ7P7U8NNCH44TYTRND469CA 55KOJ117UXW0MIB0PE1KNH4K9H5P132IDC OLE695CRXO2Y&#x27;</span>, <span class="hljs-number">0</span>, <span class="hljs-number">16</span>);<br><br><span class="hljs-keyword">insert</span> <span class="hljs-keyword">into</span> <span class="hljs-keyword">user</span> (openid, u_name, u_img, upload_num, create_room) <span class="hljs-keyword">values</span> (<span class="hljs-string">&#x27;5GAAN7XXPTM2PR3FWQN 505579NJN8FP DI&#x27;</span>, <span class="hljs-string">&#x27;FAOHUBNOJ0EOO1VN0MS8&#x27;</span>, <span class="hljs-string">&#x27;226QCKVGFY7HMYPLNITLXIHFCGT6JN7V9CDXJB404WGTY176L5 ELYFKE3NQC2JGKT9YFJK4ULTKUCSC2C13WKPHWRTM EYAH8XU6URAC ORCQ1QDGY04T 8XO5Q30N42P883ML5YH94N1Q6BDI5H5B40D5LB52UVSUGF97JHSI W YM7B74CV0G9S8EC WI1F5HK20EB45DB748YXDA07KTBCI WM8C5 DYT6QVB0QY56VAX93KWBWVBRWUR0BNE5I4LPD7XGK2OE372RAKC73IYA44P2P G5B AM7U2VPO&#x27;</span>, <span class="hljs-number">1</span>, <span class="hljs-number">5</span>);<br><br><span class="hljs-keyword">insert</span> <span class="hljs-keyword">into</span> <span class="hljs-keyword">user</span> (openid, u_name, u_img, upload_num, create_room) <span class="hljs-keyword">values</span> (<span class="hljs-string">&#x27; WCMA43UXF3MW74PA8T8RB414SR5QHNHRW1&#x27;</span>, <span class="hljs-string">&#x27;HJ2I1HPYE4B9CYCABXHG&#x27;</span>, <span class="hljs-string">&#x27;573KTBJLUTMPFGMOILB1LID3DURC902F TA576DJU14OJAPW3A9LJ8YPC6VII2AMGFIVQ1Y1TLLPI6C AQYOLO7SOBP7DOS712TSGYA9B6A97YGN0H4ELN1UXWLHXVSS3PI4 G75XCQ0YTJD8YQ3UA35OG9KS0AM4898ED796JRQME29WF17A9UKJDMU2Y2NLFYOD2PSQ7ICMP6007LCAJJM50 TGXOF2 R438SM9LA0W6T2ME89UJ6I6MT55JG71H7F9YC8EWTYWOPGS12WD2J3BDYQXWIU3GYL4S4UW90L&#x27;</span>, <span class="hljs-number">14</span>, <span class="hljs-number">14</span>);<br><br><span class="hljs-keyword">insert</span> <span class="hljs-keyword">into</span> <span class="hljs-keyword">user</span> (openid, u_name, u_img, upload_num, create_room) <span class="hljs-keyword">values</span> (<span class="hljs-string">&#x27;T5QS25YFVGU4HV2B63JTUXLUCLLR34H69P9&#x27;</span>, <span class="hljs-string">&#x27;SXNRE1ESPPBL2XM3DKJQ&#x27;</span>, <span class="hljs-string">&#x27;OFCXM3GBYC9VA9GI ESXW94SGMK9HM3HP22U8F4S21O0VAPN6WWM28YBKTX0YYLE2PX8SS OS4XBVBCHTPETAL3N938732A6DRRSIVAJR2X934BFRFG 8HDEYMBNSN9WQ48TL8J33RE0DCS5E64COW DJYQTVEUQT2RDAEJ6GDUCNNBEOF7OETBIE0XT9SO2TAI2WPCT1NINTGM302BH615WK60FVBNDFUH8QHD6KLG3U7RCEESXUCFSH7Y3PA BXAFT5X7MAPHEO63ED3SSAEHK6BFUQ06R3GXHJ4RL1V80&#x27;</span>, <span class="hljs-number">2</span>, <span class="hljs-number">19</span>);<br><br><span class="hljs-keyword">insert</span> <span class="hljs-keyword">into</span> <span class="hljs-keyword">user</span> (openid, u_name, u_img, upload_num, create_room) <span class="hljs-keyword">values</span> (<span class="hljs-string">&#x27;XCU1TRKINDVK4B9VE0CDW57V68TK50V1NLJ&#x27;</span>, <span class="hljs-string">&#x27;AHXDIV7Y1QD3OEDRT85J&#x27;</span>, <span class="hljs-string">&#x27;CM8N 99HDQTU820H MXN7P8G95AS4D4YVL2NSFW52UBBQFXCJ6B45QJPTV8YDWAYE6S4WI8KA23V9S9JGONHBNNTM4D25JPFY9UX UI51QKI 0VQW0J6J0919OR9FS3EQPY375SXC0EHM8CC XVSCPUA75QRNL KV87S8KWP8 K2B35BX6R3N4M312V0Q8N8LITDCMHTUNBTVNGEWBP0Y KPCW2L9G8H33GCB9YB8Y7DJ97W7VFMBGI T1I87DKXOFXBEVGXLN0J4T6S29W5930G1PNU6J9VMVF5G7  2IUA&#x27;</span>, <span class="hljs-number">13</span>, <span class="hljs-number">3</span>);<br><br><span class="hljs-keyword">insert</span> <span class="hljs-keyword">into</span> <span class="hljs-keyword">user</span> (openid, u_name, u_img, upload_num, create_room) <span class="hljs-keyword">values</span> (<span class="hljs-string">&#x27;JYKIORMPQFH22 HXJU37MELWBVLF63NYG 1&#x27;</span>, <span class="hljs-string">&#x27;YLTQEYLDLBJPJYK61CMF&#x27;</span>, <span class="hljs-string">&#x27;YIWRUTFYXUFAQ27HAVSC8RCRTE9IV42RW0P2UQLLX3WDN96B5QBXW7EAF2U791C8EDOPG58RFMC5I7XPXVVY AL0N60CHPM5C1O924HB3LGT4UY7BH6BX27CH4VXUF336VE15LRA5MP69X6HK2UN6ERWEO9LPH9UY69X4FRTCPDPU6PDEN57734FE2VOE1X95KHJICG7 8HHP8 T5L8VIUES2V42B55GU724T13 V0UCRKO0MPY9OB 2G38EXR9NLITJN28RB94OYMS7541K8 KG577YNRV6KEADJXOB9LNL&#x27;</span>, <span class="hljs-number">17</span>, <span class="hljs-number">6</span>);<br><br><span class="hljs-keyword">insert</span> <span class="hljs-keyword">into</span> <span class="hljs-keyword">user</span> (openid, u_name, u_img, upload_num, create_room) <span class="hljs-keyword">values</span> (<span class="hljs-string">&#x27;DDFF1SUW6HR MP231O TOYRWVAF940LCXEP&#x27;</span>, <span class="hljs-string">&#x27;WLMCQ97S7DJRC8CVBDX &#x27;</span>, <span class="hljs-string">&#x27;AKAJVYDWWX51EAUQC577EMEPJEHDFMVSTN7KD57WH3LU1BW9H01TYIQF8ID53IJ4KM0K1RYEO8KFWWOPFJG1R2CBL2FHVW0P8JL48XI6C37U5UTEGBXL07WJGTWY6XDQKH32V9EOBAT9EGQERT9BC4WTQA9DV0D1DC BDN02JD12VFNBNGK9XIMNB09MG2M3E0XYOHJ2XSSR9UIGGI5LJF446E UXEH0H7 8CJW4GVA0U74TI7ONFC7 BPS9RP4NJMELB SB4WYMEE 07N1VC5INO68912HEFRQK7DREX0LL&#x27;</span>, <span class="hljs-number">18</span>, <span class="hljs-number">9</span>);<br><br><span class="hljs-keyword">insert</span> <span class="hljs-keyword">into</span> <span class="hljs-keyword">user</span> (openid, u_name, u_img, upload_num, create_room) <span class="hljs-keyword">values</span> (<span class="hljs-string">&#x27;WV2N5Y4VAINKIYOGGSXUAHSU2BJ2 V3P0E2&#x27;</span>, <span class="hljs-string">&#x27;X98HLFUAF3IB9QQ  QLS&#x27;</span>, <span class="hljs-string">&#x27;7RFAYTIYN3E6DW8EB09E25VV3R3SYB715YLN6OIO7X3BGX FPGXEG4VFKHTHAR5AL6BMD1T CPIG17Y6VQTUJ 67TDT7280QGVAG1MH01XEK8JVPYKXSCWHGHMOCFJN151Y3P3U0OJAF8NQ5P35YY QITUUXKC9XO K3Y HEAUHC99VWBU2RE96UI3ILOAABIH3NDSBRDJ1BHUVEKS48VKD4WQMQ1UFAPNDNKSIVYST07WMBR9F2FS46RNX9XGP2S2XM9BIKL3IRQT7HP10NBLHYF10WLEF1WP5Q2I1XFFHJ&#x27;</span>, <span class="hljs-number">15</span>, <span class="hljs-number">15</span>);<br><br><span class="hljs-keyword">insert</span> <span class="hljs-keyword">into</span> <span class="hljs-keyword">user</span> (openid, u_name, u_img, upload_num, create_room) <span class="hljs-keyword">values</span> (<span class="hljs-string">&#x27;J9NOKX3AV2YRF 3TKFEOKL5I4XKHIP7GTO6&#x27;</span>, <span class="hljs-string">&#x27;0BBMNM6IOXOS5E0AYPJF&#x27;</span>, <span class="hljs-string">&#x27;DT4UTALYPNWMRK4WGY4RNX6VSG5424 YH50IXLQOVGYF6BF9U8OW6HWH453KPYYBGTXRHXO51GMTMOQK697B6L1QWHHR 18KOV41FOKCJ 4EIKR3W041WU2GW85D6 AAN75XAM8WOBXXV8XSFA572883 4871QJRULT61 D4VLUA8DF7BW76Y5MT1R7AUO0WRRAO8CDXGVYKM1BM2ILEEE C MPRFMN9XCXHYQG W5JYOQCW9NUJR804Q6QV4Q51XVFTTKNHN99VGC2MGTRDV70AARK5UMW6EQQ1YNPE701U&#x27;</span>, <span class="hljs-number">8</span>, <span class="hljs-number">18</span>);<br><br><span class="hljs-keyword">insert</span> <span class="hljs-keyword">into</span> <span class="hljs-keyword">user</span> (openid, u_name, u_img, upload_num, create_room) <span class="hljs-keyword">values</span> (<span class="hljs-string">&#x27;G3F2PYXUUJPSC1HFKVDGK3J7CAR31A7BHP8&#x27;</span>, <span class="hljs-string">&#x27;OEHWHAGVWKPBRTEG56CQ&#x27;</span>, <span class="hljs-string">&#x27;M6V AEGT5E7JNKR5 975YA3P287B231IEXUTEOB0J8IBTR4OH4179S2GB GES3QSGRWPIU07JKNNXDRMTY751CE4HVLLYIUM14RSB1GT4L6A0D2211BI027RSEIG7RG7Y WXK7WFT0CL8MQANYPGWVUG2FW555UUGOJK0BVQOV9KRVONQSITKN KM67JHVM GXPWI53OCNRXST6PVXP0S6JICCP5W3NA8V8PVGO8W6G0I0P589X8G4PXL0F46U2JR3QG U N0RST6Y2UH1Q8F2 LBM5C10CNFIK9QWN9W3  &#x27;</span>, <span class="hljs-number">6</span>, <span class="hljs-number">12</span>);<br><br><span class="hljs-keyword">insert</span> <span class="hljs-keyword">into</span> <span class="hljs-keyword">user</span> (openid, u_name, u_img, upload_num, create_room) <span class="hljs-keyword">values</span> (<span class="hljs-string">&#x27;H2FN6HGYBER 9T2PFJSKRY7X4S93LEQMKUD&#x27;</span>, <span class="hljs-string">&#x27;B8BQI4X25ISIBU05 DU4&#x27;</span>, <span class="hljs-string">&#x27;41DURWCGMI5GY3G8BH6Q8IWW21JK88 UNJXAVXT00U9LIQR U0K2MVORYLW9APJC2OFI0K OKEN8H76CH8T NQM EV64VE84TKQ 0QHTBCYRWNNS3QG4VQ79E 469MCG873D5POJAU1SEJWFNYC6DSQ101TJA31AUJ HC6RKKV201TE039M0RCACD IIEY562D69X8O88EJ9HSG E NO77PVLQVIFOCEEGOTTD6NG97MW74DMA5DDJL0S2R6U93VFFUFHIRGD617 77 S93FH0ER7NC9M0M4PTBHW R08SEF&#x27;</span>, <span class="hljs-number">5</span>, <span class="hljs-number">11</span>);<br><br><span class="hljs-keyword">insert</span> <span class="hljs-keyword">into</span> <span class="hljs-keyword">user</span> (openid, u_name, u_img, upload_num, create_room) <span class="hljs-keyword">values</span> (<span class="hljs-string">&#x27;7BSUVE2WV9EGWHEK6YDGSPTN CIIUXIFYDO&#x27;</span>, <span class="hljs-string">&#x27;LSLNYJ3PNOOC6RJ0V6WC&#x27;</span>, <span class="hljs-string">&#x27;0BD5 WPC9L9T 51N8OYES4WLKH7C7OTPPI XB4JS Q7IF0LGREUJCNUII503MB7RD490YQEKHAYTSN0VQRW41PK2CJSKP0OCUW4S1GDN3F2FEFLB8PGAJGTE4K SU3OGI1C8TWT5NVULLKWAXMOVLYLMILSCDQX774G2IMFELMCAQ5RJYAGFX676NE6JN0EUE4RKE24ST5I57ACW0VH2D28I93YB5WDU1EBQRJ3YTC FHV1DA 9MPEICK9N99BDRLR18YBWMKF620RJ4KM0JSU6IBVLNI3AD3FKBCJ9PL4BM&#x27;</span>, <span class="hljs-number">9</span>, <span class="hljs-number">17</span>);<br><br><span class="hljs-keyword">insert</span> <span class="hljs-keyword">into</span> video (vid, v_title, v_url, v_describe) <span class="hljs-keyword">values</span> (<span class="hljs-number">1</span>, <span class="hljs-string">&#x27;OGODMPYGKSAJ3XSYLYKQ&#x27;</span>, <span class="hljs-string">&#x27;C99RPEM1GNR 2KAV2 0M7YJREH2ITYCT EKT9TD P0LBPONK09UB9U H 3N9B3P6SE9XW6J47F98BDI 323MRA37DKP73MBOM BGU67F759E9 6HFE3RDGL1OVODGSLASCHDAHR0NSY4UP6ONL0KVFJ5JBSCST8581BDGKT6WFEDGQE7VHQK 66W3O0FGR8ID12TNWDCVIHQH1YYT6 VIM3T243KVMVT4RVM5TL42VWHDM8WOB8A9J6KN7LDJAPN 0KHAK 9GU1LKA 89VRB2MJ0NWV3VLJR0XTNFBCNK25L&#x27;</span>, <span class="hljs-string">&#x27;TSJ5FDIWLOLN7H94KFS96XLLIK0SJD54E5BO5Y4S  V5 8SEFS1212CK6MJ530DCR8V3QC O0SN5ERQ53GCGTKTQVGUR2Q7WEQC2&#x27;</span>);<br><br><span class="hljs-keyword">insert</span> <span class="hljs-keyword">into</span> video (vid, v_title, v_url, v_describe) <span class="hljs-keyword">values</span> (<span class="hljs-number">13</span>, <span class="hljs-string">&#x27;EFQ09WJGI8SBM1A32FF4&#x27;</span>, <span class="hljs-string">&#x27;LT5AS9K3UHM2CL0MF8J1P624 5RDHM8Q W0I3AHCGO3YJ2XKPT2K5QJHD IOQ 3YA12KJ65JWK XKI94CVTJ 16 1P9VH38R3S68 JXR3JIGDJI5WTQBCWTJH5XKD72D0HEGUE R3S95B4W8102GVK R8XNEK1PNPF5C17AYXG1SDOFKFOCLTN0VTOY8SQ15VT352SJDML 902XYQ DMV72RUWJ29SR07Q5BXD9SB6FO9GYXQ 7HBP XX0G2T4C3H7LD4NRI5239MHVO5M9C YHNPA1IP22VG5V2QN3L8 WE&#x27;</span>, <span class="hljs-string">&#x27;C99E9EBQFI0RJMK6FV1CBBGAO610U88GQTUHH I5HCD9UBR6CRU66C5MNE KQ9AA5JF5DN6UMIBF5GCJLGSR7M1Q8UX3O7JPBCI5&#x27;</span>);<br><br><span class="hljs-keyword">insert</span> <span class="hljs-keyword">into</span> video (vid, v_title, v_url, v_describe) <span class="hljs-keyword">values</span> (<span class="hljs-number">17</span>, <span class="hljs-string">&#x27;SKGJ53TTU2Y3XWXJM0KA&#x27;</span>, <span class="hljs-string">&#x27;68TYTR5J591QUYUXSDXHXESADV4QSN3OK3RAI7THPAWO26RXF6SRSNF255G92L7RVXCT5LHU131P4YY9I275UJ5MPSK69C1JS 3AKKLD25BMR7UWIXJR1MKB9FL4PAM0IYA5PK 09DAWST5XC60DBBLLI8KGPPCCRVYJJ0NUL0DO1IVMIKJEM0F7QM73MSUWT8X607Y3KTORD BC1ATXYYKWOJ3OTO14FVTH5DI68V5MPQ0OIWCQCAQPOAIHOD5PY51J L8O7PHBX9TD EG5U4 RKLLGPSME8OQ2LXA9K77M&#x27;</span>, <span class="hljs-string">&#x27;NGKCBM4KJY0IPM8A52IS9CJT9EA0KKA2586FOSVR7KPGR9CJTL5217BK804ORXV MVTYAGFOBXMYCU000YY1G2IW88YC8L0PY1IY&#x27;</span>);<br><br><span class="hljs-keyword">insert</span> <span class="hljs-keyword">into</span> video (vid, v_title, v_url, v_describe) <span class="hljs-keyword">values</span> (<span class="hljs-number">10</span>, <span class="hljs-string">&#x27;RCWYMT144MG27H01S0LB&#x27;</span>, <span class="hljs-string">&#x27;1 V9376AJEMBRK86CR96NMWF4A4U PL003JE 3EUL09U3P2W31263F8OOJHFKXOHVVJ C9O54QSX20JIH8FM21AIFDE631BUNCTDCCH9BADDMRXM4XW ISB9KH6GRK4FGJN0SC UEAF2AQ7DKJESYDGYCEEQCGIADCJMXP58M6P2225PGG3TEWJ80LXP52N5LMB J9QF9G7MIBE5GXFYGY7FUFX4 5HD8132 8A2LD83RG8T95587GVJ86S08WTXK870593G06C2FVUML59UBQS5G19FRV4JSQB3EFAKV0D7&#x27;</span>, <span class="hljs-string">&#x27;9HEN4NBOM6YTLT2BU03Y21WSW4CQ FMNA59OU8JI8KORHS1P7IXKGDEX7F75MJTEI55FS0FGEMGAKCM3XGL8846W2XTQTU OOK37&#x27;</span>);<br><br><span class="hljs-keyword">insert</span> <span class="hljs-keyword">into</span> video (vid, v_title, v_url, v_describe) <span class="hljs-keyword">values</span> (<span class="hljs-number">4</span>, <span class="hljs-string">&#x27;XU5F725LNIEXU9SN8DH7&#x27;</span>, <span class="hljs-string">&#x27;NC417Y17WKWKY2BO01PH60DSO5P JXGD30R8WG3SO30Q4A87YSPS2DLMHC1 IU1K2I9 HFAAWXN9FKLK1YY2Q2GEQ8QI7MR 8TUSSLQIA 4DCP6JAO4MLAS01I 551OXWBMRPJVG6OL1DG40AMME02LJD8T5UPYVWUCP5TEACSXR2EU02RO0ED96EX0DV97GKMN03TAA5HST03 SAI9P92EB6H4ET47GS9YSGWTWIEN2SXKP1P7G2 WHD7HFAP2UYRDS98JQSIR12ARA0L1RCR E6R9CYB6Q LVEK19L 84X&#x27;</span>, <span class="hljs-string">&#x27;ACBPSFAHTWUM15F2709Y0D2XJOA61WT ODULQH246Q2I1AMV9OWG2XPSRA9QD1WDB9WK MDLP3X5Y 33APN0S673JUNA BMNN0QB&#x27;</span>);<br><br><span class="hljs-keyword">insert</span> <span class="hljs-keyword">into</span> video (vid, v_title, v_url, v_describe) <span class="hljs-keyword">values</span> (<span class="hljs-number">14</span>, <span class="hljs-string">&#x27;TGSA5V9AHQ923LKSA1BP&#x27;</span>, <span class="hljs-string">&#x27;HD48FR2WM12VBACNI37CEL6QEB4DJEJMRBHB0BHRI9YW0CFIN63460TGW1H5H8LKN8VM1O4WLVMO0S S4L1NUG2Y7206CCM V2P7AOOHK6GHO 9YP8LLG109F5OU7RTN8NLG4MND1EYTTOA68WIXM7H2SYPOOY31KRISC594SN2AT0V8JCVMGT5QI3MEUQ4BQ4LUEDIUHYXPJJNLH71WN5F7U07WFEE8LAEE7P9FYAYYG6 DY M5CWH635K5LL894ROD632A GW7HC0DX6JTA6BXJQ0D2DNH7XIUCSBME8QN&#x27;</span>, <span class="hljs-string">&#x27;V6L F393FPJV8KDC94V6WFG0QF4S3ITL8SX FPB2IFHX0N6A25S5 115 I9B4NWEHLB1SXIYUG6PM6HWE2RPUIY7O3PJA31TI3H5&#x27;</span>);<br><br><span class="hljs-keyword">insert</span> <span class="hljs-keyword">into</span> video (vid, v_title, v_url, v_describe) <span class="hljs-keyword">values</span> (<span class="hljs-number">5</span>, <span class="hljs-string">&#x27;WVSIOHB3LOVQ81HWGEBA&#x27;</span>, <span class="hljs-string">&#x27;6SOYC30LQFOHK18U57GOV4637J4729QPIPQ960HBGL4EJ442K A74IBHTEHHW3HY2MN0I4PYS   V1VPP0J7 9ULQW2KS8T4WKQLDFRNJAC70O0KDXECJCX43 C8P1V2OY03U XO3N3LFW9KYWS1WQ1YIXNVOS0UIJE62LUIDLWGMEOTEDHA78W37I1LON M3KG874CQT18N4ULM49 UMMJRUUA3RRPQNMM9E7N3DBARISME4XK0DI99NH3S13FQWQ4 XH5JK83 EONPV2CSNHN3FDTQMKQ84CUP FL3FVG8&#x27;</span>, <span class="hljs-string">&#x27;NJLRNIP94E EX2G7PN4Q63YB2JK5S7  7BKNKQVCIEM2VR9OP5PJJU691I2R973XNWS0WNCDX5NHY7DT3N5I74EJUGGAGUW 7UTA&#x27;</span>);<br><br><span class="hljs-keyword">insert</span> <span class="hljs-keyword">into</span> video (vid, v_title, v_url, v_describe) <span class="hljs-keyword">values</span> (<span class="hljs-number">18</span>, <span class="hljs-string">&#x27;N6DV80DX8VKLI16R8BL7&#x27;</span>, <span class="hljs-string">&#x27;DVTAGS6VQ LWGUMLMYD259MFUI 2ITW 5MN2FNPKXD7IKPIR91G7ARYRV LRX1UHD3T1WLDUJYXW3377PEEREF52D41RAXEISFCFHYBCXVH5 K9N8LS1XDB9P15RQ7GM6JJMCILCI8UJM5YE31MGR0C AS1L 4QYAB 47E SO1BI 7EFK33NE8VHKB4B97QAXMJLA7Y9V5EOJJFD1 OBSACQ0G41AIO3 4BVCVX2LF QACQJUW7EIV 93Y 4DDNJBERYNTY2DJ5MT7QWDWPXK2TBCI 0AOFDU0K 1TYVP4AE&#x27;</span>, <span class="hljs-string">&#x27;D8HCGKM8GRRW2L5P92F22QWFF98T5MH6AUHY8HC67C7YYGQE78TBDNU4QYTPRL GH8BMGLVAI46N2I6X6KYJHB1CGW OC0Q2BLPA&#x27;</span>);<br><br><span class="hljs-keyword">insert</span> <span class="hljs-keyword">into</span> video (vid, v_title, v_url, v_describe) <span class="hljs-keyword">values</span> (<span class="hljs-number">6</span>, <span class="hljs-string">&#x27;A59SFAU8H82KQ6MPP5J8&#x27;</span>, <span class="hljs-string">&#x27;75N02XI6KCLTDONDFLN1IDQ8V1LO7O480MG6DVAIMLWBPXT NQOM9SI613BDGOKJFEYASIWFE421 OKSD5PV5IGFX EH4EWT4QOYUJJN3O9SV6AXI9N76ODRH4U7U5MR9A E1JP DBC51MNLKX9NFCE38CFFC1J8N2 I114HHK0A84K9ID2  GWH4URMC3Q6HJLTEETA8ER06PBGVABI VK7Q96XMCLRLKGIS 3PX3UTN9DYQO4AMCBM5MV8YMQBAD3HV L7DFAVHMJMO0C00KFAXDPX5P4AGOP8CJ5FYJW &#x27;</span>, <span class="hljs-string">&#x27;BJNN9R18P13VSHYJ4UGD8G0CB2F6PG7O2T9LUBWQ94AW7QQT07GJACU 0U310T43 XOJ69LP5SWV3H KYBKC8Q9JVDY382JIC643&#x27;</span>);<br><br><span class="hljs-keyword">insert</span> <span class="hljs-keyword">into</span> video (vid, v_title, v_url, v_describe) <span class="hljs-keyword">values</span> (<span class="hljs-number">0</span>, <span class="hljs-string">&#x27;5HD64CV3G31YHKJ1J5HQ&#x27;</span>, <span class="hljs-string">&#x27;HJVHV7K1G4EX7EF739XAHICY NX4KYAKJLPRWJ8B6H1DPWIUOWN3AETFJ9C9NNTSJCQS0MKJG1DOKJ79T23NB6O5T95Y6 NEG9S2XMI0M2T JFLLF8A1K7CANCCEMPQS8N4BU0VP0T0NV0IKJNKIK4XMW762 1S4UT7ALO581DT4D6JL4JKGC1ELGE7HVJC2DWR0GXOU2RI3C73R905FGIGB9DBDC7M2T VMBIKJKVIBNRCS04J52ELJ9JMM0ER5B0TDIIOV KMSO 81HR5HS22PF4I92YJ1 X8QYGQ3VKWL&#x27;</span>, <span class="hljs-string">&#x27;RFTGS1CTPD7JRYNHD7TNCILWU ALIT3 K40VNPBWRCM7ATVSEPVIX2U8VT3LT D54 DL8JTELUBQFIM9NNH23RU V4CJOS MG4WT&#x27;</span>);<br><br><span class="hljs-keyword">insert</span> <span class="hljs-keyword">into</span> video (vid, v_title, v_url, v_describe) <span class="hljs-keyword">values</span> (<span class="hljs-number">9</span>, <span class="hljs-string">&#x27;5U6FBG4NGKRP6OIEWHXL&#x27;</span>, <span class="hljs-string">&#x27;CDIKSSRGS9 WUDOH42N2YG B4B43QIM 2TP25YD9R24THD2MGDGBFC8VYE4H5YGFVM4WQVA8 15VH2 7SU5EL5EBYHPFPC9H7KS1R54V76G4YFWUDXQPQE9P5OPT126V6QM5I7PSPS7808NE0HX64JSB3LN6TCQJBO9LAE6UCNDLV8CT3QAI2UAHX4XPQDLGQB4BE10YFXQ7P0C9GB4YVJBR8PN9H7TV10EX7AWAX6RQR4AYH9IIYTQV63RAVVO6GJ3R49T27FSIC 4E42DSPNONGGY N8QTN1YQIW2R80XI&#x27;</span>, <span class="hljs-string">&#x27;272UYN4W2LM0XSKWE7X8WX9YJ6BN70EHP9MV80L36FVCLBT7GXU5KNT5T0YLFJF3Q6B89I5GPDMPJUOVUDI404T002V U0CWTE7V&#x27;</span>);<br><br><span class="hljs-keyword">insert</span> <span class="hljs-keyword">into</span> video (vid, v_title, v_url, v_describe) <span class="hljs-keyword">values</span> (<span class="hljs-number">15</span>, <span class="hljs-string">&#x27;F CMU5BUPCAYX83QUO50&#x27;</span>, <span class="hljs-string">&#x27;P 35ULC1K0J3AFO5M3WJT2KGV45YHR0E7BOYM2V7 Q1EFY89O694RL85OR D0VQF76MR 75VHM4V5GMEO1ALR13REHLXBXHL4N1L0279JA2Y9RPEI8N1M50VNXGPJXHHCM9O96UBSCFD413O67BTQ5OOYM6U7CQCC2WFUDLJR8 TMY4BL8LCYLJ2Y0SSJ 14MOVCG0T53CVB5J02SK 9OIUK8EH161XDO7D49RN1G0GWM6NCSCCBVBLEI1S9B6QD38TMXR PIDDWJRU6ONSF1UMDH2JBPGLYF71TRIIC0JMO&#x27;</span>, <span class="hljs-string">&#x27;I6XONOEQ5EDF6U6OYKU6O26JL59QK5QYUHX83G17DCX46MDIJM6TCLD2D245NNIOS8T51SO0QJ5QITWFJBYUK47LG9KAU HHCO64&#x27;</span>);<br><br><span class="hljs-keyword">insert</span> <span class="hljs-keyword">into</span> video (vid, v_title, v_url, v_describe) <span class="hljs-keyword">values</span> (<span class="hljs-number">2</span>, <span class="hljs-string">&#x27;W5L3H9YIKL6152GGLI A&#x27;</span>, <span class="hljs-string">&#x27;WI1BJEPP59G1VKS6LAEOAM WHYPROJEU83K5JGQCR8JJFIW TJURCP05FFUH9A84LKHNSLUSYSXPYPK3OID2AQQ2GNXMMLVDLDNKHHAJBEL A NY1T93STYAVRT0K7FNCEP6WPKB U9IA F59KI0L WJMB220P85IX1J8QG MGD3TCCHC8YNH6 T5A1YTOW89MW9TY2KFU86SH7VOO5H98W7D1YFWKDEDL7OXPR852UU7V0F98HOQWOXTCPXAOTB0CSRY55B0N3U0R6CMK3 TULFHC1IYCRT1Q448E5BTFKM&#x27;</span>, <span class="hljs-string">&#x27;NKO866MTXIUG644T03PAMP30U7XY0I8K0PP5BWPH5NKQBWBXAS7F5NXTG6ATVQ3HB Q35QJM03QK8V 03G9IWX5THQEXITMKQ0 N&#x27;</span>);<br><br><span class="hljs-keyword">insert</span> <span class="hljs-keyword">into</span> video (vid, v_title, v_url, v_describe) <span class="hljs-keyword">values</span> (<span class="hljs-number">11</span>, <span class="hljs-string">&#x27;5MEPQO12YCB628COAT1T&#x27;</span>, <span class="hljs-string">&#x27;7E83TTXWDL79YNGWWOWVQ4K18I UWPO7UV57EHPIBOC4A97K7RAMX78GCC5P36KC182CHGXKNF4X4JEH KAC04  1RDWSW7FUEGGQ3UIB50OMBVEB GIWCITVIQGXGCHG72IB4IFD0MLFR8PDSOP0V9WC7JQWOH7YEWQXNS0U4Y SJWDCP4PC0FS0EF3RXXXNM9ES9AOTG9EFM33GB8EEI2PIK84XWROOFR2OVFHEY2GMHQ7Y4RV6IXHG16LIRV3C98DXUD3SF7 6WMP2JOD9LMPH3PD20UJYJU3BY3W3KQY&#x27;</span>, <span class="hljs-string">&#x27;B41NCN9FTRFL46S68LKUQMBC2OF5HE JYXXQ YCWGLNV41W619RC5GEA7KY8UNILQEOMTNHT2VGNUY1GRV3FKS8226DI34NTT6LS&#x27;</span>);<br><br><span class="hljs-keyword">insert</span> <span class="hljs-keyword">into</span> video (vid, v_title, v_url, v_describe) <span class="hljs-keyword">values</span> (<span class="hljs-number">19</span>, <span class="hljs-string">&#x27;Y27Y1LMALSPP1 3DI1M &#x27;</span>, <span class="hljs-string">&#x27;F5986XA9QQHJBXIIOL5XTI178DBWK01H9V 4KG6389NTOKN70W0XACIVKOLRFASV14VANA5JX 21A1FU7MCUR48APT8UYUWKQBTCTGDIH3DD 7DWY  LNUIYO7B2G0L4SDHLHX9Y553MKVE3HHGRFFVFWMP482EC7JAY5II2N5I8URL8L53NJO5GF91AP523HHG0A0259JLDRHFBIC04I9IXSRSI7ANHPA0 F18QT38R6IKH4T3RWUAX245E8IJOGGQT48IEN00W2B00QT1T9X6NVQ486OA3UV60 0QYOYAU&#x27;</span>, <span class="hljs-string">&#x27;R6G13IFE4RY5CSRW 2S8GKO8J4RF COCRYCQJQYAR7MGASO5AM9FJ9MEJVHQFES0UAF3WB53NYBTN0KAJP2H55RMHGR8 6J7 DCI&#x27;</span>);<br><br><span class="hljs-keyword">insert</span> <span class="hljs-keyword">into</span> video (vid, v_title, v_url, v_describe) <span class="hljs-keyword">values</span> (<span class="hljs-number">16</span>, <span class="hljs-string">&#x27;846AT2LK7EKUW9HM2N6 &#x27;</span>, <span class="hljs-string">&#x27;D71E9X957X6HCFGWJJV9JUPSNR D8XAC5E57241BE8HX6GR0WSFVO2F1QTOPBDWTD2786UDHH0NOKGBSQ2GQ0O9AXCF9D4VA68BE W2I6HGK8GA3OTPWS6WNYF9FEFQILVVSKIPW6N0LGXKIBH6IQHT1K4BSXXSVSUJMFANTAIOW0OT8AD6V7X9WJA521P2CXV9BOA12AW2T90I3BOCG1A9DPSJ6B7FO7O9DUYS6 M5S1LWN2JJWKONAVCK3WBJ6TT3K55M79B4FRH11A0WYPN 3WKJ3FBTT1RJP6210 MHJ&#x27;</span>, <span class="hljs-string">&#x27;M603L6TCDOUYQJYBPHVR0HERNXF S2V99MSPMT0P77QF0HMORSD0E6 ISV R99BRQ60J2SBL0TB9VKYN88D3I19JURN99D9XKR5I&#x27;</span>);<br><br><span class="hljs-keyword">insert</span> <span class="hljs-keyword">into</span> video (vid, v_title, v_url, v_describe) <span class="hljs-keyword">values</span> (<span class="hljs-number">7</span>, <span class="hljs-string">&#x27;AX4PDOJADOWJULYTIJW7&#x27;</span>, <span class="hljs-string">&#x27;C6O2S VMW5PXQ 5H3VFB5YNU6F9 30 08KG9AD6Y3KXIA39RM2DXHMT4VAD8IUO EWPRPUS7SNLBJ73MAFEOD0NVI38J9HYNEXLBV41S0LFEGL4WTU24784MWREAB4DF8Q2FNQF9A YJ3F2JKLPLDADYBJAKRUUWJUT505UDRRF2IR1ODGE C4WQO423MPJRD5CBWREY0DY3SKANLH1XLIIUANP81MYUE XABUH37MCB2RGU59AML97G5LX14GS9S3N59KTY0O83H3FWHOL1XYCTNUA83X339MBNS1CVM61G&#x27;</span>, <span class="hljs-string">&#x27;IQ0A9D45IK FT OSC588 8TK04VJNQG6G6Q9Y7FG340AQJWF1I310BPAP1MHJTWRKMC1K1B5WRLSRWG3N1FN6E9TLP7V87A4GD1D&#x27;</span>);<br><br><span class="hljs-keyword">insert</span> <span class="hljs-keyword">into</span> video (vid, v_title, v_url, v_describe) <span class="hljs-keyword">values</span> (<span class="hljs-number">8</span>, <span class="hljs-string">&#x27;NL3W3FO8EHGASNL LO81&#x27;</span>, <span class="hljs-string">&#x27;7ACLL47O45IDSR143O5R13J7 ABCU4Y1HXNSXA4TSBLN22APEAKPVFRS 692VYX8KJ2LJC49LTSFIUVO877M3156WI TLIQ0PJM8 VSK4WJKQOGCXS7AIONOX2MK91X078M3DUIY5RK6SGHPSB NHH0BAFHHT5RJFUKPCKD8CGVEDL4C6 AVW1SS759SMWEKRIDR0WBVGYTMLSEKGU277C9DXMW MROOK9554Y13B7WC581C3XM2BRJ3T8MM9M96B2BUUD0NPY0ABHM8I3I2R4HK58VHKPM GRJ1X4H2IWB8&#x27;</span>, <span class="hljs-string">&#x27;50OX6 MK7EIGEJ1V9B93 INWBF7SRR95AN43649EWR2WEQ0OMC7T6R8 VG Y7WQG2W3MAHW967TGV9O753G9HPJMINSGHVHG44S5&#x27;</span>);<br><br><span class="hljs-keyword">insert</span> <span class="hljs-keyword">into</span> video (vid, v_title, v_url, v_describe) <span class="hljs-keyword">values</span> (<span class="hljs-number">3</span>, <span class="hljs-string">&#x27;WQY1W2Y3TVJWT7LAR8YF&#x27;</span>, <span class="hljs-string">&#x27;SIHJ77JYJKP3ARHG0PXOI4U0PMJEKP76XPP4NWUL6RPMOVIMPP8IYSGAYO HTUDAIT8KFVT3SNOSPKA666BCECWI0IEP7QUUV3O44K4N QLTUPFIM2PRE90ESP67OQUAY3JNAHRLVS8NL1V6MMR LXW NCIP81X94T1PMWYH516UGBRUDKNUNMYBKTCMYTYICP7GR47004RN 2LCM18V8JTO0 E W4  3JTRE8C0743 SU4QKI792TFHY35J4WFQEKH4ACFG F2BF0C30X3UWF1AYSYOS0Y0RFJQ7DVI5YDX&#x27;</span>, <span class="hljs-string">&#x27;U79BYABQ2NRP8N2DAFFKGTJTDOTIM18Y7FDSM0W4AB6NRFXT01 MB3W5N8A69T5 U3G46QMKRM4M9APT3GOTC4DA4AR2923V543W&#x27;</span>);<br><br><span class="hljs-keyword">insert</span> <span class="hljs-keyword">into</span> video (vid, v_title, v_url, v_describe) <span class="hljs-keyword">values</span> (<span class="hljs-number">12</span>, <span class="hljs-string">&#x27;BHJ8BNDYMGYLJ0DY6CW6&#x27;</span>, <span class="hljs-string">&#x27;LXMT9N23IA4U24UE27J7946CW79H1XIMYRHB5D86P7I1WKOD55DUJ49I8LKTI0NX8OV80ADVBY8VJ04 8G0OO9JB1905YBW04OWDSW3N84OLOQJ7KL8JESGK7S19AA0PFQ0NW7RNCAGJID6PHY4GUDCOOMG3 TLIYNX6BJJMLUG7Q20S9U0LR27SE7AP 70JJ8N7IOD Y7W9MARE9FKAFDVMBTXCV6FM02G4JS UEKAJXX07VUP1M5 MHOXGMSR5ARWIWHVX 5B0 B1GI4MGNOXTXW7JVLRABSU3QQCMR 3T&#x27;</span>, <span class="hljs-string">&#x27;38CPWT4DOKUAYI5BBV7PNLE2EPETNB3VCRQV01XSJVKV5YFFHQGJ4PL5 47RUEMYJV8 IDM YBVS6IQONJXIG62GR5DA9 17QL1M&#x27;</span>);<br><br><span class="hljs-keyword">insert</span> <span class="hljs-keyword">into</span> videoroom (vr_id, vr_title, vr_describe) <span class="hljs-keyword">values</span> (<span class="hljs-number">13</span>, <span class="hljs-string">&#x27;V59 CQX91GGPVAODXJVY&#x27;</span>, <span class="hljs-string">&#x27;E9WUE2TDILQTWIMDU81U WWSCROJC10SXYM1WEAQQ4S6 75NDBGHRFIGB1BGNB0VIKD XMNQ0VXUL6D3TCX92LU SW8SA2EMNV21&#x27;</span>);<br><br><span class="hljs-keyword">insert</span> <span class="hljs-keyword">into</span> videoroom (vr_id, vr_title, vr_describe) <span class="hljs-keyword">values</span> (<span class="hljs-number">4</span>, <span class="hljs-string">&#x27;G5AA8FPW4YF07R5 ISAX&#x27;</span>, <span class="hljs-string">&#x27;S30F8IKTYVDMP0L4D1C95DGLAB69VIYNAO4N9IE6Y02SL T3TQ7YSFC29L4PP2MGQJNU3AFBWU3U0PBDY4FB8 IMCSTJS1V92BY1&#x27;</span>);<br><br><span class="hljs-keyword">insert</span> <span class="hljs-keyword">into</span> videoroom (vr_id, vr_title, vr_describe) <span class="hljs-keyword">values</span> (<span class="hljs-number">18</span>, <span class="hljs-string">&#x27;JWN2S0L4EVCWV4ICMVNJ&#x27;</span>, <span class="hljs-string">&#x27;O7WLOXXOKO0D 0S9WRVR57KXPSS0N2810HCPQ9USY76LKMVCCHL7VJJQ5LRTG6D759ND BSDTIBQVMYT4R5R7WMIRNGWWI5N5LVI&#x27;</span>);<br><br><span class="hljs-keyword">insert</span> <span class="hljs-keyword">into</span> videoroom (vr_id, vr_title, vr_describe) <span class="hljs-keyword">values</span> (<span class="hljs-number">6</span>, <span class="hljs-string">&#x27;MWUK38233ED6 8UC8D2Q&#x27;</span>, <span class="hljs-string">&#x27;XTMBTS8LO28LT2BGFUJFA3TQ1B124EE8K2W3Q2177CJ51T3FA8PAHW2UD9ES6LYRFO VBB2PADMRFBT14GFM3 P  D8XIWFHLN1H&#x27;</span>);<br><br><span class="hljs-keyword">insert</span> <span class="hljs-keyword">into</span> videoroom (vr_id, vr_title, vr_describe) <span class="hljs-keyword">values</span> (<span class="hljs-number">19</span>, <span class="hljs-string">&#x27;HE2SBLSJEKPESJUL ES1&#x27;</span>, <span class="hljs-string">&#x27;CEYE9DV9NS1PQ8PKX6K1G4F3903YOFYEN3OQY1L5GDP3IPEXV8N1WEMNPIFVTWGQ42FDSFSLJ2WYCF14RQD60G7M2UA3NB1ALXP2&#x27;</span>);<br><br><span class="hljs-keyword">insert</span> <span class="hljs-keyword">into</span> videoroom (vr_id, vr_title, vr_describe) <span class="hljs-keyword">values</span> (<span class="hljs-number">17</span>, <span class="hljs-string">&#x27;4RTBRMSGO1BUQU1X0Y61&#x27;</span>, <span class="hljs-string">&#x27;N0AFPU39ND2BI8BUY FNNFOODA I148Q1PN5PI 2FULA16EHG381RL0QQXAHC44HWS9VFVLO5PLFCYUTRADRRHXN0PU K6PJS 9F&#x27;</span>);<br><br><span class="hljs-keyword">insert</span> <span class="hljs-keyword">into</span> videoroom (vr_id, vr_title, vr_describe) <span class="hljs-keyword">values</span> (<span class="hljs-number">14</span>, <span class="hljs-string">&#x27;G4AH 7J0DYHP5I1A84LH&#x27;</span>, <span class="hljs-string">&#x27;QJ7GT1RTES4NOFEF08BWXG7ENHJBQCL7H2D 1HN88U YHUNBXVD3VJTUO8LDAF DM X V1H1W6GW088DYBM2OKU QD0FL4WO4L C&#x27;</span>);<br><br><span class="hljs-keyword">insert</span> <span class="hljs-keyword">into</span> videoroom (vr_id, vr_title, vr_describe) <span class="hljs-keyword">values</span> (<span class="hljs-number">3</span>, <span class="hljs-string">&#x27;OGFNHDNJ WMM3PXHBKOY&#x27;</span>, <span class="hljs-string">&#x27;X1CBJTUPPR07LDTQPP78WV9CBRMJX8 3CC3R7LTWEWN1BT 9WEONBK24K38041LEU4DQ3B61KNMSN8HVPMSV56H 39KVP6SMM0J8&#x27;</span>);<br><br><span class="hljs-keyword">insert</span> <span class="hljs-keyword">into</span> videoroom (vr_id, vr_title, vr_describe) <span class="hljs-keyword">values</span> (<span class="hljs-number">0</span>, <span class="hljs-string">&#x27;TW3DEOYHLE C7CVP86UU&#x27;</span>, <span class="hljs-string">&#x27;DO4V7A5078V02MSAMES84R8GSKT9E1U 9A4DRL8XJ739I6TWXQKEELMUH66 HL8B0NUJAPNEBK9C4EODDNP492XQXRQLNJF7X6DO&#x27;</span>);<br><br><span class="hljs-keyword">insert</span> <span class="hljs-keyword">into</span> videoroom (vr_id, vr_title, vr_describe) <span class="hljs-keyword">values</span> (<span class="hljs-number">9</span>, <span class="hljs-string">&#x27;JUXEBTIF9QDUCFVL9HCX&#x27;</span>, <span class="hljs-string">&#x27;D61 6JW6ET208JB6I 4HB3K2930996X420OUSBORHDDSUOVKJIY3TS0J6XAUDX3E1JQTX OD0FTCJ82E66X8PDR9S2CWOHQ9FK5E&#x27;</span>);<br><br><span class="hljs-keyword">insert</span> <span class="hljs-keyword">into</span> videoroom (vr_id, vr_title, vr_describe) <span class="hljs-keyword">values</span> (<span class="hljs-number">1</span>, <span class="hljs-string">&#x27;V4JWQR1KR1IWIEV0O7YN&#x27;</span>, <span class="hljs-string">&#x27;CI4B5PD P9WXW0D999RQ1 21JY JX8KRSSM4KEUMSTMLNDC4QT6HEI3IE897Q6JQ3M1GI2RV7RS1W3RGIAKBU WAP78HMD9Q4QI6&#x27;</span>);<br><br><span class="hljs-keyword">insert</span> <span class="hljs-keyword">into</span> videoroom (vr_id, vr_title, vr_describe) <span class="hljs-keyword">values</span> (<span class="hljs-number">7</span>, <span class="hljs-string">&#x27;OSYLNP8T 6M6LUYERH 8&#x27;</span>, <span class="hljs-string">&#x27;84CNMVHUT1ILO02W QSEUJJ69MBQVPKMH2X3Q1 420EO0P306ABYYNLO1KKV3AD8ITOOOVBLMJ6BFJK8EHJKBQNJN4NNELVV NVN&#x27;</span>);<br><br><span class="hljs-keyword">insert</span> <span class="hljs-keyword">into</span> videoroom (vr_id, vr_title, vr_describe) <span class="hljs-keyword">values</span> (<span class="hljs-number">15</span>, <span class="hljs-string">&#x27;BJ78OHUJCRTTS3FIY8W3&#x27;</span>, <span class="hljs-string">&#x27;1QL6WM3BYO254APSJ3YASJ1NCB9839PUIV7 UP12MCEL86USC00NLF53F305JR1TRJT9XMRLHJPG9WQGEMLFVV1V9EWNKPLPHSDG&#x27;</span>);<br><br><span class="hljs-keyword">insert</span> <span class="hljs-keyword">into</span> videoroom (vr_id, vr_title, vr_describe) <span class="hljs-keyword">values</span> (<span class="hljs-number">2</span>, <span class="hljs-string">&#x27;LXJ3EWEMCKLC64SHBG1O&#x27;</span>, <span class="hljs-string">&#x27;5MRON8CS6P 8F UMUANIGMWVY TEGO341DBM890WJ8YC723DCKN8O3D40Y BF3H0MXKJFFN3FJRLJP00NXIWK1WVKC4O8UBYKQA1&#x27;</span>);<br><br><span class="hljs-keyword">insert</span> <span class="hljs-keyword">into</span> videoroom (vr_id, vr_title, vr_describe) <span class="hljs-keyword">values</span> (<span class="hljs-number">5</span>, <span class="hljs-string">&#x27;FBWQFJJLLDVOOAO7 KBF&#x27;</span>, <span class="hljs-string">&#x27;DDG F0CG8PI O2H0UKDR B08QOP1YN5HCO09OIF05PSXR2KR9QWK6DBHQ8YGG0LWLU2SVBH46CDLVDKXLFX8KIDH70QJ8GSWD9QK&#x27;</span>);<br><br><span class="hljs-keyword">insert</span> <span class="hljs-keyword">into</span> videoroom (vr_id, vr_title, vr_describe) <span class="hljs-keyword">values</span> (<span class="hljs-number">8</span>, <span class="hljs-string">&#x27;2LI8M4EFA4ER4LADXBTH&#x27;</span>, <span class="hljs-string">&#x27;52R7830XGX41MK7V43C21IYT12PU17BSAVCCACR0HYK86UQOCW6N81R 4E4NWWIRI41AAFY3I7194XR482LARVOS8AL DG70NSHH&#x27;</span>);<br><br><span class="hljs-keyword">insert</span> <span class="hljs-keyword">into</span> videoroom (vr_id, vr_title, vr_describe) <span class="hljs-keyword">values</span> (<span class="hljs-number">11</span>, <span class="hljs-string">&#x27;VIGXB7EQ10GV H5WYVI2&#x27;</span>, <span class="hljs-string">&#x27;AI8LIRIMEDVRC73QN6G9Q2F3UVM4 31 AQG044NEVOWATAYE 14JFGPXR38YEQXIE4U4G9 DJ7YL7P9BUE0WPLD2MXTF8U1GQMTS&#x27;</span>);<br><br><span class="hljs-keyword">insert</span> <span class="hljs-keyword">into</span> videoroom (vr_id, vr_title, vr_describe) <span class="hljs-keyword">values</span> (<span class="hljs-number">16</span>, <span class="hljs-string">&#x27;XLPUM7CV44KI3U7E42TG&#x27;</span>, <span class="hljs-string">&#x27;4GTYE7HPOAT7B5PRHY1SW4DOGW6TD14 AF48FX5TY8BGM43S7J6Y5AAXITTCJ4TYPDTWPEW96541WXCPTM06W15NBXADEJ6 LRID&#x27;</span>);<br><br><span class="hljs-keyword">insert</span> <span class="hljs-keyword">into</span> videoroom (vr_id, vr_title, vr_describe) <span class="hljs-keyword">values</span> (<span class="hljs-number">10</span>, <span class="hljs-string">&#x27;8CT6SMQYLISH5HFK6ORI&#x27;</span>, <span class="hljs-string">&#x27;BO0L52GND9WFU0KMTRUEGXMV8USLOLKPDM0E4D8NAKH1ATM7HTIXWYRJ9GIGB76L03OJWXA0XA3RQMQFLJO4AJ9OSSJCBCCEER6 &#x27;</span>);<br><br><span class="hljs-keyword">insert</span> <span class="hljs-keyword">into</span> videoroom (vr_id, vr_title, vr_describe) <span class="hljs-keyword">values</span> (<span class="hljs-number">12</span>, <span class="hljs-string">&#x27;HYWLNIYSANWXDIPOLQ8O&#x27;</span>, <span class="hljs-string">&#x27;U 3DLQ1 ACAHS100ONM9438708R4SATTS6 1N5U9JFF7UEKUPM0YNKC8BD0FE69E4J1 GMF9OL14HMLXJ6F0RAUMNTCNGWH3UJ6T&#x27;</span>);<br><br><span class="hljs-keyword">insert</span> <span class="hljs-keyword">into</span> upload_video (vid, openid, uv_id) <span class="hljs-keyword">values</span> (<span class="hljs-number">10</span>, <span class="hljs-string">&#x27;7BSUVE2WV9EGWHEK6YDGSPTN CIIUXIFYDO&#x27;</span>, <span class="hljs-number">2</span>);<br><br><span class="hljs-keyword">insert</span> <span class="hljs-keyword">into</span> upload_video (vid, openid, uv_id) <span class="hljs-keyword">values</span> (<span class="hljs-number">18</span>, <span class="hljs-string">&#x27;7F3GGF36N22H3XUAV23EYSDJ6Y1MU7KYUN1&#x27;</span>, <span class="hljs-number">0</span>);<br><br><span class="hljs-keyword">insert</span> <span class="hljs-keyword">into</span> upload_video (vid, openid, uv_id) <span class="hljs-keyword">values</span> (<span class="hljs-number">0</span>, <span class="hljs-string">&#x27;9IWM51WXRKD9BN21CJV SS9SXBAMV4F FEA&#x27;</span>, <span class="hljs-number">11</span>);<br><br><span class="hljs-keyword">insert</span> <span class="hljs-keyword">into</span> upload_video (vid, openid, uv_id) <span class="hljs-keyword">values</span> (<span class="hljs-number">6</span>, <span class="hljs-string">&#x27;DDFF1SUW6HR MP231O TOYRWVAF940LCXEP&#x27;</span>, <span class="hljs-number">14</span>);<br><br><span class="hljs-keyword">insert</span> <span class="hljs-keyword">into</span> upload_video (vid, openid, uv_id) <span class="hljs-keyword">values</span> (<span class="hljs-number">0</span>, <span class="hljs-string">&#x27;J9NOKX3AV2YRF 3TKFEOKL5I4XKHIP7GTO6&#x27;</span>, <span class="hljs-number">15</span>);<br><br><span class="hljs-keyword">insert</span> <span class="hljs-keyword">into</span> upload_video (vid, openid, uv_id) <span class="hljs-keyword">values</span> (<span class="hljs-number">13</span>, <span class="hljs-string">&#x27;JYKIORMPQFH22 HXJU37MELWBVLF63NYG 1&#x27;</span>, <span class="hljs-number">8</span>);<br><br><span class="hljs-keyword">insert</span> <span class="hljs-keyword">into</span> upload_video (vid, openid, uv_id) <span class="hljs-keyword">values</span> (<span class="hljs-number">14</span>, <span class="hljs-string">&#x27;T5QS25YFVGU4HV2B63JTUXLUCLLR34H69P9&#x27;</span>, <span class="hljs-number">4</span>);<br><br><span class="hljs-keyword">insert</span> <span class="hljs-keyword">into</span> upload_video (vid, openid, uv_id) <span class="hljs-keyword">values</span> (<span class="hljs-number">0</span>, <span class="hljs-string">&#x27;T5QS25YFVGU4HV2B63JTUXLUCLLR34H69P9&#x27;</span>, <span class="hljs-number">16</span>);<br><br><span class="hljs-keyword">insert</span> <span class="hljs-keyword">into</span> upload_video (vid, openid, uv_id) <span class="hljs-keyword">values</span> (<span class="hljs-number">6</span>, <span class="hljs-string">&#x27;T5QS25YFVGU4HV2B63JTUXLUCLLR34H69P9&#x27;</span>, <span class="hljs-number">12</span>);<br><br><span class="hljs-keyword">insert</span> <span class="hljs-keyword">into</span> upload_video (vid, openid, uv_id) <span class="hljs-keyword">values</span> (<span class="hljs-number">18</span>, <span class="hljs-string">&#x27;9IWM51WXRKD9BN21CJV SS9SXBAMV4F FEA&#x27;</span>, <span class="hljs-number">5</span>);<br><br><span class="hljs-keyword">insert</span> <span class="hljs-keyword">into</span> upload_video (vid, openid, uv_id) <span class="hljs-keyword">values</span> (<span class="hljs-number">10</span>, <span class="hljs-string">&#x27;XCU1TRKINDVK4B9VE0CDW57V68TK50V1NLJ&#x27;</span>, <span class="hljs-number">6</span>);<br><br><span class="hljs-keyword">insert</span> <span class="hljs-keyword">into</span> upload_video (vid, openid, uv_id) <span class="hljs-keyword">values</span> (<span class="hljs-number">9</span>, <span class="hljs-string">&#x27;XCU1TRKINDVK4B9VE0CDW57V68TK50V1NLJ&#x27;</span>, <span class="hljs-number">9</span>);<br><br><span class="hljs-keyword">insert</span> <span class="hljs-keyword">into</span> upload_video (vid, openid, uv_id) <span class="hljs-keyword">values</span> (<span class="hljs-number">16</span>, <span class="hljs-string">&#x27;7F3GGF36N22H3XUAV23EYSDJ6Y1MU7KYUN1&#x27;</span>, <span class="hljs-number">10</span>);<br><br><span class="hljs-keyword">insert</span> <span class="hljs-keyword">into</span> upload_video (vid, openid, uv_id) <span class="hljs-keyword">values</span> (<span class="hljs-number">9</span>, <span class="hljs-string">&#x27;XCU1TRKINDVK4B9VE0CDW57V68TK50V1NLJ&#x27;</span>, <span class="hljs-number">7</span>);<br><br><span class="hljs-keyword">insert</span> <span class="hljs-keyword">into</span> upload_video (vid, openid, uv_id) <span class="hljs-keyword">values</span> (<span class="hljs-number">2</span>, <span class="hljs-string">&#x27;7F3GGF36N22H3XUAV23EYSDJ6Y1MU7KYUN1&#x27;</span>, <span class="hljs-number">3</span>);<br><br><span class="hljs-keyword">insert</span> <span class="hljs-keyword">into</span> upload_video (vid, openid, uv_id) <span class="hljs-keyword">values</span> (<span class="hljs-number">6</span>, <span class="hljs-string">&#x27;DDFF1SUW6HR MP231O TOYRWVAF940LCXEP&#x27;</span>, <span class="hljs-number">1</span>);<br><br><span class="hljs-keyword">insert</span> <span class="hljs-keyword">into</span> upload_video (vid, openid, uv_id) <span class="hljs-keyword">values</span> (<span class="hljs-number">15</span>, <span class="hljs-string">&#x27;WV2N5Y4VAINKIYOGGSXUAHSU2BJ2 V3P0E2&#x27;</span>, <span class="hljs-number">17</span>);<br><br><span class="hljs-keyword">insert</span> <span class="hljs-keyword">into</span> upload_video (vid, openid, uv_id) <span class="hljs-keyword">values</span> (<span class="hljs-number">19</span>, <span class="hljs-string">&#x27; WCMA43UXF3MW74PA8T8RB414SR5QHNHRW1&#x27;</span>, <span class="hljs-number">19</span>);<br><br><span class="hljs-keyword">insert</span> <span class="hljs-keyword">into</span> upload_video (vid, openid, uv_id) <span class="hljs-keyword">values</span> (<span class="hljs-number">7</span>, <span class="hljs-string">&#x27;WV2N5Y4VAINKIYOGGSXUAHSU2BJ2 V3P0E2&#x27;</span>, <span class="hljs-number">13</span>);<br><br><span class="hljs-keyword">insert</span> <span class="hljs-keyword">into</span> upload_video (vid, openid, uv_id) <span class="hljs-keyword">values</span> (<span class="hljs-number">14</span>, <span class="hljs-string">&#x27;TIPF1J 5XM2 GYRBN2Q6FME2P7MOVT9PRD0&#x27;</span>, <span class="hljs-number">18</span>);<br><br><span class="hljs-keyword">insert</span> <span class="hljs-keyword">into</span> create_room (cr_id, vr_id, openid, vid) <span class="hljs-keyword">values</span> (<span class="hljs-number">9</span>, <span class="hljs-number">17</span>, <span class="hljs-string">&#x27;JYKIORMPQFH22 HXJU37MELWBVLF63NYG 1&#x27;</span>, <span class="hljs-number">13</span>);<br><br><span class="hljs-keyword">insert</span> <span class="hljs-keyword">into</span> create_room (cr_id, vr_id, openid, vid) <span class="hljs-keyword">values</span> (<span class="hljs-number">5</span>, <span class="hljs-number">15</span>, <span class="hljs-string">&#x27;WV2N5Y4VAINKIYOGGSXUAHSU2BJ2 V3P0E2&#x27;</span>, <span class="hljs-number">7</span>);<br><br><span class="hljs-keyword">insert</span> <span class="hljs-keyword">into</span> create_room (cr_id, vr_id, openid, vid) <span class="hljs-keyword">values</span> (<span class="hljs-number">7</span>, <span class="hljs-number">9</span>, <span class="hljs-string">&#x27;G3F2PYXUUJPSC1HFKVDGK3J7CAR31A7BHP8&#x27;</span>, <span class="hljs-number">14</span>);<br><br><span class="hljs-keyword">insert</span> <span class="hljs-keyword">into</span> create_room (cr_id, vr_id, openid, vid) <span class="hljs-keyword">values</span> (<span class="hljs-number">17</span>, <span class="hljs-number">13</span>, <span class="hljs-string">&#x27;4 JOITHJDIPDWANASPBR0U55TV0R4M82GHF&#x27;</span>, <span class="hljs-number">2</span>);<br><br><span class="hljs-keyword">insert</span> <span class="hljs-keyword">into</span> create_room (cr_id, vr_id, openid, vid) <span class="hljs-keyword">values</span> (<span class="hljs-number">3</span>, <span class="hljs-number">10</span>, <span class="hljs-string">&#x27;NU5YM T64H1ACW0X5C534PIOCKGSWADOWU8&#x27;</span>, <span class="hljs-number">5</span>);<br><br><span class="hljs-keyword">insert</span> <span class="hljs-keyword">into</span> create_room (cr_id, vr_id, openid, vid) <span class="hljs-keyword">values</span> (<span class="hljs-number">18</span>, <span class="hljs-number">10</span>, <span class="hljs-string">&#x27; GOU3TKJSA0LUDR 1R966AC2J0Y7GFOR8P6&#x27;</span>, <span class="hljs-number">4</span>);<br><br><span class="hljs-keyword">insert</span> <span class="hljs-keyword">into</span> create_room (cr_id, vr_id, openid, vid) <span class="hljs-keyword">values</span> (<span class="hljs-number">6</span>, <span class="hljs-number">14</span>, <span class="hljs-string">&#x27;WV2N5Y4VAINKIYOGGSXUAHSU2BJ2 V3P0E2&#x27;</span>, <span class="hljs-number">5</span>);<br><br><span class="hljs-keyword">insert</span> <span class="hljs-keyword">into</span> create_room (cr_id, vr_id, openid, vid) <span class="hljs-keyword">values</span> (<span class="hljs-number">14</span>, <span class="hljs-number">14</span>, <span class="hljs-string">&#x27;WV2N5Y4VAINKIYOGGSXUAHSU2BJ2 V3P0E2&#x27;</span>, <span class="hljs-number">3</span>);<br><br><span class="hljs-keyword">insert</span> <span class="hljs-keyword">into</span> create_room (cr_id, vr_id, openid, vid) <span class="hljs-keyword">values</span> (<span class="hljs-number">13</span>, <span class="hljs-number">16</span>, <span class="hljs-string">&#x27; WCMA43UXF3MW74PA8T8RB414SR5QHNHRW1&#x27;</span>, <span class="hljs-number">1</span>);<br><br><span class="hljs-keyword">insert</span> <span class="hljs-keyword">into</span> create_room (cr_id, vr_id, openid, vid) <span class="hljs-keyword">values</span> (<span class="hljs-number">11</span>, <span class="hljs-number">6</span>, <span class="hljs-string">&#x27;5GAAN7XXPTM2PR3FWQN 505579NJN8FP DI&#x27;</span>, <span class="hljs-number">1</span>);<br><br><span class="hljs-keyword">insert</span> <span class="hljs-keyword">into</span> create_room (cr_id, vr_id, openid, vid) <span class="hljs-keyword">values</span> (<span class="hljs-number">15</span>, <span class="hljs-number">2</span>, <span class="hljs-string">&#x27;TIPF1J 5XM2 GYRBN2Q6FME2P7MOVT9PRD0&#x27;</span>, <span class="hljs-number">6</span>);<br><br><span class="hljs-keyword">insert</span> <span class="hljs-keyword">into</span> create_room (cr_id, vr_id, openid, vid) <span class="hljs-keyword">values</span> (<span class="hljs-number">2</span>, <span class="hljs-number">11</span>, <span class="hljs-string">&#x27;J9NOKX3AV2YRF 3TKFEOKL5I4XKHIP7GTO6&#x27;</span>, <span class="hljs-number">5</span>);<br><br><span class="hljs-keyword">insert</span> <span class="hljs-keyword">into</span> create_room (cr_id, vr_id, openid, vid) <span class="hljs-keyword">values</span> (<span class="hljs-number">4</span>, <span class="hljs-number">8</span>, <span class="hljs-string">&#x27;PYXQG I05VSV0END78CKB 6HA9TDWL7SKYQ&#x27;</span>, <span class="hljs-number">14</span>);<br><br><span class="hljs-keyword">insert</span> <span class="hljs-keyword">into</span> create_room (cr_id, vr_id, openid, vid) <span class="hljs-keyword">values</span> (<span class="hljs-number">10</span>, <span class="hljs-number">6</span>, <span class="hljs-string">&#x27;J9NOKX3AV2YRF 3TKFEOKL5I4XKHIP7GTO6&#x27;</span>, <span class="hljs-number">9</span>);<br><br><span class="hljs-keyword">insert</span> <span class="hljs-keyword">into</span> create_room (cr_id, vr_id, openid, vid) <span class="hljs-keyword">values</span> (<span class="hljs-number">19</span>, <span class="hljs-number">17</span>, <span class="hljs-string">&#x27;TIPF1J 5XM2 GYRBN2Q6FME2P7MOVT9PRD0&#x27;</span>, <span class="hljs-number">5</span>);<br><br><span class="hljs-keyword">insert</span> <span class="hljs-keyword">into</span> create_room (cr_id, vr_id, openid, vid) <span class="hljs-keyword">values</span> (<span class="hljs-number">16</span>, <span class="hljs-number">8</span>, <span class="hljs-string">&#x27;4 JOITHJDIPDWANASPBR0U55TV0R4M82GHF&#x27;</span>, <span class="hljs-number">4</span>);<br><br><span class="hljs-keyword">insert</span> <span class="hljs-keyword">into</span> create_room (cr_id, vr_id, openid, vid) <span class="hljs-keyword">values</span> (<span class="hljs-number">12</span>, <span class="hljs-number">14</span>, <span class="hljs-string">&#x27;WV2N5Y4VAINKIYOGGSXUAHSU2BJ2 V3P0E2&#x27;</span>, <span class="hljs-number">16</span>);<br><br><span class="hljs-keyword">insert</span> <span class="hljs-keyword">into</span> create_room (cr_id, vr_id, openid, vid) <span class="hljs-keyword">values</span> (<span class="hljs-number">0</span>, <span class="hljs-number">2</span>, <span class="hljs-string">&#x27;7F3GGF36N22H3XUAV23EYSDJ6Y1MU7KYUN1&#x27;</span>, <span class="hljs-number">1</span>);<br><br><span class="hljs-keyword">insert</span> <span class="hljs-keyword">into</span> create_room (cr_id, vr_id, openid, vid) <span class="hljs-keyword">values</span> (<span class="hljs-number">1</span>, <span class="hljs-number">0</span>, <span class="hljs-string">&#x27;WV2N5Y4VAINKIYOGGSXUAHSU2BJ2 V3P0E2&#x27;</span>, <span class="hljs-number">19</span>);<br><br><span class="hljs-keyword">insert</span> <span class="hljs-keyword">into</span> create_room (cr_id, vr_id, openid, vid) <span class="hljs-keyword">values</span> (<span class="hljs-number">8</span>, <span class="hljs-number">11</span>, <span class="hljs-string">&#x27;J9NOKX3AV2YRF 3TKFEOKL5I4XKHIP7GTO6&#x27;</span>, <span class="hljs-number">10</span>);<br></code></pre></td></tr></table></figure>
+<blockquote>
+<p>效果如下<br><img src="https://tanblog.cc/upload/2022/09/YB1%25%40Y3%29NO9%294Y7%24QM5WD%25J.png" srcset="/img/loading.gif" lazyload alt="YB1%@Y3)NO9)4Y7$QM5WD%J"></p>
+</blockquote>
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/%E5%90%8C%E6%AD%A5%E5%BD%B1%E9%99%A2%E5%B0%8F%E7%A8%8B%E5%BA%8F/" class="category-chain-item">同步影院小程序</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/%E5%90%8C%E6%AD%A5%E5%BD%B1%E9%99%A2%E5%B0%8F%E7%A8%8B%E5%BA%8F/">#同步影院小程序</a>
+      
+        <a href="/tags/mysql/">#mysql</a>
+      
+        <a href="/tags/PowerDesigner/">#PowerDesigner</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>二. 数据库搭建</div>
+      <div>https://tanblog.cc/2022/09/29/project/online/onlinevideo-2/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>言云纪</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2022年9月29日</div>
+        </div>
+      
+      
+      
+        <div class="license-meta-item">
+          <div>许可协议</div>
+          <div>
+            
+              
+              
+                <a target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                    <i class="iconfont icon-by"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2022/09/30/python/pyprogress/" title="python进度条与下载器的实现">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">python进度条与下载器的实现</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2022/09/29/project/online/online-1/" title="一. 项目简介与技术栈分析">
+                        <span class="hidden-mobile">一. 项目简介与技术栈分析</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header">
+    <i class="iconfont icon-list"></i>
+    <span>目录</span>
+  </p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
+  
+  
+    <div class="statistics">
+  
+  
+
+  
+    
+      <span id="busuanzi_container_site_pv" style="display: none">
+        总访问量 
+        <span id="busuanzi_value_site_pv"></span>
+         次
+      </span>
+    
+    
+      <span id="busuanzi_container_site_uv" style="display: none">
+        总访客数 
+        <span id="busuanzi_value_site_uv"></span>
+         人
+      </span>
+    
+    
+  
+</div>
+
+  
+  
+    <!-- 备案信息 ICP for China -->
+    <div class="beian">
+  <span>
+    <a href="http://beian.miit.gov.cn/" target="_blank" rel="nofollow noopener">
+      蜀ICP备2022023578号 -1
+    </a>
+  </span>
+  
+</div>
+
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.0/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.18.2/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init(Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc));
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script  src="/js/local-search.js" ></script>
+
+  <script defer src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>
