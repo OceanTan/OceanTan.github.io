@@ -540,11 +540,7 @@
     <content type="html"><![CDATA[<h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><blockquote><p>该项目属于个人毕设项目，目前还处于开发阶段。前期功能分析可能不完善后期会慢慢添加。项目灵感来源于某站一起观影功能！<br>若看官有好的建议欢迎留言补充！最后再立下一个flag，年底前对项目完工并成功部署服务器。最后再写一章说明文档！至于惩罚emmm，暂时还没想好🤪</p></blockquote><h1 id="前期使用技术栈分析"><a href="#前期使用技术栈分析" class="headerlink" title="前期使用技术栈分析"></a>前期使用技术栈分析</h1><blockquote><p>后端：<code>SpringBoot框架</code> <code>Mybatis框架</code><br>数据库：<code>mysql</code> <code>redis</code><br>前端：<code>微信小程序</code> <code>uniapp框架</code> <code>colorui组件库</code><br>多媒体视频处理工具：<code>Ffmpeg</code></p></blockquote><h1 id="开发使用工具"><a href="#开发使用工具" class="headerlink" title="开发使用工具"></a>开发使用工具</h1><blockquote><p><code>IDEA2020</code> <code>Postman</code> <code>PowerDesigner</code> <code>Sqlyog</code> <code>微信web开发者工具</code> <code>Hbuilder X</code></p></blockquote><h1 id="项目地址"><a href="#项目地址" class="headerlink" title="项目地址"></a>项目地址</h1><blockquote><p>前端：<a href="https://gitee.com/hai-yang-tan/uniapp-online">https://gitee.com/hai-yang-tan/uniapp-online</a><br>后端：<a href="https://gitee.com/hai-yang-tan/online">https://gitee.com/hai-yang-tan/online</a><br>项目进度和博客进度不会相差太大，别问为什么，问就是边敲代码边写博客！</p></blockquote><h1 id="后端脑图"><a href="#后端脑图" class="headerlink" title="后端脑图"></a>后端脑图</h1><p><img src="https://tanblog.cc/upload/2022/11/online.png" alt="online"></p>]]></content>
     
     
-      
-      
-    <summary type="html">&lt;h1 id=&quot;前言&quot;&gt;&lt;a href=&quot;#前言&quot; class=&quot;headerlink&quot; title=&quot;前言&quot;&gt;&lt;/a&gt;前言&lt;/h1&gt;&lt;blockquote&gt;
-&lt;p&gt;该项目属于个人毕设项目，目前还处于开发阶段。前期功能分析可能不完善后期会慢慢添加。项目灵感来源于某站一起观影功能！</summary>
-      
+    <summary type="html">项目简介</summary>
     
     
     
